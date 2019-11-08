@@ -88,11 +88,13 @@ STRING    = \"[a-zA-Z]+\"
 
 LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
+
 TraditionalComment = "/*" [^*] ~"*/" | "/*" "*"+ "/"
 EndOfLineComment = "//" {InputCharacter}* {LineTerminator}?
 DocumentationComment = "/*" "*"+ [^/*] ~"*/"
-COMMENT = {TraditionalComment} | {EndOfLineComment} |
-          {DocumentationComment}
+
+COMMENT_MULTI = {DocumentationComment} | {TraditionalComment}
+COMMENT = {COMMENT_MULTI} | {EndOfLineComment}
 
 
 /******************************/
@@ -144,4 +146,5 @@ COMMENT = {TraditionalComment} | {EndOfLineComment} |
 {WhiteSpace}		{ /* just skip what was found, do nothing */ }
 {STRING}     { return symbol(TokenNames.STRING);}
 <<EOF>>				{ return symbol(TokenNames.EOF);}
+//<COMMENT_MULTI><<EOF>> { return symbol(TokenNames.error);}
 }
