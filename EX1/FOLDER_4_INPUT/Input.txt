@@ -6,8 +6,5 @@ abcd
 
     moish 77 999 zebra
 90
-
--0
+"asdfad"
 -1234
-
-/*

@@ -73,7 +73,6 @@ import java_cup.runtime.*;
 LineTerminator	= \r|\n|\r\n
 WhiteSpace		= {LineTerminator} | [ \t\f]
 INTEGER			= 0 | [1-9][0-9]*
-NEG_NUMBER  = -{INTEGER}
 // ID				= [a-zA-Z0-9]+
 
 ID  = [:jletter:][:jletterdigit:]*
@@ -141,10 +140,9 @@ COMMENT = {COMMENT_MULTI} | {EndOfLineComment}
 "new"					{ return symbol(TokenNames.NEW);}
 "nil"					{ return symbol(TokenNames.NIL);}
 {INTEGER}			{ return symbol(TokenNames.NUMBER, new Integer(yytext()));}
-{NEG_NUMBER}			{ return symbol(TokenNames.NUMBER, new Integer(yytext()));}
-{ID}				{ return symbol(TokenNames.ID,     new String( yytext()));}
+{ID}				{ return symbol(TokenNames.ID, new String( yytext()));}
 {WhiteSpace}		{ /* just skip what was found, do nothing */ }
-{STRING}     { return symbol(TokenNames.STRING);}
+{STRING}     { return symbol(TokenNames.STRING, new String(yytext()));}
 <<EOF>>				{ return symbol(TokenNames.EOF);}
 //<COMMENT_MULTI><<EOF>> { return symbol(TokenNames.error);}
 }
