@@ -113,13 +113,11 @@ public class Main
             break;
           case TokenNames.NUMBER:
             // TODO -validate -0
-            // TODO - validate 000099
-            // Validating leading zeros
+
             int firstVal = Character.getNumericValue( String.valueOf(s.value).charAt(0) );
             int value = (int) s.value;
-            System.out.print(firstVal);
-            System.out.print("-");
-            System.out.print(value);
+            // Handling 
+            // Validating leading zeros
             if (firstVal == 0 && value != 0) { throw new Exception("Leading Zeros"); }
             // Validating min/max possible ints
             if (value > MAX_INT) { throw new Exception("MAX_INT"); }
