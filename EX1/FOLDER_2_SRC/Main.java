@@ -1,9 +1,10 @@
-   
+
 import java.io.*;
 import java.io.PrintWriter;
+import java.lang.Math;
 
 import java_cup.runtime.Symbol;
-   
+
 public class Main
 {
 	static public void main(String argv[])
@@ -14,7 +15,9 @@ public class Main
 		PrintWriter file_writer;
 		String inputFilename = argv[0];
 		String outputFilename = argv[1];
-		
+    int MAX_INT = ( (int) Math.pow(2,15) )-1;
+    int MIN_INT = - (int) Math.pow(2,15)  ;
+
 		try
 		{
 			/********************************/
@@ -26,7 +29,7 @@ public class Main
 			/* [2] Initialize a file writer */
 			/********************************/
 			file_writer = new PrintWriter(outputFilename);
-			
+
 			/******************************/
 			/* [3] Initialize a new lexer */
 			/******************************/
@@ -52,21 +55,131 @@ public class Main
 				System.out.print("]:");
 				System.out.print(s.value);
 				System.out.print("\n");
-				
+
 				/*********************/
 				/* [7] Print to file */
 				/*********************/
-				file_writer.print(l.getLine());
-				file_writer.print(": ");
-				file_writer.print(s.value);
+        switch (s.sym) {
+          case TokenNames.MINUS:
+            file_writer.print("MINUS");
+            break;
+          case TokenNames.DIVIDE:
+            file_writer.print("DIVIDE");
+            break;
+          case TokenNames.PLUS:
+            file_writer.print("PLUS");
+            break;
+          case TokenNames.TIMES:
+            file_writer.print("TIMES");
+            break;
+          case TokenNames.GT:
+            file_writer.print("GT");
+            break;
+          case TokenNames.LT:
+            file_writer.print("LT");
+            break;
+          case TokenNames.EQ:
+            file_writer.print("EQ");
+            break;
+          case TokenNames.ASSIGN:
+            file_writer.print("ASSIGN");
+            break;
+          case TokenNames.SEMICOLON:
+            file_writer.print("SEMICOLON");
+            break;
+          case TokenNames.DOT:
+            file_writer.print("DOT");
+            break;
+          case TokenNames.COMMA:
+            file_writer.print("COMMA");
+            break;
+          case TokenNames.RPAREN:
+            file_writer.print("RPAREN");
+            break;
+          case TokenNames.LPAREN:
+            file_writer.print("LPAREN");
+            break;
+          case TokenNames.LBRACE:
+            file_writer.print("LBRACE");
+            break;
+          case TokenNames.RBRACE:
+            file_writer.print("RBRACE");
+            break;
+          case TokenNames.LBRACK:
+            file_writer.print("LBRACK");
+            break;
+          case TokenNames.RBRACK:
+            file_writer.print("RBRACK");
+            break;
+          case TokenNames.NUMBER:
+            // TODO - validate int -2^15 <int < 2^15-1
+            // TODO -validate -0
+            // TODO - validate 000099
+            int value = Integer.parseInt(s.value);
+            if (value > MAX_INT) {
+              throw new Exception("MAX_INT");
+            }
+            if (value < MIN_INT) {
+              throw new Exception("MIN_INT");
+            }
+            file_writer.print("INT");
+            file_writer.print("(");
+            file_writer.print(s.value);
+            file_writer.print(")");
+            break;
+          case TokenNames.ID:
+            file_writer.print("ID");
+            file_writer.print("(");
+            file_writer.print(s.value);
+            file_writer.print(")");
+            break;
+          case TokenNames.STRING:
+            file_writer.print("STRING");
+            file_writer.print("(");
+            file_writer.print(s.value);
+            file_writer.print(")");
+            break;
+          case TokenNames.RETURN:
+            file_writer.print("RETURN");
+            break;
+          case TokenNames.IF:
+            file_writer.print("IF");
+            break;
+          case TokenNames.WHILE:
+            file_writer.print("WHILE");
+            break;
+          case TokenNames.CLASS:
+            file_writer.print("CLASS");
+            break;
+          case TokenNames.ARRAY:
+            file_writer.print("ARRAY");
+            break;
+          case TokenNames.NEW:
+            file_writer.print("NEW");
+            break;
+          case TokenNames.EXTENDS:
+            file_writer.print("EXTENDS");
+            break;
+          case TokenNames.NIL:
+            file_writer.print("NIL");
+            break;
+          default:
+            file_writer.print("got-default");
+            break;
+        }
+        file_writer.print("[");
+        file_writer.print(l.getLine());
+        file_writer.print(",");
+        file_writer.print(l.getTokenStartPosition());
+        file_writer.print("]");
 				file_writer.print("\n");
-				
+
 				/***********************/
 				/* [8] Read next token */
 				/***********************/
 				s = l.next_token();
 			}
-			
+
 			/******************************/
 			/* [9] Close lexer input file */
 			/******************************/
@@ -77,12 +190,16 @@ public class Main
 			/**************************/
 			file_writer.close();
     	}
-			     
+
 		catch (Exception e)
 		{
+      try {
+  			file_writer = new PrintWriter(outputFilename);
+        file_writer.print("ERROR");
+        file_writer.close();
+      }
+      catch (Exception e1) {}
 			e.printStackTrace();
 		}
 	}
 }
-
-

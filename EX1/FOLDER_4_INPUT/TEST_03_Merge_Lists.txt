@@ -14,21 +14,21 @@ IntList MergeLists(IntList l1, IntList l2)
     {
         return l1;
     }
-    
+
     if (l1.head < l2.head)
     {
         IntList l3 := l1;
         l3.tail := MergeLists(l1.tail,l2);
         return l3;
     }
-    
+
     if (l2.head < l1.head)
     {
         IntList l3 := l2;
         l3.tail := MergeLists(l1,l2.tail);
         return l3;
     }
-    
+
     /***************************************************/
     /* Execution falls off here ... what should we do? */
     /***************************************************/
@@ -45,7 +45,7 @@ void main(void)
     IntList B := new IntList;
     IntList C := new IntList;
     IntList D := new IntList;
-       
+
     a.head := 34;
     b.head := 70;
     c.head := 92;
@@ -65,9 +65,9 @@ void main(void)
     B.tail := C;
     C.tail := D;
     D.tail := nil;
-    
+
     IntList l := MergeLists(a,A);
-    
+
     while (l)
     {
         PrintInt(l.head);

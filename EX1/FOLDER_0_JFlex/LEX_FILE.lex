@@ -16,11 +16,11 @@ import java_cup.runtime.*;
 /************************************/
 /* OPTIONS AND DECLARATIONS SECTION */
 /************************************/
-   
-/*****************************************************/ 
+
+/*****************************************************/
 /* Lexer is the name of the class JFlex will create. */
 /* The code will be written to the file Lexer.java.  */
-/*****************************************************/ 
+/*****************************************************/
 %class Lexer
 
 /********************************************************************/
@@ -43,12 +43,12 @@ import java_cup.runtime.*;
 /****************/
 /* DECLARATIONS */
 /****************/
-/*****************************************************************************/   
+/*****************************************************************************/
 /* Code between %{ and %}, both of which must be at the beginning of a line, */
 /* will be copied verbatim (letter to letter) into the Lexer class code.     */
 /* Here you declare member variables and functions that are used inside the  */
-/* scanner actions.                                                          */  
-/*****************************************************************************/   
+/* scanner actions.                                                          */
+/*****************************************************************************/
 %{
 	/*********************************************************************************/
 	/* Create a new java_cup.runtime.Symbol with information about the current token */
@@ -59,12 +59,12 @@ import java_cup.runtime.*;
 	/*******************************************/
 	/* Enable line number extraction from main */
 	/*******************************************/
-	public int getLine() { return yyline + 1; } 
+	public int getLine() { return yyline + 1; }
 
 	/**********************************************/
 	/* Enable token position extraction from main */
 	/**********************************************/
-	public int getTokenStartPosition() { return yycolumn + 1; } 
+	public int getTokenStartPosition() { return yycolumn + 1; }
 %}
 
 /***********************/
@@ -73,7 +73,10 @@ import java_cup.runtime.*;
 LineTerminator	= \r|\n|\r\n
 WhiteSpace		= {LineTerminator} | [ \t\f]
 INTEGER			= 0 | [1-9][0-9]*
-ID				= [a-z]+
+ID				= [a-zA-Z0-9]+
+STRING    = "[a-zA-Z]+"
+COMMENT   = "/*"( [^*] | (\*+[^*/]) )*\*+\/
+
 
 /******************************/
 /* DOLAR DOLAR - DON'T TOUCH! */
@@ -93,14 +96,36 @@ ID				= [a-z]+
 
 <YYINITIAL> {
 
+
 "+"					{ return symbol(TokenNames.PLUS);}
 "-"					{ return symbol(TokenNames.MINUS);}
-"PPP"				{ return symbol(TokenNames.TIMES);}
+"="					{ return symbol(TokenNames.EQ);}
+"<"					{ return symbol(TokenNames.LT);}
+">"					{ return symbol(TokenNames.GT);}
+//{COMMENT}	{ /* just skip what was found, do nothing */ }
+"//".*                                    { /* DO NOTHING */ }
+[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]       { /* DO NOTHING */ }
+"*"				{ return symbol(TokenNames.TIMES);}
 "/"					{ return symbol(TokenNames.DIVIDE);}
+"}"				{ return symbol(TokenNames.RBRACE);}
+"{"				{ return symbol(TokenNames.LBRACE);}
+"]"				{ return symbol(TokenNames.RBRACK);}
+"["				{ return symbol(TokenNames.LBRACK);}
 "("					{ return symbol(TokenNames.LPAREN);}
 ")"					{ return symbol(TokenNames.RPAREN);}
+","					{ return symbol(TokenNames.COMMA);}
+"."					{ return symbol(TokenNames.DOT);}
+";"					{ return symbol(TokenNames.SEMICOLON);}
+":="					{ return symbol(TokenNames.ASSIGN);}
+"class"					{ return symbol(TokenNames.CLASS);}
+"while"					{ return symbol(TokenNames.WHILE);}
+"if"					{ return symbol(TokenNames.IF);}
+"return"					{ return symbol(TokenNames.RETURN);}
+"new"					{ return symbol(TokenNames.NEW);}
+"nil"					{ return symbol(TokenNames.NIL);}
+{STRING}      { return symbol(TokenNames.STRING);}
 {INTEGER}			{ return symbol(TokenNames.NUMBER, new Integer(yytext()));}
-{ID}				{ return symbol(TokenNames.ID,     new String( yytext()));}   
+{ID}				{ return symbol(TokenNames.ID,     new String( yytext()));}
 {WhiteSpace}		{ /* just skip what was found, do nothing */ }
 <<EOF>>				{ return symbol(TokenNames.EOF);}
 }
