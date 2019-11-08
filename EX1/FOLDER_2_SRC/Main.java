@@ -175,7 +175,6 @@ public class Main
             throw new Exception("Regex Error");
           default:
             throw new Exception("Un handled Token");
-            break;
         }
         file_writer.print("[");
         file_writer.print(l.getLine());
