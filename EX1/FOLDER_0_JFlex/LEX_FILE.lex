@@ -73,10 +73,12 @@ import java_cup.runtime.*;
 LineTerminator	= \r|\n|\r\n
 WhiteSpace		= {LineTerminator} | [ \t\f]
 INTEGER			= 0 | [1-9][0-9]*
-ID				= [a-zA-Z0-9]+
-STRING    = "[a-zA-Z]+"
-COMMENT   = "/*"( [^*] | (\*+[^*/]) )*\*+\/
-
+// ID				= [a-zA-Z0-9]+
+ID  = ([:jletter:] | [_]) ([:jletter:] | [:digit:] | [_] )* // Will be used to read function names
+STRING    = \"[a-zA-Z]+\"
+SINGLE_LINE_COMMENT = "//".*
+MULTI_LINE_COMMENT = [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
+COMMENT = {SINGLE_LINE_COMMENT} | {MULTI_LINE_COMMENT}
 
 /******************************/
 /* DOLAR DOLAR - DON'T TOUCH! */
@@ -102,9 +104,7 @@ COMMENT   = "/*"( [^*] | (\*+[^*/]) )*\*+\/
 "="					{ return symbol(TokenNames.EQ);}
 "<"					{ return symbol(TokenNames.LT);}
 ">"					{ return symbol(TokenNames.GT);}
-//{COMMENT}	{ /* just skip what was found, do nothing */ }
-"//".*                                    { /* DO NOTHING */ }
-[/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]       { /* DO NOTHING */ }
+{COMMENT} { /* DO NOTHING */ }
 "*"				{ return symbol(TokenNames.TIMES);}
 "/"					{ return symbol(TokenNames.DIVIDE);}
 "}"				{ return symbol(TokenNames.RBRACE);}
@@ -123,9 +123,9 @@ COMMENT   = "/*"( [^*] | (\*+[^*/]) )*\*+\/
 "return"					{ return symbol(TokenNames.RETURN);}
 "new"					{ return symbol(TokenNames.NEW);}
 "nil"					{ return symbol(TokenNames.NIL);}
-{STRING}      { return symbol(TokenNames.STRING);}
 {INTEGER}			{ return symbol(TokenNames.NUMBER, new Integer(yytext()));}
 {ID}				{ return symbol(TokenNames.ID,     new String( yytext()));}
 {WhiteSpace}		{ /* just skip what was found, do nothing */ }
+{STRING}     { return symbol(TokenNames.STRING);}
 <<EOF>>				{ return symbol(TokenNames.EOF);}
 }

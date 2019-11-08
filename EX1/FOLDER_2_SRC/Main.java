@@ -16,7 +16,7 @@ public class Main
 		String inputFilename = argv[0];
 		String outputFilename = argv[1];
     int MAX_INT = ( (int) Math.pow(2,15) )-1;
-    int MIN_INT = - (int) Math.pow(2,15)  ;
+    int MIN_INT = - (int) Math.pow(2,15);
 
 		try
 		{
@@ -112,22 +112,29 @@ public class Main
             file_writer.print("RBRACK");
             break;
           case TokenNames.NUMBER:
-            // TODO - validate int -2^15 <int < 2^15-1
             // TODO -validate -0
             // TODO - validate 000099
-            int value = Integer.parseInt(s.value);
-            if (value > MAX_INT) {
-              throw new Exception("MAX_INT");
-            }
-            if (value < MIN_INT) {
-              throw new Exception("MIN_INT");
-            }
+            // Validating leading zeros
+            int firstVal = Character.getNumericValue( String.valueOf(s.value).charAt(0) );
+            int value = (int) s.value;
+            System.out.print(firstVal);
+            System.out.print("-");
+            System.out.print(value);
+            if (firstVal == 0 && value != 0) { throw new Exception("Leading Zeros"); }
+            // Validating min/max possible ints
+            if (value > MAX_INT) { throw new Exception("MAX_INT"); }
+            if (value < MIN_INT) { throw new Exception("MIN_INT"); }
             file_writer.print("INT");
             file_writer.print("(");
-            file_writer.print(s.value);
+            file_writer.print(value);
             file_writer.print(")");
             break;
           case TokenNames.ID:
+            char first = String.valueOf(s.value).charAt(0);
+            // Handling ID first char is not acceptible
+            if ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_".indexOf(first) == -1) {
+              throw new Exception("ID_ERROR");
+            }
             file_writer.print("ID");
             file_writer.print("(");
             file_writer.print(s.value);
@@ -193,6 +200,7 @@ public class Main
 
 		catch (Exception e)
 		{
+
       try {
   			file_writer = new PrintWriter(outputFilename);
         file_writer.print("ERROR");
