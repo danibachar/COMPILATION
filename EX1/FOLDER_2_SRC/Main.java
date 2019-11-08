@@ -171,6 +171,10 @@ public class Main
           case TokenNames.NIL:
             file_writer.print("NIL");
             break;
+          case TokenNames.COMMENT:
+            //Validating no special chars in COMMENT
+            // String.valueOf(s.value);
+            break;
           case TokenNames.error:
             throw new Exception("Regex Error");
           default:
@@ -186,7 +190,18 @@ public class Main
 				/***********************/
 				/* [8] Read next token */
 				/***********************/
-				s = l.next_token();
+        try {
+          s = l.next_token();
+        }
+        catch (Error erorr) {
+          file_writer.close();
+          //PrintWriter new_file_writer
+          file_writer = new PrintWriter(outputFilename);
+          file_writer.print("ERROR");
+          file_writer.close();
+          return;
+        }
+
 			}
 
 			/******************************/
@@ -200,15 +215,18 @@ public class Main
 			file_writer.close();
     	}
 
-		catch (Exception e)
-		{
+		catch (Exception e) {
+			// file_writer.close();
+			//PrintWriter new_file_writer
+			try {
+				file_writer = new PrintWriter(outputFilename);
+				file_writer.print("ERROR");
+				file_writer.close();
+			}
+			catch (Exception ex) {
 
-      try {
-  			file_writer = new PrintWriter(outputFilename);
-        file_writer.print("ERROR");
-        file_writer.close();
-      }
-      catch (Exception e1) {}
+			}
+
 			e.printStackTrace();
 		}
 	}

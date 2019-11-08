@@ -67,6 +67,8 @@ import java_cup.runtime.*;
 	public int getTokenStartPosition() { return yycolumn + 1; }
 %}
 
+%state STRING
+
 /***********************/
 /* MACRO DECALARATIONS */
 /***********************/
@@ -80,6 +82,7 @@ ID  = [:jletter:][:jletterdigit:]*
 //([:jletter:] | [_]) ([:jletter:] | [:digit:] | [_] )* // Will be used to read function names
 
 STRING    = \"[a-zA-Z]+\"
+STRING_NOT_CLOSED    = \"[a-zA-Z]+\
 
 //SINGLE_LINE_COMMENT = "//".*
 //MULTI_LINE_COMMENT = [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
@@ -120,7 +123,7 @@ COMMENT = {COMMENT_MULTI} | {EndOfLineComment}
 "="					{ return symbol(TokenNames.EQ);}
 "<"					{ return symbol(TokenNames.LT);}
 ">"					{ return symbol(TokenNames.GT);}
-{COMMENT} { /* DO NOTHING */ }
+{COMMENT} { return symbol(TokenNames.COMMENT, new String( yytext())); }
 "*"				{ return symbol(TokenNames.TIMES);}
 "/"					{ return symbol(TokenNames.DIVIDE);}
 "}"				{ return symbol(TokenNames.RBRACE);}
@@ -143,6 +146,8 @@ COMMENT = {COMMENT_MULTI} | {EndOfLineComment}
 {ID}				{ return symbol(TokenNames.ID, new String( yytext()));}
 {WhiteSpace}		{ /* just skip what was found, do nothing */ }
 {STRING}     { return symbol(TokenNames.STRING, new String(yytext()));}
+<STRING><<EOF>> { return symbol(TokenNames.error);}
+// {STRING_NOT_CLOSED} { return symbol(TokenNames.error);}
 <<EOF>>				{ return symbol(TokenNames.EOF);}
 //<COMMENT_MULTI><<EOF>> { return symbol(TokenNames.error);}
 }

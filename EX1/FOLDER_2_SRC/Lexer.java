@@ -24,6 +24,7 @@ class Lexer implements java_cup.runtime.Scanner {
 
   /** lexical states */
   public static final int YYINITIAL = 0;
+  public static final int STRING = 2;
 
   /**
    * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l
@@ -32,7 +33,7 @@ class Lexer implements java_cup.runtime.Scanner {
    * l is of the form l = 2*k, k a non negative integer
    */
   private static final int ZZ_LEXSTATE[] = { 
-     0, 0
+     0,  0,  1, 1
   };
 
   /** 
@@ -192,7 +193,7 @@ class Lexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\1\0\2\1\2\2\1\3\1\0\1\4\1\5\1\6"+
+    "\2\0\2\1\2\2\1\3\1\0\1\4\1\5\1\6"+
     "\1\7\1\10\1\11\1\12\1\13\1\14\1\15\1\16"+
     "\1\17\1\20\1\21\1\22\1\23\1\0\5\3\1\0"+
     "\1\24\1\0\1\25\1\26\2\3\1\27\3\3\1\30"+
@@ -200,7 +201,7 @@ class Lexer implements java_cup.runtime.Scanner {
     "\1\3\1\35";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[56];
+    int [] result = new int[57];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -225,16 +226,17 @@ class Lexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\50\0\120\0\120\0\170\0\240\0\310\0\360"+
-    "\0\120\0\u0118\0\120\0\120\0\120\0\120\0\120\0\120"+
-    "\0\120\0\120\0\120\0\120\0\120\0\120\0\120\0\u0140"+
-    "\0\u0168\0\u0190\0\u01b8\0\u01e0\0\u0208\0\u0230\0\u0258\0\u0280"+
-    "\0\120\0\120\0\u02a8\0\u02d0\0\240\0\u02f8\0\u0320\0\u0348"+
-    "\0\120\0\u0370\0\120\0\u0398\0\u03c0\0\u03e8\0\u0410\0\240"+
-    "\0\240\0\u0438\0\u0460\0\u0488\0\240\0\240\0\u04b0\0\240";
+    "\0\0\0\50\0\120\0\50\0\50\0\170\0\240\0\310"+
+    "\0\360\0\50\0\u0118\0\50\0\50\0\50\0\50\0\50"+
+    "\0\50\0\50\0\50\0\50\0\50\0\50\0\50\0\50"+
+    "\0\u0140\0\u0168\0\u0190\0\u01b8\0\u01e0\0\u0208\0\u0230\0\u0258"+
+    "\0\u0280\0\50\0\50\0\u02a8\0\u02d0\0\240\0\u02f8\0\u0320"+
+    "\0\u0348\0\50\0\u0370\0\50\0\u0398\0\u03c0\0\u03e8\0\u0410"+
+    "\0\240\0\240\0\u0438\0\u0460\0\u0488\0\240\0\240\0\u04b0"+
+    "\0\240";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[56];
+    int [] result = new int[57];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -257,33 +259,33 @@ class Lexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_TRANS = zzUnpackTrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\0\1\2\2\3\1\4\1\5\1\6\1\0\1\7"+
-    "\1\6\1\10\1\11\1\12\1\13\1\14\1\15\1\16"+
-    "\1\17\1\20\1\21\1\22\1\23\1\24\1\25\1\26"+
-    "\1\27\1\30\1\31\3\6\1\32\1\6\1\33\2\6"+
-    "\1\34\2\6\1\35\2\0\1\3\121\0\2\5\46\0"+
-    "\4\6\1\0\1\6\21\0\15\6\11\0\1\36\21\0"+
-    "\15\36\12\0\1\37\1\40\40\0\1\41\61\0\1\42"+
-    "\35\0\4\6\1\0\1\6\21\0\1\6\1\43\13\6"+
-    "\4\0\4\6\1\0\1\6\21\0\5\6\1\44\7\6"+
-    "\4\0\4\6\1\0\1\6\21\0\10\6\1\45\4\6"+
-    "\4\0\4\6\1\0\1\6\21\0\7\6\1\46\5\6"+
-    "\4\0\4\6\1\0\1\6\21\0\6\6\1\47\1\50"+
-    "\5\6\10\0\1\51\1\36\21\0\15\36\1\37\1\52"+
-    "\1\53\45\37\13\40\1\54\34\40\4\0\4\6\1\0"+
-    "\1\6\21\0\2\6\1\55\12\6\4\0\4\6\1\0"+
-    "\1\6\21\0\6\6\1\56\6\6\4\0\4\6\1\0"+
-    "\1\6\21\0\12\6\1\57\2\6\4\0\4\6\1\0"+
-    "\1\6\21\0\1\6\1\60\13\6\4\0\4\6\1\0"+
-    "\1\6\21\0\4\6\1\61\10\6\2\0\1\53\45\0"+
-    "\12\40\1\53\1\54\34\40\4\0\4\6\1\0\1\6"+
-    "\21\0\3\6\1\62\11\6\4\0\4\6\1\0\1\6"+
-    "\21\0\1\6\1\63\13\6\4\0\4\6\1\0\1\6"+
-    "\21\0\13\6\1\64\1\6\4\0\4\6\1\0\1\6"+
-    "\21\0\3\6\1\65\11\6\4\0\4\6\1\0\1\6"+
-    "\21\0\7\6\1\66\5\6\4\0\4\6\1\0\1\6"+
-    "\21\0\11\6\1\67\3\6\4\0\4\6\1\0\1\6"+
-    "\21\0\14\6\1\70";
+    "\1\0\1\3\2\4\1\5\1\6\1\7\1\0\1\10"+
+    "\1\7\1\11\1\12\1\13\1\14\1\15\1\16\1\17"+
+    "\1\20\1\21\1\22\1\23\1\24\1\25\1\26\1\27"+
+    "\1\30\1\31\1\32\3\7\1\33\1\7\1\34\2\7"+
+    "\1\35\2\7\1\36\52\0\1\4\51\0\2\6\46\0"+
+    "\4\7\1\0\1\7\21\0\15\7\11\0\1\37\21\0"+
+    "\15\37\12\0\1\40\1\41\40\0\1\42\61\0\1\43"+
+    "\35\0\4\7\1\0\1\7\21\0\1\7\1\44\13\7"+
+    "\4\0\4\7\1\0\1\7\21\0\5\7\1\45\7\7"+
+    "\4\0\4\7\1\0\1\7\21\0\10\7\1\46\4\7"+
+    "\4\0\4\7\1\0\1\7\21\0\7\7\1\47\5\7"+
+    "\4\0\4\7\1\0\1\7\21\0\6\7\1\50\1\51"+
+    "\5\7\10\0\1\52\1\37\21\0\15\37\1\40\1\53"+
+    "\1\54\45\40\13\41\1\55\34\41\4\0\4\7\1\0"+
+    "\1\7\21\0\2\7\1\56\12\7\4\0\4\7\1\0"+
+    "\1\7\21\0\6\7\1\57\6\7\4\0\4\7\1\0"+
+    "\1\7\21\0\12\7\1\60\2\7\4\0\4\7\1\0"+
+    "\1\7\21\0\1\7\1\61\13\7\4\0\4\7\1\0"+
+    "\1\7\21\0\4\7\1\62\10\7\2\0\1\54\45\0"+
+    "\12\41\1\54\1\55\34\41\4\0\4\7\1\0\1\7"+
+    "\21\0\3\7\1\63\11\7\4\0\4\7\1\0\1\7"+
+    "\21\0\1\7\1\64\13\7\4\0\4\7\1\0\1\7"+
+    "\21\0\13\7\1\65\1\7\4\0\4\7\1\0\1\7"+
+    "\21\0\3\7\1\66\11\7\4\0\4\7\1\0\1\7"+
+    "\21\0\7\7\1\67\5\7\4\0\4\7\1\0\1\7"+
+    "\21\0\11\7\1\70\3\7\4\0\4\7\1\0\1\7"+
+    "\21\0\14\7\1\71";
 
   private static int [] zzUnpackTrans() {
     int [] result = new int[1240];
@@ -324,12 +326,12 @@ class Lexer implements java_cup.runtime.Scanner {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\1\0\1\1\2\11\2\1\1\0\1\1\1\11\1\1"+
-    "\15\11\1\0\5\1\1\0\1\1\1\0\2\11\6\1"+
-    "\1\11\1\1\1\11\1\0\14\1";
+    "\1\0\1\10\1\1\2\11\2\1\1\0\1\1\1\11"+
+    "\1\1\15\11\1\0\5\1\1\0\1\1\1\0\2\11"+
+    "\6\1\1\11\1\1\1\11\1\0\14\1";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[56];
+    int [] result = new int[57];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -803,9 +805,13 @@ class Lexer implements java_cup.runtime.Scanner {
             zzDoEOF();
             switch (zzLexicalState) {
             case YYINITIAL: {
-              return symbol(TokenNames.EOF);
+              return symbol(TokenNames.error);
             }  // fall though
-            case 57: break;
+            case 58: break;
+            case STRING: {
+              return symbol(TokenNames.error);
+            }  // fall though
+            case 59: break;
             default:
           { return new java_cup.runtime.Symbol(TokenNames.EOF); }
         }
@@ -908,7 +914,7 @@ class Lexer implements java_cup.runtime.Scanner {
             // fall through
           case 48: break;
           case 20: 
-            { /* DO NOTHING */
+            { return symbol(TokenNames.COMMENT, new String( yytext()));
             } 
             // fall through
           case 49: break;
