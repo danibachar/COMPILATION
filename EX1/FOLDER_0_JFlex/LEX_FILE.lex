@@ -73,12 +73,27 @@ import java_cup.runtime.*;
 LineTerminator	= \r|\n|\r\n
 WhiteSpace		= {LineTerminator} | [ \t\f]
 INTEGER			= 0 | [1-9][0-9]*
+NEG_NUMBER  = -{INTEGER}
 // ID				= [a-zA-Z0-9]+
-ID  = ([:jletter:] | [_]) ([:jletter:] | [:digit:] | [_] )* // Will be used to read function names
+
+ID  = [:jletter:][:jletterdigit:]*
+
+//([:jletter:] | [_]) ([:jletter:] | [:digit:] | [_] )* // Will be used to read function names
+
 STRING    = \"[a-zA-Z]+\"
-SINGLE_LINE_COMMENT = "//".*
-MULTI_LINE_COMMENT = [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
-COMMENT = {SINGLE_LINE_COMMENT} | {MULTI_LINE_COMMENT}
+
+//SINGLE_LINE_COMMENT = "//".*
+//MULTI_LINE_COMMENT = [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
+//COMMENT = {SINGLE_LINE_COMMENT} | {MULTI_LINE_COMMENT}
+
+LineTerminator = \r|\n|\r\n
+InputCharacter = [^\r\n]
+TraditionalComment = "/*" [^*] ~"*/" | "/*" "*"+ "/"
+EndOfLineComment = "//" {InputCharacter}* {LineTerminator}?
+DocumentationComment = "/*" "*"+ [^/*] ~"*/"
+COMMENT = {TraditionalComment} | {EndOfLineComment} |
+          {DocumentationComment}
+
 
 /******************************/
 /* DOLAR DOLAR - DON'T TOUCH! */
@@ -98,7 +113,7 @@ COMMENT = {SINGLE_LINE_COMMENT} | {MULTI_LINE_COMMENT}
 
 <YYINITIAL> {
 
-
+"-0"        { return symbol(TokenNames.error);}
 "+"					{ return symbol(TokenNames.PLUS);}
 "-"					{ return symbol(TokenNames.MINUS);}
 "="					{ return symbol(TokenNames.EQ);}
@@ -124,6 +139,7 @@ COMMENT = {SINGLE_LINE_COMMENT} | {MULTI_LINE_COMMENT}
 "new"					{ return symbol(TokenNames.NEW);}
 "nil"					{ return symbol(TokenNames.NIL);}
 {INTEGER}			{ return symbol(TokenNames.NUMBER, new Integer(yytext()));}
+{NEG_NUMBER}			{ return symbol(TokenNames.NUMBER, new Integer(yytext()));}
 {ID}				{ return symbol(TokenNames.ID,     new String( yytext()));}
 {WhiteSpace}		{ /* just skip what was found, do nothing */ }
 {STRING}     { return symbol(TokenNames.STRING);}

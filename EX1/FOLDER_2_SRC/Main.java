@@ -112,11 +112,14 @@ public class Main
             file_writer.print("RBRACK");
             break;
           case TokenNames.NUMBER:
-            // TODO -validate -0
-
             int firstVal = Character.getNumericValue( String.valueOf(s.value).charAt(0) );
             int value = (int) s.value;
-            // Handling 
+            // Handling negative zero
+            System.out.print(String.valueOf(s.value));
+            System.out.print(" | ");
+            System.out.print(firstVal);
+            System.out.print("-");
+            System.out.print(value);
             // Validating leading zeros
             if (firstVal == 0 && value != 0) { throw new Exception("Leading Zeros"); }
             // Validating min/max possible ints
@@ -168,8 +171,10 @@ public class Main
           case TokenNames.NIL:
             file_writer.print("NIL");
             break;
+          case TokenNames.error:
+            throw new Exception("Regex Error");
           default:
-            file_writer.print("got-default");
+            throw new Exception("Un handled Token");
             break;
         }
         file_writer.print("[");
