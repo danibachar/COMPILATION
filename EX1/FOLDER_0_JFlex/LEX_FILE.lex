@@ -67,33 +67,30 @@ import java_cup.runtime.*;
 	public int getTokenStartPosition() { return yycolumn + 1; }
 %}
 
-%state STRING
-
 /***********************/
 /* MACRO DECALARATIONS */
 /***********************/
-LineTerminator	= \r|\n|\r\n
-WhiteSpace		= {LineTerminator} | [ \t\f]
-INTEGER			= 0 | [1-9][0-9]*
-// ID				= [a-zA-Z0-9]+
-
-ID  = [:jletter:][:jletterdigit:]*
-
-//([:jletter:] | [_]) ([:jletter:] | [:digit:] | [_] )* // Will be used to read function names
-
-STRING    = \"[a-zA-Z]+\"
-STRING_NOT_CLOSED    = \"[a-zA-Z]+\
-
-//SINGLE_LINE_COMMENT = "//".*
-//MULTI_LINE_COMMENT = [/][*][^*]*[*]+([^*/][^*]*[*]+)*[/]
-//COMMENT = {SINGLE_LINE_COMMENT} | {MULTI_LINE_COMMENT}
-
-LineTerminator = \r|\n|\r\n
+LineTerminator	= \r | \n | \r\n
 InputCharacter = [^\r\n]
+WhiteSpace		= {LineTerminator} | [ \t\f]
 
+ILLEGAL_CHARS = [^0-9a-zA-Z(){}!?+/*.;\-\t\n\r\[\]\f\= <>,: ]+
+
+INTEGER			= 0 | [1-9][0-9]*
+NEG_NUMBER = -{INTEGER}
+STRING    = \"[a-zA-Z/]+\"
+
+// Based On JFlex Book
+LETTERS = [A-Za-z]
+DIGITS = [0-9]
+ID = [A-Za-z0-9]*
+
+
+// Based On JFlex JAVA Comment
 TraditionalComment = "/*" [^*] ~"*/" | "/*" "*"+ "/"
 EndOfLineComment = "//" {InputCharacter}* {LineTerminator}?
 DocumentationComment = "/*" "*"+ [^/*] ~"*/"
+OPEN_COMMENT = "/*"
 
 COMMENT_MULTI = {DocumentationComment} | {TraditionalComment}
 COMMENT = {COMMENT_MULTI} | {EndOfLineComment}
@@ -117,6 +114,7 @@ COMMENT = {COMMENT_MULTI} | {EndOfLineComment}
 
 <YYINITIAL> {
 
+{ILLEGAL_CHARS} { return symbol(TokenNames.error);}
 "-0"        { return symbol(TokenNames.error);}
 "+"					{ return symbol(TokenNames.PLUS);}
 "-"					{ return symbol(TokenNames.MINUS);}
@@ -124,6 +122,7 @@ COMMENT = {COMMENT_MULTI} | {EndOfLineComment}
 "<"					{ return symbol(TokenNames.LT);}
 ">"					{ return symbol(TokenNames.GT);}
 {COMMENT} { return symbol(TokenNames.COMMENT, new String( yytext())); }
+{OPEN_COMMENT} { return symbol(TokenNames.error);}
 "*"				{ return symbol(TokenNames.TIMES);}
 "/"					{ return symbol(TokenNames.DIVIDE);}
 "}"				{ return symbol(TokenNames.RBRACE);}
@@ -142,12 +141,11 @@ COMMENT = {COMMENT_MULTI} | {EndOfLineComment}
 "return"					{ return symbol(TokenNames.RETURN);}
 "new"					{ return symbol(TokenNames.NEW);}
 "nil"					{ return symbol(TokenNames.NIL);}
-{INTEGER}			{ return symbol(TokenNames.NUMBER, new Integer(yytext()));}
+"array"					{ return symbol(TokenNames.ARRAY);}
+{INTEGER}	| {NEG_NUMBER}		{ return symbol(TokenNames.NUMBER, new Integer(yytext()));}
 {ID}				{ return symbol(TokenNames.ID, new String( yytext()));}
 {WhiteSpace}		{ /* just skip what was found, do nothing */ }
 {STRING}     { return symbol(TokenNames.STRING, new String(yytext()));}
-<STRING><<EOF>> { return symbol(TokenNames.error);}
-// {STRING_NOT_CLOSED} { return symbol(TokenNames.error);}
 <<EOF>>				{ return symbol(TokenNames.EOF);}
-//<COMMENT_MULTI><<EOF>> { return symbol(TokenNames.error);}
+[^]						{ return symbol(TokenNames.error);}
 }

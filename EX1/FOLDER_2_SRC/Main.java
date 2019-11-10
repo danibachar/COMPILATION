@@ -2,6 +2,12 @@
 import java.io.*;
 import java.io.PrintWriter;
 import java.lang.Math;
+import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import java_cup.runtime.Symbol;
 
@@ -131,11 +137,11 @@ public class Main
             file_writer.print(")");
             break;
           case TokenNames.ID:
-            char first = String.valueOf(s.value).charAt(0);
-            // Handling ID first char is not acceptible
-            if ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_".indexOf(first) == -1) {
-              throw new Exception("ID_ERROR");
-            }
+						char first = String.valueOf(s.value).charAt(0);
+						// Handling ID first char is not acceptible
+						if ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(first) == -1) {
+						  throw new Exception("ID_ERROR");
+						}
             file_writer.print("ID");
             file_writer.print("(");
             file_writer.print(s.value);
@@ -173,8 +179,15 @@ public class Main
             break;
           case TokenNames.COMMENT:
             //Validating no special chars in COMMENT
-            // String.valueOf(s.value);
-            break;
+						Set<Character> contains = convertToSet(String.valueOf(s.value));
+						Set<Character> allowed = convertToSet("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()[]{};.:=+-/*<> \n\t\f\r?!");
+						contains.removeAll(allowed);
+						if (!contains.isEmpty()) {
+							throw new Exception("COMMENT_ERROR");
+						}
+
+						s = l.next_token();
+						continue;
           case TokenNames.error:
             throw new Exception("Regex Error");
           default:
@@ -190,17 +203,7 @@ public class Main
 				/***********************/
 				/* [8] Read next token */
 				/***********************/
-        try {
-          s = l.next_token();
-        }
-        catch (Error erorr) {
-          file_writer.close();
-          //PrintWriter new_file_writer
-          file_writer = new PrintWriter(outputFilename);
-          file_writer.print("ERROR");
-          file_writer.close();
-          return;
-        }
+				s = l.next_token();
 
 			}
 
@@ -214,20 +217,35 @@ public class Main
 			/**************************/
 			file_writer.close();
     	}
-
-		catch (Exception e) {
-			// file_writer.close();
-			//PrintWriter new_file_writer
-			try {
-				file_writer = new PrintWriter(outputFilename);
-				file_writer.print("ERROR");
-				file_writer.close();
+			catch (Error e) {
+				try {
+					file_writer = new PrintWriter(outputFilename);
+					file_writer.print("ERROR");
+					file_writer.close();
+				}
+				catch (Exception ex) { }
+				e.printStackTrace();
 			}
-			catch (Exception ex) {
+			catch (Exception e) {
+				try {
+					file_writer = new PrintWriter(outputFilename);
+					file_writer.print("ERROR");
+					file_writer.close();
+				}
+				catch (Exception ex) {}
+				e.printStackTrace();
+			}
+	}
+	public static Set<Character> convertToSet(String string) {
 
+			// Result hashset
+			Set resultSet = new HashSet();
+
+			for (int i = 0; i < string.length(); i++) {
+					resultSet.add(new Character(string.charAt(i)));
 			}
 
-			e.printStackTrace();
-		}
+			// Return result
+			return resultSet;
 	}
 }
