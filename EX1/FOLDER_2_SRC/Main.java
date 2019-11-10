@@ -120,12 +120,6 @@ public class Main
           case TokenNames.NUMBER:
             int firstVal = Character.getNumericValue( String.valueOf(s.value).charAt(0) );
             int value = (int) s.value;
-            // Handling negative zero
-            // System.out.print(String.valueOf(s.value));
-            // System.out.print(" | ");
-            // System.out.print(firstVal);
-            // System.out.print("-");
-            // System.out.print(value);
             // Validating leading zeros
             if (firstVal == 0 && value != 0) { throw new Exception("Leading Zeros"); }
             // Validating min/max possible ints
@@ -185,7 +179,6 @@ public class Main
 						if (!contains.isEmpty()) {
 							throw new Exception("COMMENT_ERROR");
 						}
-
 						s = l.next_token();
 						continue;
           case TokenNames.error:
