@@ -6,7 +6,7 @@ public class AST_VAR_SIMPLE extends AST_VAR
 	/* simple variable name */
 	/************************/
 	public String name;
-	
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
@@ -16,7 +16,7 @@ public class AST_VAR_SIMPLE extends AST_VAR
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
-	
+
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
@@ -28,9 +28,6 @@ public class AST_VAR_SIMPLE extends AST_VAR
 		this.name = name;
 	}
 
-	/**************************************************/
-	/* The printing message for a simple var AST node */
-	/**************************************************/
 	public void PrintMe()
 	{
 		/**********************************/

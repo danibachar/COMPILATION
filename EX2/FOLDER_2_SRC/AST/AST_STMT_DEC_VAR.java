@@ -1,50 +1,47 @@
 package AST;
 
-public class AST_VAR_FIELD extends AST_VAR
+
+public class AST_STMT_DEC_VAR extends AST_STMT
 {
-	public AST_VAR var;
-	public String fieldName;
+	/****************/
+	/* DATA MEMBERS */
+	/****************/
+	public AST_DEC_VAR var;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_VAR_FIELD(AST_VAR var,String fieldName)
+	public AST_STMT_DEC_VAR(AST_DEC_VAR var)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
-		/***************************************/
+    /***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== var -> var DOT ID( %s )\n",fieldName);
+		System.out.print("====================== stmtDecVar\n");
 
-		/*******************************/
-		/* COPY INPUT DATA NENBERS ... */
-		/*******************************/
 		this.var = var;
-		this.fieldName = fieldName;
 	}
 
 	public void PrintMe()
 	{
-		System.out.print("AST NODE FIELD VAR\n");
+		System.out.print("AST NODE DEC VAR STMT\n");
 
 		if (var != null) var.PrintMe();
-		
-		System.out.format("FIELD NAME( %s )\n",fieldName);
 
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
 		AST_GRAPHVIZ.getInstance().logNode(
 			SerialNumber,
-			String.format("FIELD\nVAR\n...->%s",fieldName));
+			String.format("STMT\nDEC\nVAR"));
 
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
-		if (var != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,var.SerialNumber);
+		AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,var.SerialNumber);
 	}
 }

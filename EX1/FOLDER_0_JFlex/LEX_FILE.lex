@@ -121,7 +121,7 @@ COMMENT = {COMMENT_MULTI} | {EndOfLineComment}
 "="					{ return symbol(TokenNames.EQ);}
 "<"					{ return symbol(TokenNames.LT);}
 ">"					{ return symbol(TokenNames.GT);}
-{COMMENT} { return symbol(TokenNames.COMMENT, new String( yytext())); }
+{COMMENT} { /* just skip what was found, do nothing */ }
 {OPEN_COMMENT} { return symbol(TokenNames.error);}
 "*"				{ return symbol(TokenNames.TIMES);}
 "/"					{ return symbol(TokenNames.DIVIDE);}

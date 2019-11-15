@@ -5,7 +5,7 @@ public class AST_EXP_BINOP extends AST_EXP
 	int OP;
 	public AST_EXP left;
 	public AST_EXP right;
-	
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
@@ -28,20 +28,25 @@ public class AST_EXP_BINOP extends AST_EXP
 		this.right = right;
 		this.OP = OP;
 	}
-	
+
 	/*************************************************/
 	/* The printing message for a binop exp AST node */
 	/*************************************************/
 	public void PrintMe()
 	{
 		String sOP="";
-		
+
 		/*********************************/
 		/* CONVERT OP to a printable sOP */
 		/*********************************/
-		if (OP == 0) {sOP = "+";}
-		if (OP == 1) {sOP = "-";}
-		
+		if (OP == 0) {sOP = "=";}
+		if (OP == 1) {sOP = "<";}
+		if (OP == 2) {sOP = ">";}
+		if (OP == 3) {sOP = "+";}
+		if (OP == 4) {sOP = "-";}
+		if (OP == 5) {sOP = "*";}
+		if (OP == 6) {sOP = "/";}
+
 		/*************************************/
 		/* AST NODE TYPE = AST SUBSCRIPT VAR */
 		/*************************************/
@@ -52,14 +57,14 @@ public class AST_EXP_BINOP extends AST_EXP
 		/**************************************/
 		if (left != null) left.PrintMe();
 		if (right != null) right.PrintMe();
-		
+
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
 		AST_GRAPHVIZ.getInstance().logNode(
 			SerialNumber,
 			String.format("BINOP(%s)",sOP));
-		
+
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/

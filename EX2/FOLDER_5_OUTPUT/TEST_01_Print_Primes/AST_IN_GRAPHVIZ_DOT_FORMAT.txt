@@ -1,0 +1,130 @@
+digraph
+{
+graph [ordering = "out"]
+v0 [label = "NAME:TYPE
+p:int"];
+v1 [label = "TYPE-NAME
+LIST
+"];
+v1 -> v0;
+v2 [label = "INT(2)"];
+v3 [label = "VAR
+DEC(i)
+:int"];
+v3 -> v2;
+v4 [label = "STMT
+DEC
+VAR"];
+v4 -> v3;
+v5 [label = "INT(2)"];
+v6 [label = "VAR
+DEC(j)
+:int"];
+v6 -> v5;
+v7 [label = "STMT
+DEC
+VAR"];
+v7 -> v6;
+v48 [label = "INT(0)"];
+v49 [label = "RETURN"];
+v49 -> v48;
+v50 [label = "STMT
+LIST
+"];
+v50 -> v49;
+v51 [label = "STMT
+LIST
+"];
+v51 -> v47;
+v51 -> v50;
+v52 [label = "STMT
+LIST
+"];
+v52 -> v7;
+v52 -> v51;
+v53 [label = "STMT
+LIST
+"];
+v53 -> v4;
+v53 -> v52;
+v54 [label = "FUNC(IsPrime)
+:int
+"];
+v54 -> v1;
+v54 -> v53;
+v55 [label = "NAME:TYPE
+start:int"];
+v56 [label = "NAME:TYPE
+end:int"];
+v57 [label = "TYPE-NAME
+LIST
+"];
+v57 -> v56;
+v58 [label = "TYPE-NAME
+LIST
+"];
+v58 -> v55;
+v58 -> v57;
+v59 [label = "INT(2)"];
+v60 [label = "VAR
+DEC(p)
+:int"];
+v60 -> v59;
+v61 [label = "STMT
+DEC
+VAR"];
+v61 -> v60;
+v82 [label = "STMT
+LIST
+"];
+v82 -> v81;
+v83 [label = "STMT
+LIST
+"];
+v83 -> v61;
+v83 -> v82;
+v84 [label = "FUNC(PrintPrimes)
+:void
+"];
+v84 -> v58;
+v84 -> v83;
+v85 [label = "INT(2)"];
+v86 [label = "INT(100)"];
+v87 [label = "EXP
+LIST
+"];
+v87 -> v86;
+v88 [label = "EXP
+LIST
+"];
+v88 -> v85;
+v88 -> v87;
+v89 [label = "CALL(PrintPrimes)
+WITH"];
+v89 -> v88;
+v90 [label = "STMT
+CALL"];
+v90 -> v89;
+v91 [label = "STMT
+LIST
+"];
+v91 -> v90;
+v92 [label = "FUNC(main)
+:void
+"];
+v92 -> v91;
+v93 [label = "DEC
+LIST
+"];
+v93 -> v92;
+v94 [label = "DEC
+LIST
+"];
+v94 -> v84;
+v94 -> v93;
+v95 [label = "DEC
+LIST
+"];
+v95 -> v54;
+v95 -> v94;
+}

@@ -1,17 +1,17 @@
 package AST;
 
-public class AST_STMT_LIST extends AST_Node
+public class AST_EXP_LIST extends AST_Node
 {
 	/****************/
 	/* DATA MEMBERS */
 	/****************/
-	public AST_STMT head;
-	public AST_STMT_LIST tail;
+	public AST_EXP head;
+	public AST_EXP_LIST tail;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_STMT_LIST(AST_STMT head,AST_STMT_LIST tail)
+	public AST_EXP_LIST(AST_EXP head,AST_EXP_LIST tail)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -21,25 +21,20 @@ public class AST_STMT_LIST extends AST_Node
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		if (tail != null) System.out.print("====================== stmts -> stmt stmts\n");
-		if (tail == null) System.out.print("====================== stmts -> stmt      \n");
+		System.out.print("====================== expList\n");
 
-		/*******************************/
-		/* COPY INPUT DATA NENBERS ... */
-		/*******************************/
 		this.head = head;
 		this.tail = tail;
 	}
-
 	/******************************************************/
 	/* The printing message for a statement list AST node */
 	/******************************************************/
 	public void PrintMe()
 	{
-		/**************************************/
-		/* AST NODE TYPE = AST STATEMENT LIST */
-		/**************************************/
-		System.out.print("AST NODE STMT LIST\n");
+		/********************************/
+		/* AST NODE TYPE = AST EXP LIST */
+		/********************************/
+		System.out.print("AST NODE EXP LIST\n");
 
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */
@@ -52,7 +47,7 @@ public class AST_STMT_LIST extends AST_Node
 		/**********************************/
 		AST_GRAPHVIZ.getInstance().logNode(
 			SerialNumber,
-			"STMT\nLIST\n");
+			"EXP\nLIST\n");
 
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
@@ -60,5 +55,4 @@ public class AST_STMT_LIST extends AST_Node
 		if (head != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,head.SerialNumber);
 		if (tail != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,tail.SerialNumber);
 	}
-
 }
