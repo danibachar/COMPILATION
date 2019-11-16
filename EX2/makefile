@@ -7,7 +7,7 @@ CUP_DIR           = ${BASEDIR}/FOLDER_1_CUP
 SRC_DIR           = ${BASEDIR}/FOLDER_2_SRC
 BIN_DIR           = ${BASEDIR}/FOLDER_3_BIN
 INPUT_DIR         = ${BASEDIR}/FOLDER_4_INPUT
-OUTPUT_DIR        = ${BASEDIR}/FOLDER_5_OUTPUT
+OUTPUT_DIR        = ${BASEDIR}/FOLDER_5_OUTPUT/TEST_01_Print_Primes
 EXTERNAL_JARS_DIR = ${BASEDIR}/FOLDER_7_EXTERNAL_JARS
 MANIFEST_DIR      = ${BASEDIR}/FOLDER_8_MANIFEST
 
@@ -32,7 +32,7 @@ JFlex_FILE     = ${JFlex_DIR}/LEX_FILE.lex
 ######################
 # DEFINITIONS :: CUP #
 ######################
-CUP_PROGRAM                    = java -jar ${EXTERNAL_JARS_DIR}/java-cup-11b.jar 
+CUP_PROGRAM                    = java -jar ${EXTERNAL_JARS_DIR}/java-cup-11b.jar
 CUP_FILE                       = ${CUP_DIR}/CUP_FILE.cup
 CUP_GENERATED_PARSER_NAME      = Parser
 CUP_GENERATED_SYMBOLS_FILENAME = TokenNames
@@ -43,12 +43,12 @@ CUP_GENERATED_SYMBOLS_FILENAME = TokenNames
 CUP_FLAGS =                                \
 -nowarn                                    \
 -parser  ${CUP_GENERATED_PARSER_NAME}      \
--symbols ${CUP_GENERATED_SYMBOLS_FILENAME} 
+-symbols ${CUP_GENERATED_SYMBOLS_FILENAME}
 
 #########################
 # DEFINITIONS :: PARSER #
 #########################
-INPUT    = ${INPUT_DIR}/Input.txt
+INPUT    = ${INPUT_DIR}/TEST_01_Print_Primes.txt
 OUTPUT   = ${OUTPUT_DIR}/ParseStatus.txt
 
 ##########
@@ -138,5 +138,4 @@ all:
 	@echo "*                                              *"
 	@echo "*                                              *"
 	@echo "************************************************"
-	eog ${OUTPUT_DIR}/AST.jpeg &
-
+	# eog ${OUTPUT_DIR}/AST.jpeg &
