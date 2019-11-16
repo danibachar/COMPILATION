@@ -189,7 +189,7 @@ stmt									::=	varDec:v {: RESULT = new AST_STMT_DEC_VAR(v); :}
 											| var:v ASSIGN newExp:e SEMICOLON {: RESULT = new AST_STMT_ASSIGN(v,e); :}
 											| RETURN exp:e SEMICOLON {: RESULT = new AST_STMT_RETURN(e); :}
 											| RETURN SEMICOLON {: RESULT = new AST_STMT_RETURN(null); :}
-											| IF    LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE
+											| IF LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE
 												{: RESULT = new AST_STMT_IF(cond,body); :}
 											| WHILE LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE
 												{: RESULT = new AST_STMT_WHILE(cond,body); :}
@@ -202,7 +202,7 @@ var										::=		ID:name {: RESULT = new AST_VAR_SIMPLE(name);       :}
 											;
 
 exp										::=		var:v {: RESULT = new AST_EXP_VAR(v); :}
-											| LPAREN exp:e RPAREN
+											| LPAREN exp:e RPAREN {: RESULT = e; :}
 											| exp:e1 EQ  exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 0);:}
 											| exp:e1 LT exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 1);:}
 											| exp:e1 GT exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 2);:}
@@ -226,7 +226,7 @@ callExp								::=		ID:funcName LPAREN expListComma:el RPAREN
 											;
 
 
-expListComma					::=		exp:e COMMA expListComma:el	{: RESULT = new AST_EXP_LIST(e,el);   :}
+expListComma					::=		exp:e COMMA expListComma:el	{: RESULT = new AST_EXP_LIST(e,el); :}
 											| exp:e {: RESULT = new AST_EXP_LIST(e,null); :}
 											;
 
