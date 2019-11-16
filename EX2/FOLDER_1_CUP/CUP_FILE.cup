@@ -107,8 +107,11 @@ terminal String STRING;
 non terminal AST_EXP exp;
 non terminal AST_EXP_NEW newExp;
 non terminal AST_EXP_LIST	expListComma;
-non terminal  AST_EXP_CALL callExp;
+non terminal  AST_EXP_CALL callfuncExp;
 non terminal AST_VAR var;
+
+non terminal AST_VAR_DOT varDot;
+non terminal AST_VAR_DOT_LIST	varDotList;
 
 non terminal AST_TYPE_NAME typeName;
 non terminal AST_TYPE_NAME_LIST	typeNameListComma;
@@ -141,7 +144,6 @@ precedence left UNARYMINUS;
 /************************/
 /* START WITH: stmtList */
 /************************/
-//start with stmtList;
 start with decList;
 
 /********************/
@@ -191,7 +193,7 @@ stmt									::=	varDec:v {: RESULT = new AST_STMT_DEC_VAR(v); :}
 												{: RESULT = new AST_STMT_IF(cond,body); :}
 											| WHILE LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE
 												{: RESULT = new AST_STMT_WHILE(cond,body); :}
-											| callExp:callExp SEMICOLON {: RESULT = new AST_STMT_CALL(callExp); :}
+											| callfuncExp:e SEMICOLON {: RESULT = new AST_STMT_CALL(e); :}
 											;
 
 var										::=		ID:name {: RESULT = new AST_VAR_SIMPLE(name);       :}
@@ -208,7 +210,7 @@ exp										::=		var:v {: RESULT = new AST_EXP_VAR(v); :}
 											| exp:e1 MINUS exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 4);:}
 											| exp:e1 TIMES exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 5);:}
 											| exp:e1 DIVIDE exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 6);:}
-											| callExp:e {: RESULT = e; :}
+											| callfuncExp:e {: RESULT = e; :}
 											| INT:i {: RESULT = new AST_EXP_INT(i); :}
 											| NIL {: RESULT = new AST_EXP_NIL(); :}
 											| STRING:s {: RESULT = new AST_EXP_STRING(s); :}
@@ -218,24 +220,31 @@ newExp 								::= NEW ID:type {: RESULT = new AST_EXP_NEW(type,null); :}
 											| NEW ID:type LBRACK exp:e RBRACK  {: RESULT = new AST_EXP_NEW(type,e); :}
 											;
 
-callExp								::=		ID:funcName LPAREN expListComma:el RPAREN
-												{: RESULT = new AST_EXP_CALL(funcName,el); :}
-											| ID:funcName LPAREN RPAREN	{: RESULT = new AST_EXP_CALL(funcName,null); :}
+callfuncExp								::= ID:funcName LPAREN RPAREN	{: RESULT = new AST_EXP_CALL(funcName,null, null); :}
+											| ID:funcName LPAREN expListComma:el RPAREN
+												{: RESULT = new AST_EXP_CALL(funcName,el,null); :}
+											| varDotList:vl ID:funcName LPAREN expListComma:el RPAREN
+												{: RESULT = new AST_EXP_CALL(funcName,el,vl); :}
 											;
 
+varDot 								::= var:v DOT {: RESULT = new AST_TYPE_NAME(type,name); :};
 
-expListComma					::=		exp:e COMMA expListComma:el	{: RESULT = new AST_EXP_LIST(e,el); :}
+varDotList 						::= varDot:v varDotList:vl	{: RESULT = new AST_VAR_DOT_LIST(v,vl); :}
+											| varDot:v {: RESULT = new AST_VAR_DOT_LIST(v,null); :}
+											;
+
+expListComma					::= exp:e COMMA expListComma:el	{: RESULT = new AST_EXP_LIST(e,el); :}
 											| exp:e {: RESULT = new AST_EXP_LIST(e,null); :}
 											;
 
-typeName							::=		ID:type ID:name {: RESULT = new AST_TYPE_NAME(type,name);:};
+typeName							::= ID:type ID:name {: RESULT = new AST_TYPE_NAME(type,name);:};
 
-typeNameListComma			::=		typeName:tn COMMA typeNameListComma:tnl
+typeNameListComma			::= typeName:tn COMMA typeNameListComma:tnl
 												{: RESULT = new AST_TYPE_NAME_LIST(tn,tnl);  :}
 											| typeName:tn {: RESULT = new AST_TYPE_NAME_LIST(tn,null); :}
 											;
 
-typeNameListSemicolon	::=		typeName:tn SEMICOLON typeNameListSemicolon:tnl
+typeNameListSemicolon	::= typeName:tn SEMICOLON typeNameListSemicolon:tnl
 												{: RESULT = new AST_TYPE_NAME_LIST(tn,tnl);  :}
 											| 		typeName:tn SEMICOLON {: RESULT = new AST_TYPE_NAME_LIST(tn,null); :}
 											;

@@ -7,7 +7,7 @@ CUP_DIR           = ${BASEDIR}/FOLDER_1_CUP
 SRC_DIR           = ${BASEDIR}/FOLDER_2_SRC
 BIN_DIR           = ${BASEDIR}/FOLDER_3_BIN
 INPUT_DIR         = ${BASEDIR}/FOLDER_4_INPUT
-OUTPUT_DIR        = ${BASEDIR}/FOLDER_5_OUTPUT/TEST_10_Classes_Error
+OUTPUT_DIR        = ${BASEDIR}/FOLDER_5_OUTPUT/TEST_05_Classes
 EXTERNAL_JARS_DIR = ${BASEDIR}/FOLDER_7_EXTERNAL_JARS
 MANIFEST_DIR      = ${BASEDIR}/FOLDER_8_MANIFEST
 
@@ -48,7 +48,7 @@ CUP_FLAGS =                                \
 #########################
 # DEFINITIONS :: PARSER #
 #########################
-INPUT    = ${INPUT_DIR}/TEST_10_Classes_Error.txt
+INPUT    = ${INPUT_DIR}/TEST_05_Classes.txt
 OUTPUT   = ${OUTPUT_DIR}/ParseStatus.txt
 
 ##########

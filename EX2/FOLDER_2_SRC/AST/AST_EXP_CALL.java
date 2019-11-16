@@ -7,11 +7,12 @@ public class AST_EXP_CALL extends AST_EXP
 	/****************/
 	public String funcName;
 	public AST_EXP_LIST params;
+	public AST_VAR_DOT_LIST vars;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_EXP_CALL(String funcName,AST_EXP_LIST params)
+	public AST_EXP_CALL(String funcName,AST_EXP_LIST params, AST_VAR_DOT_LIST vars)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -25,6 +26,7 @@ public class AST_EXP_CALL extends AST_EXP
 
 		this.funcName = funcName;
 		this.params = params;
+		this.vars = vars
 	}
 
 	/************************************************************/
@@ -41,6 +43,7 @@ public class AST_EXP_CALL extends AST_EXP
 		/* RECURSIVELY PRINT params */
 		/***************************************/
 		if (params != null) params.PrintMe();
+		if (vars != null) vars.PrintMe();
 
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
@@ -53,5 +56,6 @@ public class AST_EXP_CALL extends AST_EXP
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
 		AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,params.SerialNumber);
+		AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,vars.SerialNumber);
 	}
 }
