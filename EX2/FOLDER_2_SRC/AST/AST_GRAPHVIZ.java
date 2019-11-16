@@ -34,7 +34,7 @@ public class AST_GRAPHVIZ
 			/****************************/
 			try
 			{
-				String dirname="./FOLDER_5_OUTPUT/TEST_01_Print_Primes/";
+				String dirname="./FOLDER_5_OUTPUT/TEST_10_Classes_Error/";
 				String filename="AST_IN_GRAPHVIZ_DOT_FORMAT.txt";
 				instance.fileWriter = new PrintWriter(dirname+filename);
 			}

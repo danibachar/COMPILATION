@@ -328,12 +328,10 @@ public class Parser extends java_cup.runtime.lr_parser {
 		System.out.print(lexer.getCharPos());
 		System.out.print("]\n");
 
-		file_writer.print("ERROR ");
-		file_writer.print("[");
+		file_writer.print("ERROR");
+		file_writer.print("(");
 		file_writer.print(lexer.getLine());
-		file_writer.print(":");
-		file_writer.print(lexer.getCharPos());
-		file_writer.print("]\n");
+		file_writer.print(")\n");
 		file_writer.close();
 		System.exit(0);
 

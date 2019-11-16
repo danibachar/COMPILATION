@@ -69,7 +69,7 @@ v18 -> v17;
 v19 [label = "EXP
 VAR"];
 v19 -> v18;
-v20 [label = "BINOP()"];
+v20 [label = "BINOP(+)"];
 v20 -> v11;
 v20 -> v19;
 v21 [label = "SIMPLE
@@ -100,7 +100,7 @@ v27 -> v26;
 v28 [label = "EXP
 VAR"];
 v28 -> v27;
-v29 [label = "BINOP()"];
+v29 [label = "BINOP(+)"];
 v29 -> v20;
 v29 -> v28;
 v30 [label = "RETURN"];
@@ -114,6 +114,15 @@ v32 [label = "FUNC(trace3x3)
 "];
 v32 -> v3;
 v32 -> v31;
+v33 [label = "SIMPLE
+VAR
+(3)"];
+v34 [label = "EXP
+VAR"];
+v34 -> v33;
+v35 [label = "NEW(int)
+"];
+v35 -> v34;
 v36 [label = "VAR
 DEC(row0)
 :IntArray"];
@@ -122,6 +131,15 @@ v37 [label = "STMT
 DEC
 VAR"];
 v37 -> v36;
+v38 [label = "SIMPLE
+VAR
+(3)"];
+v39 [label = "EXP
+VAR"];
+v39 -> v38;
+v40 [label = "NEW(int)
+"];
+v40 -> v39;
 v41 [label = "VAR
 DEC(row1)
 :IntArray"];
@@ -130,6 +148,15 @@ v42 [label = "STMT
 DEC
 VAR"];
 v42 -> v41;
+v43 [label = "SIMPLE
+VAR
+(3)"];
+v44 [label = "EXP
+VAR"];
+v44 -> v43;
+v45 [label = "NEW(int)
+"];
+v45 -> v44;
 v46 [label = "VAR
 DEC(row2)
 :IntArray"];
@@ -138,6 +165,15 @@ v47 [label = "STMT
 DEC
 VAR"];
 v47 -> v46;
+v48 [label = "SIMPLE
+VAR
+(3)"];
+v49 [label = "EXP
+VAR"];
+v49 -> v48;
+v50 [label = "NEW(IntArray)
+"];
+v50 -> v49;
 v51 [label = "VAR
 DEC(A)
 :Mat"];

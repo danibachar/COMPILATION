@@ -1,6 +1,21 @@
 digraph
 {
 graph [ordering = "out"]
+v0 [label = "VAR
+DEC(head)
+:int"];
+v1 [label = "VAR
+DEC(tail)
+:IntList"];
+v2 [label = "DEC
+LIST
+"];
+v2 -> v1;
+v3 [label = "DEC
+LIST
+"];
+v3 -> v0;
+v3 -> v2;
 v4 [label = "CLASS
 IntList"];
 v4 -> v3;
@@ -25,7 +40,7 @@ VAR"];
 v10 -> v9;
 v11 [label = "NIL
 "];
-v12 [label = "BINOP(+)"];
+v12 [label = "BINOP(=)"];
 v12 -> v10;
 v12 -> v11;
 v13 [label = "SIMPLE
@@ -52,7 +67,7 @@ VAR"];
 v19 -> v18;
 v20 [label = "NIL
 "];
-v21 [label = "BINOP(+)"];
+v21 [label = "BINOP(=)"];
 v21 -> v19;
 v21 -> v20;
 v22 [label = "SIMPLE
@@ -91,7 +106,7 @@ v31 -> v30;
 v32 [label = "EXP
 VAR"];
 v32 -> v31;
-v33 [label = "BINOP(-)"];
+v33 [label = "BINOP(<)"];
 v33 -> v29;
 v33 -> v32;
 v34 [label = "SIMPLE
@@ -194,7 +209,7 @@ v60 -> v59;
 v61 [label = "EXP
 VAR"];
 v61 -> v60;
-v62 [label = "BINOP(-)"];
+v62 [label = "BINOP(<)"];
 v62 -> v58;
 v62 -> v61;
 v63 [label = "SIMPLE
@@ -301,6 +316,8 @@ v89 [label = "FUNC(MergeLists)
 "];
 v89 -> v8;
 v89 -> v88;
+v90 [label = "NEW(IntList)
+"];
 v91 [label = "VAR
 DEC(a)
 :IntList"];
@@ -309,6 +326,8 @@ v92 [label = "STMT
 DEC
 VAR"];
 v92 -> v91;
+v93 [label = "NEW(IntList)
+"];
 v94 [label = "VAR
 DEC(b)
 :IntList"];
@@ -317,6 +336,8 @@ v95 [label = "STMT
 DEC
 VAR"];
 v95 -> v94;
+v96 [label = "NEW(IntList)
+"];
 v97 [label = "VAR
 DEC(c)
 :IntList"];
@@ -325,6 +346,8 @@ v98 [label = "STMT
 DEC
 VAR"];
 v98 -> v97;
+v99 [label = "NEW(IntList)
+"];
 v100 [label = "VAR
 DEC(d)
 :IntList"];
@@ -333,6 +356,8 @@ v101 [label = "STMT
 DEC
 VAR"];
 v101 -> v100;
+v102 [label = "NEW(IntList)
+"];
 v103 [label = "VAR
 DEC(A)
 :IntList"];
@@ -341,6 +366,8 @@ v104 [label = "STMT
 DEC
 VAR"];
 v104 -> v103;
+v105 [label = "NEW(IntList)
+"];
 v106 [label = "VAR
 DEC(B)
 :IntList"];
@@ -349,6 +376,8 @@ v107 [label = "STMT
 DEC
 VAR"];
 v107 -> v106;
+v108 [label = "NEW(IntList)
+"];
 v109 [label = "VAR
 DEC(C)
 :IntList"];
@@ -357,6 +386,8 @@ v110 [label = "STMT
 DEC
 VAR"];
 v110 -> v109;
+v111 [label = "NEW(IntList)
+"];
 v112 [label = "VAR
 DEC(D)
 :IntList"];
@@ -677,6 +708,62 @@ v200 [label = "STMT
 DEC
 VAR"];
 v200 -> v199;
+v201 [label = "SIMPLE
+VAR
+(l)"];
+v202 [label = "EXP
+VAR"];
+v202 -> v201;
+v203 [label = "SIMPLE
+VAR
+(l)"];
+v204 [label = "FIELD
+VAR
+...->head"];
+v204 -> v203;
+v205 [label = "EXP
+VAR"];
+v205 -> v204;
+v206 [label = "EXP
+LIST
+"];
+v206 -> v205;
+v207 [label = "CALL(PrintInt)
+WITH"];
+v207 -> v206;
+v208 [label = "STMT
+CALL"];
+v208 -> v207;
+v209 [label = "SIMPLE
+VAR
+(l)"];
+v210 [label = "SIMPLE
+VAR
+(l)"];
+v211 [label = "FIELD
+VAR
+...->tail"];
+v211 -> v210;
+v212 [label = "EXP
+VAR"];
+v212 -> v211;
+v213 [label = "ASSIGN
+left := right
+"];
+v213 -> v209;
+v213 -> v212;
+v214 [label = "STMT
+LIST
+"];
+v214 -> v213;
+v215 [label = "STMT
+LIST
+"];
+v215 -> v208;
+v215 -> v214;
+v216 [label = "RETURN"];
+v216 -> v202;
+v216 -> v215;
 v217 [label = "STMT
 LIST
 "];
