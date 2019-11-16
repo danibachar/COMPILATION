@@ -202,7 +202,7 @@ var										::=		ID:name {: RESULT = new AST_VAR_SIMPLE(name);       :}
 											;
 
 exp										::=		var:v {: RESULT = new AST_EXP_VAR(v); :}
-											| LPAREN exp:e RPAREN {: RESULT = e; :}
+											| LPAREN exp:e RPAREN
 											| exp:e1 EQ  exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 0);:}
 											| exp:e1 LT exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 1);:}
 											| exp:e1 GT exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 2);:}
@@ -234,6 +234,7 @@ typeName							::=		ID:type ID:name {: RESULT = new AST_TYPE_NAME(type,name);:};
 
 typeNameListComma			::=		typeName:tn COMMA typeNameListComma:tnl
 												{: RESULT = new AST_TYPE_NAME_LIST(tn,tnl);  :}
+											| typeName:tn {: RESULT = new AST_TYPE_NAME_LIST(tn,null); :}
 											;
 
 typeNameListSemicolon	::=		typeName:tn SEMICOLON typeNameListSemicolon:tnl
