@@ -115,7 +115,6 @@ non terminal AST_VAR var;
 
 non terminal AST_TYPE_NAME typeNameTuple;
 non terminal AST_TYPE_NAME_LIST	typeNameListComma;
-non terminal AST_TYPE_NAME_LIST	typeNameListSemicolon;
 
 
 non terminal AST_STMT stmt;
@@ -238,9 +237,4 @@ typeNameTuple							::= ID:type ID:name {: RESULT = new AST_TYPE_NAME(type,name)
 typeNameListComma			::= typeNameTuple:tn COMMA typeNameListComma:tnl
 												{: RESULT = new AST_TYPE_NAME_LIST(tn,tnl);  :}
 											| typeNameTuple:tn {: RESULT = new AST_TYPE_NAME_LIST(tn,null); :}
-											;
-
-typeNameListSemicolon	::= typeNameTuple:tn SEMICOLON typeNameListSemicolon:tnl
-												{: RESULT = new AST_TYPE_NAME_LIST(tn,tnl);  :}
-											| 		typeNameTuple:tn SEMICOLON {: RESULT = new AST_TYPE_NAME_LIST(tn,null); :}
 											;
