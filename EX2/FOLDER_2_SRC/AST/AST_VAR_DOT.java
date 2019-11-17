@@ -13,7 +13,7 @@ public class AST_VAR_DOT extends AST_Node
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_VAR_DOT(varName)
+	public AST_VAR_DOT(AST_VAR var)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -39,6 +39,6 @@ public class AST_VAR_DOT extends AST_Node
 		/***************************************/
 		AST_GRAPHVIZ.getInstance().logNode(
 			SerialNumber,
-			String.format("NAME-DOT\n");
+			String.format("NAME-DOT\n"));
 	}
 }
