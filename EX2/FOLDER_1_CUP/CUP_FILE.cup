@@ -114,7 +114,7 @@ non terminal AST_VAR var;
 //non terminal AST_VAR_DOT_LIST	varDotList;
 
 non terminal AST_TYPE_NAME typeNameTuple;
-non terminal AST_TYPE_NAME_LIST	typeNameListComma;
+non terminal AST_TYPE_NAME_LIST	typeNameTuplesComma;
 
 
 non terminal AST_STMT stmt;
@@ -234,7 +234,7 @@ expListComma					::= exp:e COMMA expListComma:el	{: RESULT = new AST_EXP_LIST(e,
 
 typeNameTuple							::= ID:type ID:name {: RESULT = new AST_TYPE_NAME(type,name);:};
 
-typeNameListComma			::= typeNameTuple:tn COMMA typeNameListComma:tnl
+typeNameTuplesComma			::= typeNameTuple:tn COMMA typeNameTuplesComma:tnl
 												{: RESULT = new AST_TYPE_NAME_LIST(tn,tnl);  :}
 											| typeNameTuple:tn {: RESULT = new AST_TYPE_NAME_LIST(tn,null); :}
 											;
