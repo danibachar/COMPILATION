@@ -1,6 +1,6 @@
 int IsPrime(int p)
 {
-    int i := 2;
+    int i := 8 * (1232 - 17);
     int j := 2;
 
     while (i<p)

@@ -36,7 +36,7 @@ public class TokenNames {
   public static final int NEW = 14;
   public static final int EXTENDS = 12;
   public static final int ARRAY = 13;
-  public static final int UNARYMINUS = 9;
+  public static final int UMINUS = 9;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -47,7 +47,7 @@ public class TokenNames {
   "DOT",
   "PLUS",
   "MINUS",
-  "UNARYMINUS",
+  "UMINUS",
   "TIMES",
   "CLASS",
   "EXTENDS",

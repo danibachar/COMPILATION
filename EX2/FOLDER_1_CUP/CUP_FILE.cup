@@ -74,7 +74,7 @@ terminal EQ;
 terminal DOT;
 terminal PLUS;
 terminal MINUS;
-terminal UNARYMINUS;
+terminal UMINUS;
 terminal TIMES;
 terminal CLASS;
 terminal EXTENDS;
@@ -131,14 +131,16 @@ non terminal AST_DEC_VAR varDec;
 /***********************/
 /* OPERATOR PRECEDENCE */
 /***********************/
+precedence nonassoc ASSIGN;
 precedence left EQ;
-precedence left LT;
-precedence left GT;
-precedence left PLUS;
-precedence left MINUS;
-precedence left TIMES;
-precedence left DIVIDE;
-precedence left UNARYMINUS;
+precedence left LT, GT;
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE;
+precedence left UMINUS;
+precedence nonassoc LBRACK, RBRACK;
+precedence nonassoc LPAREN, RPAREN;
+precedence left DOT;
+
 
 /************************/
 /* START WITH: stmtList */
@@ -149,8 +151,10 @@ start with decList;
 /* DERIVATION RULES */
 /********************/
 
-// I got a lot of help from - https://github.com/gmh33/Java-CUP-jLex-Example/blob/master/example.cup
-
+/*
+I got a lot of help from - https://github.com/gmh33/Java-CUP-jLex-Example/blob/master/example.cup
+													 https://www.cs.princeton.edu/~appel/modern/java/CUP/manual.html
+*/
 decList								::=	dec:d decList:l	{: RESULT = new AST_DEC_LIST(d,l); :}
 											| dec:d	{: RESULT = new AST_DEC_LIST(d,null); :}
 											;
@@ -168,7 +172,7 @@ varDec								::= ID:type ID:var SEMICOLON {: RESULT = new AST_DEC_VAR(type,var,
 
 funcDec								::= ID:ret ID:name LPAREN RPAREN LBRACE stmtList:body RBRACE
 												{: RESULT = new AST_DEC_FUNC(ret,name,null,body); :}
-											| ID:ret ID:name LPAREN typeNameListComma:tnl RPAREN LBRACE stmtList:body RBRACE
+											| ID:ret ID:name LPAREN typeNameTuplesComma:tnl RPAREN LBRACE stmtList:body RBRACE
 												{: RESULT = new AST_DEC_FUNC(ret,name,tnl,body); :}
 											;
 
@@ -203,12 +207,13 @@ var										::= ID:name {: RESULT = new AST_VAR_SIMPLE(name);       :}
 											;
 
 exp										::= var:v {: RESULT = new AST_EXP_VAR(v); :}
-											| LPAREN exp:e RPAREN
+											| LPAREN exp:e RPAREN {: RESULT = e; :}
 											| exp:e1 EQ  exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 0);:}
 											| exp:e1 LT exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 1);:}
 											| exp:e1 GT exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 2);:}
 											| exp:e1 PLUS exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 3);:}
 											| exp:e1 MINUS exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 4);:}
+
 											| exp:e1 TIMES exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 5);:}
 											| exp:e1 DIVIDE exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 6);:}
 											| callBaseExp:e {: RESULT = e; :}

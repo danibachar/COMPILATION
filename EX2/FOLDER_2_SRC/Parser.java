@@ -109,16 +109,16 @@ public class Parser extends java_cup.runtime.lr_parser {
     "\042\035\034\036\032\037\040\040\037\001\002\000\014" +
     "\025\042\035\034\036\032\037\040\040\037\001\002\000" +
     "\030\005\uffde\006\uffde\007\uffde\011\uffde\012\uffde\014\uffde" +
-    "\021\uffde\024\060\026\uffde\030\uffde\034\uffde\001\002\000" +
+    "\021\uffde\024\uffde\026\uffde\030\uffde\034\uffde\001\002\000" +
     "\030\005\uffdd\006\uffdd\007\uffdd\011\uffdd\012\uffdd\014\uffdd" +
     "\021\uffdd\024\uffdd\026\uffdd\030\uffdd\034\uffdd\001\002\000" +
     "\030\005\uffdf\006\uffdf\007\uffdf\011\uffdf\012\uffdf\014\061" +
     "\021\uffdf\024\060\026\uffdf\030\uffdf\034\uffdf\001\002\000" +
-    "\030\005\uffe0\006\uffe0\007\uffe0\011\uffe0\012\057\014\061" +
+    "\030\005\uffe0\006\uffe0\007\uffe0\011\uffe0\012\uffe0\014\061" +
     "\021\uffe0\024\060\026\uffe0\030\uffe0\034\uffe0\001\002\000" +
     "\030\005\uffe1\006\uffe1\007\uffe1\011\056\012\057\014\061" +
     "\021\uffe1\024\060\026\uffe1\030\uffe1\034\uffe1\001\002\000" +
-    "\030\005\uffe2\006\055\007\uffe2\011\056\012\057\014\061" +
+    "\030\005\uffe2\006\uffe2\007\uffe2\011\056\012\057\014\061" +
     "\021\uffe2\024\060\026\uffe2\030\uffe2\034\uffe2\001\002\000" +
     "\030\005\054\006\055\007\uffe3\011\056\012\057\014\061" +
     "\021\uffe3\024\060\026\uffe3\030\uffe3\034\uffe3\001\002\000" +
@@ -524,7 +524,7 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 11: // funcDec ::= ID ID LPAREN typeNameListComma RPAREN LBRACE stmtList RBRACE 
+          case 11: // funcDec ::= ID ID LPAREN typeNameTuplesComma RPAREN LBRACE stmtList RBRACE 
             {
               AST_DEC_FUNC RESULT =null;
 		int retleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-7)).left;
@@ -785,7 +785,7 @@ class CUP$Parser$actions {
 		int eleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		AST_EXP e = (AST_EXP)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
-
+		 RESULT = e; 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("exp",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1052,7 +1052,7 @@ class CUP$Parser$actions {
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 49: // typeNameListComma ::= typeNameTuple COMMA typeNameListComma 
+          case 49: // typeNameTuplesComma ::= typeNameTuple COMMA typeNameTuplesComma 
             {
               AST_TYPE_NAME_LIST RESULT =null;
 		int tnleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).left;
@@ -1062,19 +1062,19 @@ class CUP$Parser$actions {
 		int tnlright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		AST_TYPE_NAME_LIST tnl = (AST_TYPE_NAME_LIST)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 RESULT = new AST_TYPE_NAME_LIST(tn,tnl);  
-              CUP$Parser$result = parser.getSymbolFactory().newSymbol("typeNameListComma",6, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("typeNameTuplesComma",6, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 50: // typeNameListComma ::= typeNameTuple 
+          case 50: // typeNameTuplesComma ::= typeNameTuple 
             {
               AST_TYPE_NAME_LIST RESULT =null;
 		int tnleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int tnright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		AST_TYPE_NAME tn = (AST_TYPE_NAME)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 RESULT = new AST_TYPE_NAME_LIST(tn,null); 
-              CUP$Parser$result = parser.getSymbolFactory().newSymbol("typeNameListComma",6, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
+              CUP$Parser$result = parser.getSymbolFactory().newSymbol("typeNameTuplesComma",6, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
 
