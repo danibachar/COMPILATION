@@ -9,177 +9,179 @@ LIST
 v1 -> v0;
 v2 [label = "SIMPLE
 VAR
-(8)"];
+(2)"];
 v3 [label = "EXP
 VAR"];
 v3 -> v2;
-v4 [label = "SIMPLE
-VAR
-(1232)"];
-v5 [label = "EXP
+v4 [label = "VAR
+DEC(i)
+:int"];
+v4 -> v3;
+v5 [label = "STMT
+DEC
 VAR"];
 v5 -> v4;
 v6 [label = "SIMPLE
 VAR
-(17)"];
+(2)"];
 v7 [label = "EXP
 VAR"];
 v7 -> v6;
-v8 [label = "BINOP(-)"];
-v8 -> v5;
-v8 -> v7;
-v9 [label = "BINOP(*)"];
-v9 -> v3;
-v9 -> v8;
-v10 [label = "VAR
-DEC(i)
+v8 [label = "VAR
+DEC(j)
 :int"];
-v10 -> v9;
-v11 [label = "STMT
+v8 -> v7;
+v9 [label = "STMT
 DEC
+VAR"];
+v9 -> v8;
+v10 [label = "SIMPLE
+VAR
+(i)"];
+v11 [label = "EXP
 VAR"];
 v11 -> v10;
 v12 [label = "SIMPLE
 VAR
-(2)"];
+(p)"];
 v13 [label = "EXP
 VAR"];
 v13 -> v12;
-v14 [label = "VAR
-DEC(j)
-:int"];
+v14 [label = "BINOP(<)"];
+v14 -> v11;
 v14 -> v13;
-v15 [label = "STMT
-DEC
-VAR"];
-v15 -> v14;
-v16 [label = "SIMPLE
-VAR
-(i)"];
-v17 [label = "EXP
-VAR"];
-v17 -> v16;
-v18 [label = "SIMPLE
-VAR
-(p)"];
-v19 [label = "EXP
-VAR"];
-v19 -> v18;
-v20 [label = "BINOP(<)"];
-v20 -> v17;
-v20 -> v19;
-v21 [label = "SIMPLE
+v15 [label = "SIMPLE
 VAR
 (j)"];
-v22 [label = "EXP
+v16 [label = "EXP
 VAR"];
-v22 -> v21;
-v23 [label = "SIMPLE
+v16 -> v15;
+v17 [label = "SIMPLE
 VAR
 (p)"];
-v24 [label = "EXP
+v18 [label = "EXP
 VAR"];
-v24 -> v23;
-v25 [label = "BINOP(<)"];
-v25 -> v22;
-v25 -> v24;
-v26 [label = "SIMPLE
+v18 -> v17;
+v19 [label = "BINOP(<)"];
+v19 -> v16;
+v19 -> v18;
+v20 [label = "SIMPLE
 VAR
 (i)"];
-v27 [label = "EXP
+v21 [label = "EXP
 VAR"];
+v21 -> v20;
+v22 [label = "SIMPLE
+VAR
+(j)"];
+v23 [label = "EXP
+VAR"];
+v23 -> v22;
+v24 [label = "BINOP(*)"];
+v24 -> v21;
+v24 -> v23;
+v25 [label = "SIMPLE
+VAR
+(p)"];
+v26 [label = "EXP
+VAR"];
+v26 -> v25;
+v27 [label = "BINOP(=)"];
+v27 -> v24;
 v27 -> v26;
 v28 [label = "SIMPLE
 VAR
-(j)"];
+(1)"];
 v29 [label = "EXP
 VAR"];
 v29 -> v28;
-v30 [label = "BINOP(*)"];
-v30 -> v27;
+v30 [label = "RETURN"];
 v30 -> v29;
-v31 [label = "SIMPLE
-VAR
-(p)"];
-v32 [label = "EXP
-VAR"];
+v31 [label = "STMT
+LIST
+"];
+v31 -> v30;
+v32 [label = "IF (left)
+THEN right"];
+v32 -> v27;
 v32 -> v31;
-v33 [label = "BINOP(=)"];
-v33 -> v30;
-v33 -> v32;
+v33 [label = "SIMPLE
+VAR
+(j)"];
 v34 [label = "SIMPLE
 VAR
-(1)"];
+(j)"];
 v35 [label = "EXP
 VAR"];
 v35 -> v34;
-v36 [label = "RETURN"];
-v36 -> v35;
-v37 [label = "STMT
-LIST
-"];
+v36 [label = "SIMPLE
+VAR
+(1)"];
+v37 [label = "EXP
+VAR"];
 v37 -> v36;
-v38 [label = "IF (left)
-THEN right"];
-v38 -> v33;
+v38 [label = "BINOP(+)"];
+v38 -> v35;
 v38 -> v37;
-v39 [label = "SIMPLE
-VAR
-(j)"];
-v40 [label = "SIMPLE
-VAR
-(j)"];
-v41 [label = "EXP
-VAR"];
+v39 [label = "ASSIGN
+left := right
+"];
+v39 -> v33;
+v39 -> v38;
+v40 [label = "STMT
+LIST
+"];
+v40 -> v39;
+v41 [label = "STMT
+LIST
+"];
+v41 -> v32;
 v41 -> v40;
-v42 [label = "SIMPLE
+v42 [label = "RETURN"];
+v42 -> v19;
+v42 -> v41;
+v43 [label = "SIMPLE
 VAR
-(1)"];
-v43 [label = "EXP
+(i)"];
+v44 [label = "SIMPLE
+VAR
+(i)"];
+v45 [label = "EXP
 VAR"];
-v43 -> v42;
-v44 [label = "BINOP(+)"];
-v44 -> v41;
-v44 -> v43;
-v45 [label = "ASSIGN
-left := right
-"];
-v45 -> v39;
 v45 -> v44;
-v46 [label = "STMT
-LIST
-"];
-v46 -> v45;
-v47 [label = "STMT
-LIST
-"];
-v47 -> v38;
-v47 -> v46;
-v48 [label = "RETURN"];
-v48 -> v25;
-v48 -> v47;
-v49 [label = "SIMPLE
-VAR
-(i)"];
-v50 [label = "SIMPLE
-VAR
-(i)"];
-v51 [label = "EXP
-VAR"];
-v51 -> v50;
-v52 [label = "SIMPLE
+v46 [label = "SIMPLE
 VAR
 (1)"];
-v53 [label = "EXP
+v47 [label = "EXP
 VAR"];
-v53 -> v52;
-v54 [label = "BINOP(+)"];
-v54 -> v51;
-v54 -> v53;
-v55 [label = "ASSIGN
+v47 -> v46;
+v48 [label = "BINOP(+)"];
+v48 -> v45;
+v48 -> v47;
+v49 [label = "ASSIGN
 left := right
 "];
-v55 -> v49;
+v49 -> v43;
+v49 -> v48;
+v50 [label = "STMT
+LIST
+"];
+v50 -> v49;
+v51 [label = "STMT
+LIST
+"];
+v51 -> v42;
+v51 -> v50;
+v52 [label = "RETURN"];
+v52 -> v14;
+v52 -> v51;
+v53 [label = "SIMPLE
+VAR
+(0)"];
+v54 [label = "EXP
+VAR"];
+v54 -> v53;
+v55 [label = "RETURN"];
 v55 -> v54;
 v56 [label = "STMT
 LIST
@@ -188,235 +190,179 @@ v56 -> v55;
 v57 [label = "STMT
 LIST
 "];
-v57 -> v48;
+v57 -> v52;
 v57 -> v56;
-v58 [label = "RETURN"];
-v58 -> v20;
+v58 [label = "STMT
+LIST
+"];
+v58 -> v9;
 v58 -> v57;
-v59 [label = "SIMPLE
-VAR
-(0)"];
-v60 [label = "EXP
-VAR"];
-v60 -> v59;
-v61 [label = "RETURN"];
-v61 -> v60;
-v62 [label = "STMT
+v59 [label = "STMT
 LIST
 "];
-v62 -> v61;
-v63 [label = "STMT
-LIST
-"];
-v63 -> v58;
-v63 -> v62;
-v64 [label = "STMT
-LIST
-"];
-v64 -> v15;
-v64 -> v63;
-v65 [label = "STMT
-LIST
-"];
-v65 -> v11;
-v65 -> v64;
-v66 [label = "FUNC(IsPrime)
+v59 -> v5;
+v59 -> v58;
+v60 [label = "FUNC(IsPrime)
 :int
 "];
-v66 -> v1;
-v66 -> v65;
-v67 [label = "NAME:TYPE
+v60 -> v1;
+v60 -> v59;
+v61 [label = "NAME:TYPE
 start:int"];
-v68 [label = "NAME:TYPE
+v62 [label = "NAME:TYPE
 end:int"];
-v69 [label = "TYPE-NAME
+v63 [label = "TYPE-NAME
 LIST
 "];
-v69 -> v68;
-v70 [label = "TYPE-NAME
+v63 -> v62;
+v64 [label = "TYPE-NAME
 LIST
 "];
-v70 -> v67;
+v64 -> v61;
+v64 -> v63;
+v65 [label = "SIMPLE
+VAR
+(2)"];
+v66 [label = "EXP
+VAR"];
+v66 -> v65;
+v67 [label = "VAR
+DEC(p)
+:int"];
+v67 -> v66;
+v68 [label = "STMT
+DEC
+VAR"];
+v68 -> v67;
+v69 [label = "SIMPLE
+VAR
+(p)"];
+v70 [label = "EXP
+VAR"];
 v70 -> v69;
 v71 [label = "SIMPLE
 VAR
-(2)"];
+(end)"];
 v72 [label = "EXP
 VAR"];
 v72 -> v71;
-v73 [label = "VAR
-DEC(p)
-:int"];
-v73 -> v72;
-v74 [label = "STMT
-DEC
+v73 [label = "SIMPLE
+VAR
+(1)"];
+v74 [label = "EXP
 VAR"];
 v74 -> v73;
-v75 [label = "SIMPLE
-VAR
-(p)"];
-v76 [label = "EXP
-VAR"];
+v75 [label = "BINOP(+)"];
+v75 -> v72;
+v75 -> v74;
+v76 [label = "BINOP(<)"];
+v76 -> v70;
 v76 -> v75;
 v77 [label = "SIMPLE
 VAR
-(end)"];
+(p)"];
 v78 [label = "EXP
 VAR"];
 v78 -> v77;
-v79 [label = "SIMPLE
-VAR
-(1)"];
-v80 [label = "EXP
-VAR"];
+v79 [label = "EXP
+LIST
+"];
+v79 -> v78;
+v80 [label = "CALL(IsPrime)
+WITH"];
 v80 -> v79;
-v81 [label = "BINOP(+)"];
-v81 -> v78;
-v81 -> v80;
-v82 [label = "BINOP(<)"];
-v82 -> v76;
+v81 [label = "SIMPLE
+VAR
+(p)"];
+v82 [label = "EXP
+VAR"];
 v82 -> v81;
-v83 [label = "SIMPLE
-VAR
-(p)"];
-v84 [label = "EXP
-VAR"];
+v83 [label = "EXP
+LIST
+"];
+v83 -> v82;
+v84 [label = "CALL(PrintInt)
+WITH"];
 v84 -> v83;
-v85 [label = "EXP
-LIST
-"];
+v85 [label = "STMT
+CALL"];
 v85 -> v84;
-v86 [label = "CALL(IsPrime)
-WITH"];
-v86 -> v85;
-v87 [label = "SIMPLE
-VAR
-(p)"];
-v88 [label = "EXP
-VAR"];
-v88 -> v87;
-v89 [label = "EXP
+v86 [label = "STMT
 LIST
 "];
+v86 -> v85;
+v87 [label = "IF (left)
+THEN right"];
+v87 -> v80;
+v87 -> v86;
+v88 [label = "STMT
+LIST
+"];
+v88 -> v87;
+v89 [label = "RETURN"];
+v89 -> v76;
 v89 -> v88;
-v90 [label = "CALL(PrintInt)
-WITH"];
+v90 [label = "STMT
+LIST
+"];
 v90 -> v89;
 v91 [label = "STMT
-CALL"];
+LIST
+"];
+v91 -> v68;
 v91 -> v90;
-v92 [label = "STMT
-LIST
-"];
-v92 -> v91;
-v93 [label = "IF (left)
-THEN right"];
-v93 -> v86;
-v93 -> v92;
-v94 [label = "STMT
-LIST
-"];
-v94 -> v93;
-v95 [label = "RETURN"];
-v95 -> v82;
-v95 -> v94;
-v96 [label = "STMT
-LIST
-"];
-v96 -> v95;
-v97 [label = "STMT
-LIST
-"];
-v97 -> v74;
-v97 -> v96;
-v98 [label = "FUNC(PrintPrimes)
+v92 [label = "FUNC(PrintPrimes)
 :void
 "];
-v98 -> v70;
-v98 -> v97;
-v99 [label = "SIMPLE
+v92 -> v64;
+v92 -> v91;
+v93 [label = "SIMPLE
 VAR
 (2)"];
-v100 [label = "EXP
+v94 [label = "EXP
 VAR"];
-v100 -> v99;
-v101 [label = "SIMPLE
-VAR
-(7)"];
-v102 [label = "EXP
-VAR"];
-v102 -> v101;
-v103 [label = "BINOP(*)"];
-v103 -> v100;
-v103 -> v102;
-v104 [label = "SIMPLE
-VAR
-(8)"];
-v105 [label = "EXP
-VAR"];
-v105 -> v104;
-v106 [label = "BINOP(-)"];
-v106 -> v103;
-v106 -> v105;
-v107 [label = "SIMPLE
-VAR
-(9)"];
-v108 [label = "EXP
-VAR"];
-v108 -> v107;
-v109 [label = "SIMPLE
-VAR
-(10)"];
-v110 [label = "EXP
-VAR"];
-v110 -> v109;
-v111 [label = "BINOP(*)"];
-v111 -> v108;
-v111 -> v110;
-v112 [label = "BINOP(+)"];
-v112 -> v106;
-v112 -> v111;
-v113 [label = "SIMPLE
+v94 -> v93;
+v95 [label = "SIMPLE
 VAR
 (100)"];
-v114 [label = "EXP
+v96 [label = "EXP
 VAR"];
-v114 -> v113;
-v115 [label = "EXP
+v96 -> v95;
+v97 [label = "EXP
 LIST
 "];
-v115 -> v114;
-v116 [label = "EXP
+v97 -> v96;
+v98 [label = "EXP
 LIST
 "];
-v116 -> v112;
-v116 -> v115;
-v117 [label = "CALL(PrintPrimes)
+v98 -> v94;
+v98 -> v97;
+v99 [label = "CALL(PrintPrimes)
 WITH"];
-v117 -> v116;
-v118 [label = "STMT
+v99 -> v98;
+v100 [label = "STMT
 CALL"];
-v118 -> v117;
-v119 [label = "STMT
+v100 -> v99;
+v101 [label = "STMT
 LIST
 "];
-v119 -> v118;
-v120 [label = "FUNC(main)
+v101 -> v100;
+v102 [label = "FUNC(main)
 :void
 "];
-v120 -> v119;
-v121 [label = "DEC
+v102 -> v101;
+v103 [label = "DEC
 LIST
 "];
-v121 -> v120;
-v122 [label = "DEC
+v103 -> v102;
+v104 [label = "DEC
 LIST
 "];
-v122 -> v98;
-v122 -> v121;
-v123 [label = "DEC
+v104 -> v92;
+v104 -> v103;
+v105 [label = "DEC
 LIST
 "];
-v123 -> v66;
-v123 -> v122;
+v105 -> v60;
+v105 -> v104;
 }

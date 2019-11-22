@@ -213,7 +213,6 @@ exp										::= var:v {: RESULT = new AST_EXP_VAR(v); :}
 											| exp:e1 GT exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 2);:}
 											| exp:e1 PLUS exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 3);:}
 											| exp:e1 MINUS exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 4);:}
-
 											| exp:e1 TIMES exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 5);:}
 											| exp:e1 DIVIDE exp:e2 {: RESULT = new AST_EXP_BINOP(e1, e2, 6);:}
 											| callBaseExp:e {: RESULT = e; :}
@@ -231,6 +230,8 @@ callBaseExp						::= ID:funcName LPAREN RPAREN	{: RESULT = new AST_EXP_CALL(func
 												{: RESULT = new AST_EXP_CALL(funcName,el,null); :}
 											| var:v DOT ID:funcName LPAREN RPAREN
 												{: RESULT = new AST_EXP_CALL(funcName,null,v); :}
+												| var:v DOT ID:funcName LPAREN expListComma:el RPAREN
+													{: RESULT = new AST_EXP_CALL(funcName,el,v); :}
 											;
 
 expListComma					::= exp:e COMMA expListComma:el	{: RESULT = new AST_EXP_LIST(e,el); :}
