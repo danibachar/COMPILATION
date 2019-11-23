@@ -110,7 +110,7 @@ COMMENT = {COMMENT_MULTI} | {EndOfLineComment}
 <YYINITIAL> {
 
 
-//TODO - Comments
+"-0"        { return symbol(TokenNames.error);}
 {COMMENT} { /* just skip what was found, do nothing */ }
 {OPEN_COMMENT} { return symbol(TokenNames.error);}
 "if"				{ return symbol(TokenNames.IF);}
