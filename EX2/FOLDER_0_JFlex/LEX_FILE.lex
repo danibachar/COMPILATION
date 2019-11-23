@@ -112,6 +112,7 @@ COMMENT = {COMMENT_MULTI} | {EndOfLineComment}
 
 //TODO - Comments
 {COMMENT} { /* just skip what was found, do nothing */ }
+{OPEN_COMMENT} { return symbol(TokenNames.error);}
 "if"				{ return symbol(TokenNames.IF);}
 "class"					{ return symbol(TokenNames.CLASS);}
 "extends"					{ return symbol(TokenNames.EXTENDS);}
