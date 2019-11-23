@@ -76,8 +76,8 @@ LineTerminator	= \r|\n|\r\n
 WhiteSpace		= {LineTerminator} | [ \t\f]
 INTEGER			= 0 | [1-9][0-9]*
 NEG_NUMBER = -{INTEGER}
-//ID				= [a-zA-Z]+
-ID = [A-Za-z0-9]*
+ID				= [A-Za-z]+[A-Za-z0-9]*
+//ID = [A-Za-z0-9]*
 STRING    = \"[a-zA-Z/]+\"
 
 ILLEGAL_CHARS = [^0-9a-zA-Z(){}!?+/*.;\-\t\n\r\[\]\f\= <>,: ]+
