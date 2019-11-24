@@ -9,7 +9,7 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 	/* simple variable name */
 	/************************/
 	public String name;
-	
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
@@ -41,7 +41,7 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 			SerialNumber,
 			String.format("SIMPLE\nVAR\n(%s)",name));
 	}
-	public TYPE SemantMe()
+	public TYPE SemantMe() throws Exception
 	{
 		return SYMBOL_TABLE.getInstance().find(name);
 	}

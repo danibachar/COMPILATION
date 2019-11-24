@@ -1,0 +1,211 @@
+digraph
+{
+graph [ordering = "out"]
+v0 [label = "STRING
+'LEFT'"];
+v1 [label = "VAR
+DEC(left)
+:string"];
+v1 -> v0;
+v2 [label = "STRING
+'RIGHT'"];
+v3 [label = "VAR
+DEC(right)
+:string"];
+v3 -> v2;
+v4 [label = "NAME:TYPE
+left:int"];
+v5 [label = "NAME:TYPE
+right:int"];
+v6 [label = "TYPE-NAME
+LIST
+"];
+v6 -> v5;
+v7 [label = "TYPE-NAME
+LIST
+"];
+v7 -> v4;
+v7 -> v6;
+v8 [label = "CLASS
+Person"];
+v8 -> v7;
+v9 [label = "NAME:TYPE
+d:int"];
+v10 [label = "NAME:TYPE
+k:int"];
+v11 [label = "TYPE-NAME
+LIST
+"];
+v11 -> v10;
+v12 [label = "TYPE-NAME
+LIST
+"];
+v12 -> v9;
+v12 -> v11;
+v13 [label = "INT(50)"];
+v14 [label = "VAR
+DEC(left)
+:int"];
+v14 -> v13;
+v15 [label = "STMT
+DEC
+VAR"];
+v15 -> v14;
+v16 [label = "INT(40)"];
+v17 [label = "VAR
+DEC(right)
+:int"];
+v17 -> v16;
+v18 [label = "STMT
+DEC
+VAR"];
+v18 -> v17;
+v19 [label = "SIMPLE
+VAR
+(d)"];
+v20 [label = "SIMPLE
+VAR
+(k)"];
+v21 [label = "BINOP(+)"];
+v21 -> v19;
+v21 -> v20;
+v22 [label = "INT(17)"];
+v23 [label = "BINOP(=)"];
+v23 -> v21;
+v23 -> v22;
+v24 [label = "VAR
+DEC(left)
+:Person"];
+v25 [label = "STMT
+DEC
+VAR"];
+v25 -> v24;
+v26 [label = "VAR
+DEC(right)
+:Person"];
+v27 [label = "STMT
+DEC
+VAR"];
+v27 -> v26;
+v28 [label = "SIMPLE
+VAR
+(left)"];
+v29 [label = "FIELD
+VAR
+___.left"];
+v29 -> v28;
+v30 [label = "RETURN"];
+v30 -> v29;
+v31 [label = "STMT
+LIST
+"];
+v31 -> v30;
+v32 [label = "STMT
+LIST
+"];
+v32 -> v27;
+v32 -> v31;
+v33 [label = "STMT
+LIST
+"];
+v33 -> v25;
+v33 -> v32;
+v34 [label = "IF (left)
+THEN right"];
+v34 -> v23;
+v34 -> v33;
+v35 [label = "SIMPLE
+VAR
+(left)"];
+v36 [label = "RETURN"];
+v36 -> v35;
+v37 [label = "STMT
+LIST
+"];
+v37 -> v36;
+v38 [label = "STMT
+LIST
+"];
+v38 -> v34;
+v38 -> v37;
+v39 [label = "STMT
+LIST
+"];
+v39 -> v18;
+v39 -> v38;
+v40 [label = "STMT
+LIST
+"];
+v40 -> v15;
+v40 -> v39;
+v41 [label = "FUNC(foo)
+:int
+"];
+v41 -> v12;
+v41 -> v40;
+v42 [label = "INT(2)"];
+v43 [label = "INT(4)"];
+v44 [label = "EXP
+LIST
+"];
+v44 -> v43;
+v45 [label = "EXP
+LIST
+"];
+v45 -> v42;
+v45 -> v44;
+v46 [label = "CALL(foo)
+WITH"];
+v46 -> v45;
+v47 [label = "INT(800)"];
+v48 [label = "EXP
+LIST
+"];
+v48 -> v47;
+v49 [label = "CALL(PrintInt)
+WITH"];
+v49 -> v48;
+v50 [label = "STMT
+CALL"];
+v50 -> v49;
+v51 [label = "STMT
+LIST
+"];
+v51 -> v50;
+v52 [label = "IF (left)
+THEN right"];
+v52 -> v46;
+v52 -> v51;
+v53 [label = "STMT
+LIST
+"];
+v53 -> v52;
+v54 [label = "FUNC(main)
+:void
+"];
+v54 -> v53;
+v55 [label = "DEC
+LIST
+"];
+v55 -> v54;
+v56 [label = "DEC
+LIST
+"];
+v56 -> v41;
+v56 -> v55;
+v57 [label = "DEC
+LIST
+"];
+v57 -> v8;
+v57 -> v56;
+v58 [label = "DEC
+LIST
+"];
+v58 -> v3;
+v58 -> v57;
+v59 [label = "DEC
+LIST
+"];
+v59 -> v1;
+v59 -> v58;
+}

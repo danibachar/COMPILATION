@@ -5,7 +5,7 @@ import TYPES.*;
 public class AST_EXP_STRING extends AST_EXP
 {
 	public String value;
-	
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
@@ -37,7 +37,7 @@ public class AST_EXP_STRING extends AST_EXP
 			SerialNumber,
 			String.format("STRING\n%s",value.replace('"','\'')));
 	}
-	public TYPE SemantMe()
+	public TYPE SemantMe() throws Exception
 	{
 		return TYPE_STRING.getInstance();
 	}

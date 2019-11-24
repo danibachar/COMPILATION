@@ -8,7 +8,7 @@ public abstract class AST_Node
 	/* a graphviz dot format of the AST ...    */
 	/*******************************************/
 	public int SerialNumber;
-	
+
 	/***********************************************/
 	/* The default message for an unknown AST node */
 	/***********************************************/

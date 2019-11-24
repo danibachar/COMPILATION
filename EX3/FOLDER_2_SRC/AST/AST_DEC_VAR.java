@@ -11,7 +11,7 @@ public class AST_DEC_VAR extends AST_DEC
 	public String type;
 	public String name;
 	public AST_EXP initialValue;
-	
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
@@ -53,14 +53,14 @@ public class AST_DEC_VAR extends AST_DEC
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
-		if (initialValue != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,initialValue.SerialNumber);		
-			
+		if (initialValue != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,initialValue.SerialNumber);
+
 	}
 
-	public TYPE SemantMe()
+	public TYPE SemantMe() throws Exception
 	{
 		TYPE t;
-	
+
 		/****************************/
 		/* [1] Check If Type exists */
 		/****************************/
@@ -68,15 +68,18 @@ public class AST_DEC_VAR extends AST_DEC
 		if (t == null)
 		{
 			System.out.format(">> ERROR [%d:%d] non existing type %s\n",2,2,type);
-			System.exit(0);
+			throw new Exception("AST DEC VAR NOT EXISTS");
+			// System.exit(0);
 		}
-		
+
 		/**************************************/
 		/* [2] Check That Name does NOT exist */
 		/**************************************/
 		if (SYMBOL_TABLE.getInstance().find(name) != null)
 		{
-			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n",2,2,name);				
+			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n",2,2,name);
+			throw new Exception("AST DEC VAR ALREADY EXISTS");
+			// System.exit(0);
 		}
 
 		/***************************************************/
@@ -87,7 +90,7 @@ public class AST_DEC_VAR extends AST_DEC
 		/*********************************************************/
 		/* [4] Return value is irrelevant for class declarations */
 		/*********************************************************/
-		return null;		
+		return null;
 	}
-	
+
 }

@@ -9,7 +9,7 @@ public class AST_GRAPHVIZ
 	/* The file writer ... */
 	/***********************/
 	private PrintWriter fileWriter;
-	
+
 	/**************************************/
 	/* USUAL SINGLETON IMPLEMENTATION ... */
 	/**************************************/
@@ -28,13 +28,13 @@ public class AST_GRAPHVIZ
 		if (instance == null)
 		{
 			instance = new AST_GRAPHVIZ();
-			
+
 			/****************************/
 			/* Initialize a file writer */
 			/****************************/
 			try
 			{
-				String dirname="./FOLDER_5_OUTPUT/";
+				String dirname="./FOLDER_5_OUTPUT/Input/";
 				String filename="AST_IN_GRAPHVIZ_DOT_FORMAT.txt";
 				instance.fileWriter = new PrintWriter(dirname+filename);
 			}
@@ -76,7 +76,7 @@ public class AST_GRAPHVIZ
 			fatherNodeSerialNumber,
 			sonNodeSerialNumber);
 	}
-	
+
 	/******************************/
 	/* Finalize graphviz dot file */
 	/******************************/

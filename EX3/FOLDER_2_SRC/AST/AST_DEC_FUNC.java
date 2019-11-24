@@ -12,7 +12,7 @@ public class AST_DEC_FUNC extends AST_DEC
 	public String name;
 	public AST_TYPE_NAME_LIST params;
 	public AST_STMT_LIST body;
-	
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
@@ -48,22 +48,22 @@ public class AST_DEC_FUNC extends AST_DEC
 		/***************************************/
 		if (params != null) params.PrintMe();
 		if (body   != null) body.PrintMe();
-		
+
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
 		AST_GRAPHVIZ.getInstance().logNode(
 			SerialNumber,
 			String.format("FUNC(%s)\n:%s\n",name,returnTypeName));
-		
+
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
-		if (params != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,params.SerialNumber);		
-		if (body   != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,body.SerialNumber);		
+		if (params != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,params.SerialNumber);
+		if (body   != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,body.SerialNumber);
 	}
 
-	public TYPE SemantMe()
+	public TYPE SemantMe() throws Exception
 	{
 		TYPE t;
 		TYPE returnType = null;
@@ -75,9 +75,11 @@ public class AST_DEC_FUNC extends AST_DEC
 		returnType = SYMBOL_TABLE.getInstance().find(returnTypeName);
 		if (returnType == null)
 		{
-			System.out.format(">> ERROR [%d:%d] non existing return type %s\n",6,6,returnType);				
+			System.out.format(">> ERROR [%d:%d] non existing return type %s\n",6,6,returnType);
+			throw new Exception("AST_DEC_FUNC non existing return");
+			// System.exit(0);
 		}
-	
+
 		/****************************/
 		/* [1] Begin Function Scope */
 		/****************************/
@@ -91,7 +93,8 @@ public class AST_DEC_FUNC extends AST_DEC
 			t = SYMBOL_TABLE.getInstance().find(it.head.type);
 			if (t == null)
 			{
-				System.out.format(">> ERROR [%d:%d] non existing type %s\n",2,2,it.head.type);				
+				System.out.format(">> ERROR [%d:%d] non existing type %s\n",2,2,it.head.type);
+				throw new Exception("AST_DEC_FUNC non existing type");
 			}
 			else
 			{
@@ -103,7 +106,12 @@ public class AST_DEC_FUNC extends AST_DEC
 		/*******************/
 		/* [3] Semant Body */
 		/*******************/
-		body.SemantMe();
+		try {
+			body.SemantMe();
+		} catch (Exception e) {
+			throw e;
+		}
+
 
 		/*****************/
 		/* [4] End Scope */
@@ -118,7 +126,7 @@ public class AST_DEC_FUNC extends AST_DEC
 		/*********************************************************/
 		/* [6] Return value is irrelevant for class declarations */
 		/*********************************************************/
-		return null;		
+		return null;
 	}
-	
+
 }

@@ -11,7 +11,7 @@ public abstract class AST_STMT extends AST_Node
 	{
 		System.out.print("UNKNOWN AST STATEMENT NODE");
 	}
-	public TYPE SemantMe()
+	public TYPE SemantMe() throws Exception
 	{
 		return null;
 	}

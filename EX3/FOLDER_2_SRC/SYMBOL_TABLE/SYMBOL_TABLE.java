@@ -19,14 +19,14 @@ import TYPES.*;
 public class SYMBOL_TABLE
 {
 	private int hashArraySize = 13;
-	
+
 	/**********************************************/
 	/* The actual symbol table data structure ... */
 	/**********************************************/
 	private SYMBOL_TABLE_ENTRY[] table = new SYMBOL_TABLE_ENTRY[hashArraySize];
 	private SYMBOL_TABLE_ENTRY top;
 	private int top_index = 0;
-	
+
 	/**************************************************************/
 	/* A very primitive hash function for exposition purposes ... */
 	/**************************************************************/
@@ -58,7 +58,7 @@ public class SYMBOL_TABLE
 		/*     NOTE: this entry can very well be null, but the behaviour is identical */
 		/******************************************************************************/
 		SYMBOL_TABLE_ENTRY next = table[hashValue];
-	
+
 		/**************************************************************************/
 		/* [3] Prepare a new symbol table entry with name, type, next and prevtop */
 		/**************************************************************************/
@@ -68,12 +68,12 @@ public class SYMBOL_TABLE
 		/* [4] Update the top of the symbol table ... */
 		/**********************************************/
 		top = e;
-		
+
 		/****************************************/
 		/* [5] Enter the new entry to the table */
 		/****************************************/
 		table[hashValue] = e;
-		
+
 		/**************************/
 		/* [6] Print Symbol Table */
 		/**************************/
@@ -86,7 +86,7 @@ public class SYMBOL_TABLE
 	public TYPE find(String name)
 	{
 		SYMBOL_TABLE_ENTRY e;
-				
+
 		for (e = table[hash(name)]; e != null; e = e.next)
 		{
 			if (name.equals(e.name))
@@ -94,7 +94,7 @@ public class SYMBOL_TABLE
 				return e.type;
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -126,7 +126,7 @@ public class SYMBOL_TABLE
 	public void endScope()
 	{
 		/**************************************************************************/
-		/* Pop elements from the symbol table stack until a SCOPE-BOUNDARY is hit */		
+		/* Pop elements from the symbol table stack until a SCOPE-BOUNDARY is hit */
 		/**************************************************************************/
 		while (top.name != "SCOPE-BOUNDARY")
 		{
@@ -135,25 +135,25 @@ public class SYMBOL_TABLE
 			top = top.prevtop;
 		}
 		/**************************************/
-		/* Pop the SCOPE-BOUNDARY sign itself */		
+		/* Pop the SCOPE-BOUNDARY sign itself */
 		/**************************************/
 		table[top.index] = top.next;
 		top_index = top_index-1;
 		top = top.prevtop;
 
 		/*********************************************/
-		/* Print the symbol table after every change */		
+		/* Print the symbol table after every change */
 		/*********************************************/
 		PrintMe();
 	}
-	
+
 	public static int n=0;
-	
+
 	public void PrintMe()
 	{
 		int i=0;
 		int j=0;
-		String dirname="./FOLDER_5_OUTPUT/";
+		String dirname="./FOLDER_5_OUTPUT/Input/";
 		String filename=String.format("SYMBOL_TABLE_%d_IN_GRAPHVIZ_DOT_FORMAT.txt",n++);
 
 		try
@@ -176,7 +176,7 @@ public class SYMBOL_TABLE
 			fileWriter.print("hashTable [label=\"");
 			for (i=0;i<hashArraySize-1;i++) { fileWriter.format("<f%d>\n%d\n|",i,i); }
 			fileWriter.format("<f%d>\n%d\n\"];\n",hashArraySize-1,hashArraySize-1);
-		
+
 			/****************************************************************************/
 			/* [4] Loop over hash table array and print all linked lists per array cell */
 			/****************************************************************************/
@@ -222,9 +222,9 @@ public class SYMBOL_TABLE
 		catch (Exception e)
 		{
 			e.printStackTrace();
-		}		
+		}
 	}
-	
+
 	/**************************************/
 	/* USUAL SINGLETON IMPLEMENTATION ... */
 	/**************************************/
@@ -268,7 +268,7 @@ public class SYMBOL_TABLE
 					new TYPE_LIST(
 						TYPE_INT.getInstance(),
 						null)));
-			
+
 		}
 		return instance;
 	}

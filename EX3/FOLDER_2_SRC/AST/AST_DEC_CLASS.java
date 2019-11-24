@@ -9,23 +9,25 @@ public class AST_DEC_CLASS extends AST_DEC
 	/* NAME */
 	/********/
 	public String name;
+	public String parent;
 
 	/****************/
 	/* DATA MEMBERS */
 	/****************/
 	public AST_TYPE_NAME_LIST data_members;
-	
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_DEC_CLASS(String name,AST_TYPE_NAME_LIST data_members)
+	public AST_DEC_CLASS(String name, String parent, AST_TYPE_NAME_LIST data_members)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
-	
+
 		this.name = name;
+		this.parent = parent;
 		this.data_members = data_members;
 	}
 
@@ -39,22 +41,22 @@ public class AST_DEC_CLASS extends AST_DEC
 		/*************************************/
 		System.out.format("CLASS DEC = %s\n",name);
 		if (data_members != null) data_members.PrintMe();
-		
+
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
 		AST_GRAPHVIZ.getInstance().logNode(
 			SerialNumber,
 			String.format("CLASS\n%s",name));
-		
+
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
-		AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,data_members.SerialNumber);		
+		AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,data_members.SerialNumber);
 	}
-	
-	public TYPE SemantMe()
-	{	
+
+	public TYPE SemantMe() throws Exception
+	{
 		/*************************/
 		/* [1] Begin Class Scope */
 		/*************************/
@@ -63,7 +65,12 @@ public class AST_DEC_CLASS extends AST_DEC
 		/***************************/
 		/* [2] Semant Data Members */
 		/***************************/
-		TYPE_CLASS t = new TYPE_CLASS(null,name,data_members.SemantMe());
+		if (parent != null) {
+			TYPE_CLASS t = new TYPE_CLASS(parent, name, data_members.SemantMe());
+		} else {
+			TYPE_CLASS t = new TYPE_CLASS(null, name, data_members.SemantMe());
+		}
+
 
 		/*****************/
 		/* [3] End Scope */
@@ -78,6 +85,6 @@ public class AST_DEC_CLASS extends AST_DEC
 		/*********************************************************/
 		/* [5] Return value is irrelevant for class declarations */
 		/*********************************************************/
-		return null;		
+		return null;
 	}
 }

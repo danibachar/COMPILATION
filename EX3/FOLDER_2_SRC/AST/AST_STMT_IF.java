@@ -44,7 +44,7 @@ public class AST_STMT_IF extends AST_STMT
 		AST_GRAPHVIZ.getInstance().logNode(
 			SerialNumber,
 			"IF (left)\nTHEN right");
-		
+
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
@@ -52,7 +52,7 @@ public class AST_STMT_IF extends AST_STMT
 		if (body != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,body.SerialNumber);
 	}
 
-	public TYPE SemantMe()
+	public TYPE SemantMe() throws Exception
 	{
 		/****************************/
 		/* [0] Semant the Condition */
@@ -60,8 +60,9 @@ public class AST_STMT_IF extends AST_STMT
 		if (cond.SemantMe() != TYPE_INT.getInstance())
 		{
 			System.out.format(">> ERROR [%d:%d] condition inside IF is not integral\n",2,2);
+			throw new Exception(" condition inside IF is not integral");
 		}
-		
+
 		/*************************/
 		/* [1] Begin Class Scope */
 		/*************************/
@@ -70,7 +71,11 @@ public class AST_STMT_IF extends AST_STMT
 		/***************************/
 		/* [2] Semant Data Members */
 		/***************************/
-		body.SemantMe();
+		try {
+			if (body != null) body.SemantMe();
+		} catch (Exception e) {
+			throw e;
+		}
 
 		/*****************/
 		/* [3] End Scope */
@@ -80,6 +85,6 @@ public class AST_STMT_IF extends AST_STMT
 		/*********************************************************/
 		/* [4] Return value is irrelevant for class declarations */
 		/*********************************************************/
-		return null;		
-	}	
+		return null;
+	}
 }

@@ -8,7 +8,7 @@ public class AST_STMT_DEC_VAR extends AST_STMT
 	/* DATA MEMBERS */
 	/****************/
 	public AST_DEC_VAR var;
-	
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
@@ -21,12 +21,17 @@ public class AST_STMT_DEC_VAR extends AST_STMT
 
 		this.var = var;
 	}
-	
-	public TYPE SemantMe()
+
+	public TYPE SemantMe() throws Exception
 	{
-		return var.SemantMe();
+		try {
+			return var.SemantMe();
+		} catch (Exception e) {
+			throw e;
+		}
+
 	}
-	
+
 	public void PrintMe()
 	{
 		var.PrintMe();
@@ -37,10 +42,10 @@ public class AST_STMT_DEC_VAR extends AST_STMT
 		AST_GRAPHVIZ.getInstance().logNode(
 			SerialNumber,
 			String.format("STMT\nDEC\nVAR"));
-		
+
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
-		AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,var.SerialNumber);		
+		AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,var.SerialNumber);
 	}
 }

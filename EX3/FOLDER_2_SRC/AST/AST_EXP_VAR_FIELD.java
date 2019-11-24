@@ -7,7 +7,7 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 {
 	public AST_EXP_VAR var;
 	public String fieldName;
-	
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
@@ -48,31 +48,36 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
-		if (var  != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,var.SerialNumber);		
+		if (var  != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,var.SerialNumber);
 	}
-	public TYPE SemantMe()
+	public TYPE SemantMe() throws Exception
 	{
 		TYPE t = null;
 		TYPE_CLASS tc = null;
-		
+
 		/******************************/
 		/* [1] Recursively semant var */
 		/******************************/
-		if (var != null) t = var.SemantMe();
-		
+		try {
+			if (var != null) t = var.SemantMe();
+		} catch (Exception e) {
+			throw e;
+		}
+
 		/*********************************/
 		/* [2] Make sure type is a class */
 		/*********************************/
 		if (t.isClass() == false)
 		{
 			System.out.format(">> ERROR [%d:%d] access %s field of a non-class variable\n",6,6,fieldName);
-			System.exit(0);
+			throw new Exception("field of a non-class variable");
+			// System.exit(0);
 		}
 		else
 		{
 			tc = (TYPE_CLASS) t;
 		}
-		
+
 		/************************************/
 		/* [3] Look for fiedlName inside tc */
 		/************************************/
@@ -83,12 +88,13 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 				return it.head;
 			}
 		}
-		
+
 		/*********************************************/
 		/* [4] fieldName does not exist in class var */
 		/*********************************************/
-		System.out.format(">> ERROR [%d:%d] field %s does not exist in class\n",6,6,fieldName);							
-		System.exit(0);
-		return null;
+		System.out.format(">> ERROR [%d:%d] field %s does not exist in class\n",6,6,fieldName);
+		// System.exit(0);
+		throw new Exception("field does not exist in class");
+		// return null;
 	}
 }

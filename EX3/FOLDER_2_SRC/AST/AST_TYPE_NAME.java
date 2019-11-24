@@ -16,7 +16,7 @@ public class AST_TYPE_NAME extends AST_Node
 	/****************/
 	public String type;
 	public String name;
-	
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
@@ -26,7 +26,7 @@ public class AST_TYPE_NAME extends AST_Node
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
-	
+
 		this.type = type;
 		this.name = name;
 	}
@@ -52,7 +52,7 @@ public class AST_TYPE_NAME extends AST_Node
 	/*****************/
 	/* SEMANT ME ... */
 	/*****************/
-	public TYPE SemantMe()
+	public TYPE SemantMe() throws Exception
 	{
 		TYPE t = SYMBOL_TABLE.getInstance().find(type);
 		if (t == null)
@@ -60,8 +60,9 @@ public class AST_TYPE_NAME extends AST_Node
 			/**************************/
 			/* ERROR: undeclared type */
 			/**************************/
-			System.exit(0);
-			return null;
+			// System.exit(0);
+			throw new Exception("AST_TYPE_NAME undeclared type");
+			// return null;
 		}
 		else
 		{
@@ -75,5 +76,5 @@ public class AST_TYPE_NAME extends AST_Node
 		/* return (existing) type t */
 		/****************************/
 		return t;
-	}	
+	}
 }

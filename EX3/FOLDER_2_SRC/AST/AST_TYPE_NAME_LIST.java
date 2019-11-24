@@ -9,7 +9,7 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 	/****************/
 	public AST_TYPE_NAME head;
 	public AST_TYPE_NAME_LIST tail;
-	
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
@@ -46,7 +46,7 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 		AST_GRAPHVIZ.getInstance().logNode(
 			SerialNumber,
 			"TYPE-NAME\nLIST\n");
-		
+
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
@@ -54,19 +54,31 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 		if (tail != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,tail.SerialNumber);
 	}
 
-	public TYPE_LIST SemantMe()
+	public TYPE_LIST SemantMe() throws Exception
 	{
 		if (tail == null)
 		{
-			return new TYPE_LIST(
-				head.SemantMe(),
-				null);
+			try {
+				return new TYPE_LIST(
+					head.SemantMe(),
+					null
+				);
+			} catch (Exception e) {
+				throw e;
+			}
+
 		}
 		else
 		{
-			return new TYPE_LIST(
-				head.SemantMe(),
-				tail.SemantMe());
+			try {
+				return new TYPE_LIST(
+					head.SemantMe(),
+					tail.SemantMe()
+				);
+			} catch (Exception e) {
+				throw e;
+			}
+
 		}
 	}
 }

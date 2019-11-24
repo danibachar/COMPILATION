@@ -24,15 +24,19 @@ public class AST_DEC_LIST extends AST_Node
 		this.tail = tail;
 	}
 
-	public TYPE SemantMe()
-	{		
+	public TYPE SemantMe() throws Exception
+	{
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */
 		/*************************************/
-		if (head != null) head.SemantMe();
-		if (tail != null) tail.SemantMe();
-		
-		return null;	
+		try {
+			if (head != null) head.SemantMe();
+			if (tail != null) tail.SemantMe();
+		} catch (Exception e) {
+			throw e;
+		}
+
+		return null;
 	}
 
 	/********************************************************/
@@ -57,7 +61,7 @@ public class AST_DEC_LIST extends AST_Node
 		AST_GRAPHVIZ.getInstance().logNode(
 			SerialNumber,
 			"DEC\nLIST\n");
-				
+
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
