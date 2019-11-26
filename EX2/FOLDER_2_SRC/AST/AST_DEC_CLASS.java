@@ -7,11 +7,11 @@ public class AST_DEC_CLASS extends AST_DEC
 	/********/
 	public String name;
 	public String parent;
-	public AST_DEC_LIST body;
+	public AST_DEC_CFIELDS body;
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_DEC_CLASS(String name,String parent,AST_DEC_LIST body)
+	public AST_DEC_CLASS(String name,String parent,AST_DEC_CFIELDS body)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
