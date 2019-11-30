@@ -120,6 +120,11 @@ non terminal AST_TYPE_NAME_LIST	typeNameTuplesComma;
 non terminal AST_STMT stmt;
 non terminal AST_STMT_LIST stmtList;
 
+non terminal AST_DEC cField;
+non terminal AST_DEC_CFIELDS cFields;
+
+
+
 
 non terminal AST_DEC_LIST decList;
 non terminal AST_DEC dec;
@@ -176,9 +181,9 @@ funcDec								::= ID:ret ID:name LPAREN RPAREN LBRACE stmtList:body RBRACE
 												{: RESULT = new AST_DEC_FUNC(ret,name,tnl,body); :}
 											;
 
-classDec							::= CLASS ID:name EXTENDS ID:parent	LBRACE decList:body RBRACE
+classDec							::= CLASS ID:name EXTENDS ID:parent	LBRACE cFields:body RBRACE
 												{: RESULT = new AST_DEC_CLASS(name,parent,body); :}
-											| CLASS ID:name	LBRACE decList:body RBRACE
+											| CLASS ID:name	LBRACE cFields:body RBRACE
 												{: RESULT = new AST_DEC_CLASS(name,null,body); :}
 											;
 
@@ -244,3 +249,11 @@ typeNameTuplesComma			::= typeNameTuple:tn COMMA typeNameTuplesComma:tnl
 												{: RESULT = new AST_TYPE_NAME_LIST(tn,tnl);  :}
 											| typeNameTuple:tn {: RESULT = new AST_TYPE_NAME_LIST(tn,null); :}
 											;
+
+cFields ::= cField:f cFields:fl {: RESULT = new AST_DEC_CFIELDS(f,fl); :}
+				| cField:f {: RESULT = new AST_DEC_CFIELDS(f,null); :}
+				;
+
+cField ::= funcDec:d	 {: RESULT = d; :}
+					| varDec:d {: RESULT = d; :}
+					;
