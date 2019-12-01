@@ -1,6 +1,8 @@
 package AST;
 
 import TYPES.*;
+import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
 
 public class AST_EXP_STRING extends AST_EXP
 {
@@ -9,7 +11,7 @@ public class AST_EXP_STRING extends AST_EXP
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_EXP_STRING(String value)
+	public AST_EXP_STRING(String value, Integer lineNumber)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -17,6 +19,7 @@ public class AST_EXP_STRING extends AST_EXP
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
 		System.out.format("====================== exp -> STRING( %s )\n", value);
+		this.lineNumber = lineNumber;
 		this.value = value;
 	}
 
@@ -25,11 +28,6 @@ public class AST_EXP_STRING extends AST_EXP
 	/******************************************************/
 	public void PrintMe()
 	{
-		/*******************************/
-		/* AST NODE TYPE = AST STRING EXP */
-		/*******************************/
-		System.out.format("AST NODE STRING( %s )\n",value);
-
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
@@ -39,6 +37,10 @@ public class AST_EXP_STRING extends AST_EXP
 	}
 	public TYPE SemantMe() throws Exception
 	{
+		/*******************************/
+		/* AST NODE TYPE = AST STRING EXP */
+		/*******************************/
+		System.out.format("AST NODE STRING( %s )\n",value);
 		return TYPE_STRING.getInstance();
 	}
 }

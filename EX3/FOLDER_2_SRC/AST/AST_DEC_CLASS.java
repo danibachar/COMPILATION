@@ -2,6 +2,8 @@ package AST;
 
 import TYPES.*;
 import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
+
 
 public class AST_DEC_CLASS extends AST_DEC
 {
@@ -10,25 +12,30 @@ public class AST_DEC_CLASS extends AST_DEC
 	/********/
 	public String name;
 	public String parent;
-
-	/****************/
-	/* DATA MEMBERS */
-	/****************/
-	public AST_TYPE_NAME_LIST data_members;
-
+	public AST_DEC_CFIELDS body;
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_DEC_CLASS(String name, String parent, AST_TYPE_NAME_LIST data_members)
+	public AST_DEC_CLASS(String name,String parent,AST_DEC_CFIELDS body, Integer lineNumber)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
+		/***************************************/
+		/* PRINT CORRESPONDING DERIVATION RULE */
+		/***************************************/
+		if (parent != null) {
+			System.out.format("====================== classDec -> CLASS ID( %s ) EXTENDS( %s )\n", name, parent);
+		} else {
+			System.out.format("====================== classDec -> CLASS ID( %s ) \n", name);
+		}
+
+		this.lineNumber = lineNumber;
 		this.name = name;
 		this.parent = parent;
-		this.data_members = data_members;
+		this.body = body;
 	}
 
 	/*********************************************************/
@@ -40,8 +47,8 @@ public class AST_DEC_CLASS extends AST_DEC
 		/* RECURSIVELY PRINT HEAD + TAIL ... */
 		/*************************************/
 		System.out.format("CLASS DEC = %s\n",name);
-		if (data_members != null) data_members.PrintMe();
 
+		if (body != null) body.PrintMe();
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
@@ -49,14 +56,43 @@ public class AST_DEC_CLASS extends AST_DEC
 			SerialNumber,
 			String.format("CLASS\n%s",name));
 
-		/****************************************/
-		/* PRINT Edges to AST GRAPHVIZ DOT file */
-		/****************************************/
-		AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,data_members.SerialNumber);
+		AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,body.SerialNumber);
 	}
 
 	public TYPE SemantMe() throws Exception
 	{
+		System.out.format("AST_DEC_CLASS name = %s, parent = %s\n",name, parent);
+		/**************************************/
+		/* Check That Name does NOT exist */
+		/**************************************/
+		if (SYMBOL_TABLE.getInstance().find(name) != null)
+		{
+			System.out.format(">> ERROR [%d] Class %s already exists\n",this.lineNumber,name);
+			throw new AST_EXCEPTION(this);
+		}
+
+		/**************************************/
+		/* Check That Extends previous defined class*/
+		/**************************************/
+		if (parent != null && SYMBOL_TABLE.getInstance().find(parent) == null)
+		{
+			System.out.format(">> ERROR [%d] Class %s Extends non existing Class %s\n",this.lineNumber,name, parent);
+			throw new AST_EXCEPTION(this);
+		}
+
+		// TODO - validate body as follow:
+		// func can refer to any data Members
+		// func cannot refer to func that was not declared yet
+
+
+		// We are making some pointer game hhere, not sure it will work
+		// 1) creating and adding the type before
+		// 2) then semant the body
+		// 3) then fetching actual instance (or hold a pointer?) and update the body
+
+		//prepopulate for
+		// TYPE_CLASS_VAR_DEC tc = new TYPE_CLASS_VAR_DEC(,name);
+
 		/*************************/
 		/* [1] Begin Class Scope */
 		/*************************/
@@ -65,12 +101,13 @@ public class AST_DEC_CLASS extends AST_DEC
 		/***************************/
 		/* [2] Semant Data Members */
 		/***************************/
+		TYPE_CLASS father = null;
 		if (parent != null) {
-			TYPE_CLASS t = new TYPE_CLASS(parent, name, data_members.SemantMe());
-		} else {
-			TYPE_CLASS t = new TYPE_CLASS(null, name, data_members.SemantMe());
+			father = (TYPE_CLASS)SYMBOL_TABLE.getInstance().find(parent);
 		}
-
+		TYPE_CLASS t = new TYPE_CLASS(father, name, null);
+		SYMBOL_TABLE.getInstance().enter(name,t);
+		t.data_members = body.SemantMe();
 
 		/*****************/
 		/* [3] End Scope */
@@ -80,7 +117,7 @@ public class AST_DEC_CLASS extends AST_DEC
 		/************************************************/
 		/* [4] Enter the Class Type to the Symbol Table */
 		/************************************************/
-		SYMBOL_TABLE.getInstance().enter(name,t);
+
 
 		/*********************************************************/
 		/* [5] Return value is irrelevant for class declarations */

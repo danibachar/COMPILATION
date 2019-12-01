@@ -2,6 +2,7 @@ package AST;
 
 import TYPES.*;
 import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
 
 public class AST_DEC_VAR extends AST_DEC
 {
@@ -15,13 +16,14 @@ public class AST_DEC_VAR extends AST_DEC
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_DEC_VAR(String type,String name,AST_EXP initialValue)
+	public AST_DEC_VAR(String type,String name,AST_EXP initialValue,Integer lineNumber)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
+		this.lineNumber = lineNumber;
 		this.type = type;
 		this.name = name;
 		this.initialValue = initialValue;
@@ -32,16 +34,14 @@ public class AST_DEC_VAR extends AST_DEC
 	/********************************************************/
 	public void PrintMe()
 	{
-		/********************************/
-		/* AST NODE TYPE = AST DEC LIST */
-		/********************************/
-		if (initialValue != null) System.out.format("VAR-DEC(%s):%s := initialValue\n",name,type);
-		if (initialValue == null) System.out.format("VAR-DEC(%s):%s                \n",name,type);
-
 		/**************************************/
 		/* RECURSIVELY PRINT initialValue ... */
 		/**************************************/
-		if (initialValue != null) initialValue.PrintMe();
+		if (initialValue != null)
+		{
+			System.out.format("about to print initialValue \n");
+			initialValue.PrintMe();
+		}
 
 		/**********************************/
 		/* PRINT to AST GRAPHVIZ DOT file */
@@ -61,27 +61,48 @@ public class AST_DEC_VAR extends AST_DEC
 	{
 		TYPE t;
 
+		/********************************/
+		/* AST NODE TYPE = AST DEC LIST */
+		/********************************/
+		if (initialValue != null) System.out.format("VAR-DEC(%s):%s := initialValue\n",name,type);
+		if (initialValue == null) System.out.format("VAR-DEC(%s):%s                \n",name,type);
+
 		/****************************/
 		/* [1] Check If Type exists */
 		/****************************/
 		t = SYMBOL_TABLE.getInstance().find(type);
 		if (t == null)
 		{
-			System.out.format(">> ERROR [%d:%d] non existing type %s\n",2,2,type);
-			throw new Exception("AST DEC VAR NOT EXISTS");
+			// if type is class we check if there was a previous TYPE_CLASS_VAR_DEC 
+			System.out.format(">> ERROR [%d] non existing type %s\n",this.lineNumber,type);
+			throw new AST_EXCEPTION(this);
 			// System.exit(0);
 		}
 
 		/**************************************/
 		/* [2] Check That Name does NOT exist */
 		/**************************************/
-		if (SYMBOL_TABLE.getInstance().find(name) != null)
+		if (SYMBOL_TABLE.getInstance().findInCurrentScope(name) != null)
 		{
-			System.out.format(">> ERROR [%d:%d] variable %s already exists in scope\n",2,2,name);
-			throw new Exception("AST DEC VAR ALREADY EXISTS");
-			// System.exit(0);
+			System.out.format(">> ERROR [%d] variable %s already exists in scope\n",this.lineNumber,name);
+			throw new AST_EXCEPTION(this);
 		}
 
+		// validate that the initialValue is the same type as the var type, and that it exists!
+		if (initialValue != null)
+		{
+			TYPE initValueType = initialValue.SemantMe();
+			if (initValueType == null)
+			{
+				System.out.format(">> ERROR [%d] initialValue that assigned to the var is not exists\n",this.lineNumber,name);
+				throw new AST_EXCEPTION(this);
+			}
+			if (initValueType.getClass() != t.getClass())
+			{
+				System.out.format(">> ERROR [%d] initialValue that assigned to the var is not the same type of the var\n",this.lineNumber,name);
+				throw new AST_EXCEPTION(this);
+			}
+		}
 		/***************************************************/
 		/* [3] Enter the Function Type to the Symbol Table */
 		/***************************************************/

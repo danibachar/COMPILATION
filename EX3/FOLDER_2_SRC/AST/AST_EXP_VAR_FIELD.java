@@ -2,6 +2,7 @@ package AST;
 
 import TYPES.*;
 import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
 
 public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 {
@@ -11,7 +12,7 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_EXP_VAR_FIELD(AST_EXP_VAR var,String fieldName)
+	public AST_EXP_VAR_FIELD(AST_EXP_VAR var,String fieldName, Integer lineNumber)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -19,6 +20,7 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
 		System.out.format("====================== var -> var DOT ID( %s )\n",fieldName);
+		this.lineNumber = lineNumber;
 		this.var = var;
 		this.fieldName = fieldName;
 	}
@@ -28,11 +30,6 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 	/*************************************************/
 	public void PrintMe()
 	{
-		/*********************************/
-		/* AST NODE TYPE = AST FIELD VAR */
-		/*********************************/
-		System.out.format("FIELD\nNAME\n(___.%s)\n",fieldName);
-
 		/**********************************************/
 		/* RECURSIVELY PRINT VAR, then FIELD NAME ... */
 		/**********************************************/
@@ -54,15 +51,14 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 	{
 		TYPE t = null;
 		TYPE_CLASS tc = null;
-
+		/*********************************/
+		/* AST NODE TYPE = AST FIELD VAR */
+		/*********************************/
+		System.out.format("FIELD\nNAME\n(___.%s)\n",fieldName);
 		/******************************/
 		/* [1] Recursively semant var */
 		/******************************/
-		try {
-			if (var != null) t = var.SemantMe();
-		} catch (Exception e) {
-			throw e;
-		}
+		if (var != null) t = var.SemantMe();
 
 		/*********************************/
 		/* [2] Make sure type is a class */
@@ -70,7 +66,7 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 		if (t.isClass() == false)
 		{
 			System.out.format(">> ERROR [%d:%d] access %s field of a non-class variable\n",6,6,fieldName);
-			throw new Exception("field of a non-class variable");
+			throw new AST_EXCEPTION(this);
 			// System.exit(0);
 		}
 		else
@@ -93,8 +89,6 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 		/* [4] fieldName does not exist in class var */
 		/*********************************************/
 		System.out.format(">> ERROR [%d:%d] field %s does not exist in class\n",6,6,fieldName);
-		// System.exit(0);
-		throw new Exception("field does not exist in class");
-		// return null;
+		throw new AST_EXCEPTION(this);
 	}
 }

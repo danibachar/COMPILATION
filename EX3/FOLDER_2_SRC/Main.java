@@ -3,17 +3,18 @@ import java.io.*;
 import java.io.PrintWriter;
 import java_cup.runtime.Symbol;
 import AST.*;
+import AST_EXCEPTION.*;
 
 public class Main
 {
 	static public void main(String argv[])
 	{
-		Lexer l;
-		Parser p;
-		Symbol s;
+		Lexer l = null;;
+		Parser p = null;;;
+		Symbol s = null;;;
 		AST_DEC_LIST AST;
-		FileReader file_reader;
-		PrintWriter file_writer;
+		FileReader file_reader = null;;
+		PrintWriter file_writer = null;;
 		String inputFilename = argv[0];
 		String outputFilename = argv[1];
 
@@ -52,37 +53,7 @@ public class Main
 			/**************************/
 			/* [7] Semant the AST ... */
 			/**************************/
-			try {
-				AST.SemantMe();
-			} catch (Error error) {
-				try {
-					file_writer = new PrintWriter(outputFilename);
-					file_writer.print("ERROR");
-					file_writer.print("[");
-					file_writer.print(l.getLine());
-					file_writer.print(":");
-					file_writer.print(l.getCharPos());
-					file_writer.print("]\n");
-					file_writer.close();
-				}
-				catch (Exception ex) {}
-				error.printStackTrace();
-			} catch (Exception exc) {
-				try {
-					file_writer = new PrintWriter(outputFilename);
-					file_writer.print("ERROR");
-					file_writer.print("[");
-					file_writer.print(l.getLine());
-					file_writer.print(":");
-					file_writer.print(l.getCharPos());
-					file_writer.print("]\n");
-					file_writer.close();
-				}
-				catch (Exception ex) {}
-				exc.printStackTrace();
-			}
-
-
+			AST.SemantMe();
 
 			/*************************/
 			/* [8] Close output file */
@@ -94,10 +65,36 @@ public class Main
 			/* [9] Finalize AST GRAPHIZ DOT file */
 			/*************************************/
 			AST_GRAPHVIZ.getInstance().finalizeFile();
-    	}
 
-		catch (Exception e)
-		{
+    } catch (AST_EXCEPTION e) {
+			// Semantic Exception handling, thrown from within th AST_Node
+			int lineNumber = e.node.lineNumber;
+			System.out.print("ERROR");
+			System.out.print("[");
+			System.out.print(lineNumber);
+			System.out.print("]\n");
+
+			file_writer.print("ERROR");
+			file_writer.print("[");
+			file_writer.print(lineNumber);
+			file_writer.print("]\n");
+			file_writer.close();
+		} catch (Exception e) {
+			// Lex Exception handling, thrown from Lexer
+			try {
+				int lineNumber = l.getLine();
+				System.out.print("ERROR");
+				System.out.print("[");
+				System.out.print(lineNumber);
+				System.out.print("]\n");
+
+				file_writer.print("ERROR");
+				file_writer.print("[");
+				file_writer.print(lineNumber);
+				file_writer.print("]\n");
+				file_writer.close();
+			}
+			catch (Exception ex) {}
 			e.printStackTrace();
 		}
 	}

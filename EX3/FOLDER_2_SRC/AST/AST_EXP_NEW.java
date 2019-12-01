@@ -1,5 +1,9 @@
 package AST;
 
+import TYPES.*;
+import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
+
 public class AST_EXP_NEW extends AST_EXP
 {
 	public String type;
@@ -8,7 +12,7 @@ public class AST_EXP_NEW extends AST_EXP
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_EXP_NEW(String type,AST_EXP exp)
+	public AST_EXP_NEW(String type,AST_EXP exp, Integer lineNumber)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -20,6 +24,7 @@ public class AST_EXP_NEW extends AST_EXP
 		/***************************************/
 		System.out.format("====================== newExp -> ID( %s )\n", type);
 
+		this.lineNumber = lineNumber;
 		this.type = type;
     this.exp = exp;
 	}
@@ -29,12 +34,6 @@ public class AST_EXP_NEW extends AST_EXP
 	/************************************************/
   public void PrintMe()
   {
-    /********************************/
-    /* AST NODE TYPE = AST EXP NEW */
-    /********************************/
-		System.out.print("AST NODE EXP NEW\n");
-    // if (exp != null) System.out.format("VAR-DEC(%s):%s := exp\n",type,exp);
-    // if (exp == null) System.out.format("VAR-DEC(%s):%s                \n",name,type);
 
     /**************************************/
     /* RECURSIVELY PRINT initialValue ... */
@@ -54,4 +53,30 @@ public class AST_EXP_NEW extends AST_EXP
     if (exp != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,exp.SerialNumber);
 
   }
+
+	public TYPE SemantMe() throws Exception
+	{
+		TYPE t;
+		System.out.format("AST_EXP_NEW type - %s\n" ,type);
+
+		/************************************************/
+		/* Check That Class Type Was previously declared*/
+		/************************************************/
+		t = SYMBOL_TABLE.getInstance().find(type);
+		if (t != null)
+		{
+			System.out.format(">> ERROR [%d] Class type(%s) was not declared\n",this.lineNumber,type);
+			throw new AST_EXCEPTION(this);
+		}
+		/************************************************/
+		/* Check That the Type is actually a class type */
+		/************************************************/
+		if (!t.isClass())
+		{
+			System.out.format(">> ERROR [%d] trying to create new entity that is not a class type(%)\n",this.lineNumber,type);
+			throw new AST_EXCEPTION(this);
+		}
+
+		return null;
+	}
 }

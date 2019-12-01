@@ -1,6 +1,8 @@
 package AST;
 
 import TYPES.*;
+import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
 
 public class AST_TYPE_NAME_LIST extends AST_Node
 {
@@ -13,13 +15,11 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_TYPE_NAME_LIST(AST_TYPE_NAME head,AST_TYPE_NAME_LIST tail)
+	public AST_TYPE_NAME_LIST(AST_TYPE_NAME head,AST_TYPE_NAME_LIST tail,Integer lineNumber)
 	{
-		/******************************/
-		/* SET A UNIQUE SERIAL NUMBER */
-		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
+		this.lineNumber = lineNumber;
 		this.head = head;
 		this.tail = tail;
 	}
@@ -64,7 +64,7 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 					null
 				);
 			} catch (Exception e) {
-				throw e;
+				throw new AST_EXCEPTION(this);
 			}
 
 		}
@@ -76,7 +76,7 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 					tail.SemantMe()
 				);
 			} catch (Exception e) {
-				throw e;
+				throw new AST_EXCEPTION(this);
 			}
 
 		}

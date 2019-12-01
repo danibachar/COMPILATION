@@ -1,6 +1,6 @@
 package TYPES;
 
-public class TYPE_LIST
+public class TYPE_LIST extends TYPE
 {
 	/****************/
 	/* DATA MEMBERS */

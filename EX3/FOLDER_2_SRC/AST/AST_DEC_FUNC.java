@@ -2,6 +2,7 @@ package AST;
 
 import TYPES.*;
 import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
 
 public class AST_DEC_FUNC extends AST_DEC
 {
@@ -20,13 +21,15 @@ public class AST_DEC_FUNC extends AST_DEC
 		String returnTypeName,
 		String name,
 		AST_TYPE_NAME_LIST params,
-		AST_STMT_LIST body)
-	{
+		AST_STMT_LIST body,
+		Integer lineNumber
+	) {
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
+		this.lineNumber = lineNumber;
 		this.returnTypeName = returnTypeName;
 		this.name = name;
 		this.params = params;
@@ -38,11 +41,6 @@ public class AST_DEC_FUNC extends AST_DEC
 	/************************************************************/
 	public void PrintMe()
 	{
-		/*************************************************/
-		/* AST NODE TYPE = AST NODE FUNCTION DECLARATION */
-		/*************************************************/
-		System.out.format("FUNC(%s):%s\n",name,returnTypeName);
-
 		/***************************************/
 		/* RECURSIVELY PRINT params + body ... */
 		/***************************************/
@@ -69,14 +67,19 @@ public class AST_DEC_FUNC extends AST_DEC
 		TYPE returnType = null;
 		TYPE_LIST type_list = null;
 
+		/*************************************************/
+		/* AST NODE TYPE = AST NODE FUNCTION DECLARATION */
+		/*************************************************/
+		System.out.format("FUNC(%s):%s\n",name,returnTypeName);
+
 		/*******************/
 		/* [0] return type */
 		/*******************/
 		returnType = SYMBOL_TABLE.getInstance().find(returnTypeName);
 		if (returnType == null)
 		{
-			System.out.format(">> ERROR [%d:%d] non existing return type %s\n",6,6,returnType);
-			throw new Exception("AST_DEC_FUNC non existing return");
+			System.out.format(">> ERROR [%d] non existing return type %s\n",this.lineNumber,returnType);
+			throw new AST_EXCEPTION(this);
 			// System.exit(0);
 		}
 
@@ -88,16 +91,19 @@ public class AST_DEC_FUNC extends AST_DEC
 		/***************************/
 		/* [2] Semant Input Params */
 		/***************************/
+
 		for (AST_TYPE_NAME_LIST it = params; it  != null; it = it.tail)
 		{
+
 			t = SYMBOL_TABLE.getInstance().find(it.head.type);
 			if (t == null)
 			{
-				System.out.format(">> ERROR [%d:%d] non existing type %s\n",2,2,it.head.type);
-				throw new Exception("AST_DEC_FUNC non existing type");
+				System.out.format(">> ERROR [%d] non existing type %s\n",this.lineNumber, it.head.type);
+				throw new AST_EXCEPTION(this);
 			}
 			else
 			{
+				System.out.format("Semant Input Params(%s):%s\n",name,returnTypeName);
 				type_list = new TYPE_LIST(t,type_list);
 				SYMBOL_TABLE.getInstance().enter(it.head.name,t);
 			}
@@ -106,11 +112,7 @@ public class AST_DEC_FUNC extends AST_DEC
 		/*******************/
 		/* [3] Semant Body */
 		/*******************/
-		try {
-			body.SemantMe();
-		} catch (Exception e) {
-			throw e;
-		}
+		body.SemantMe();
 
 
 		/*****************/

@@ -1,6 +1,8 @@
 package AST;
 
 import TYPES.*;
+import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
 
 public class AST_STMT_LIST extends AST_Node
 {
@@ -13,7 +15,7 @@ public class AST_STMT_LIST extends AST_Node
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_STMT_LIST(AST_STMT head,AST_STMT_LIST tail)
+	public AST_STMT_LIST(AST_STMT head,AST_STMT_LIST tail, Integer lineNumber)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -26,9 +28,7 @@ public class AST_STMT_LIST extends AST_Node
 		if (tail != null) System.out.print("====================== stmts -> stmt stmts\n");
 		if (tail == null) System.out.print("====================== stmts -> stmt      \n");
 
-		/*******************************/
-		/* COPY INPUT DATA NENBERS ... */
-		/*******************************/
+		this.lineNumber = lineNumber;
 		this.head = head;
 		this.tail = tail;
 	}
@@ -65,14 +65,10 @@ public class AST_STMT_LIST extends AST_Node
 
 	public TYPE SemantMe() throws Exception
 	{
-		try {
-			if (head != null) head.SemantMe();
-			if (tail != null) tail.SemantMe();
-		} catch (Exception e) {
-			throw e;
-		}
 
-
+		if (head != null) head.SemantMe();
+		if (tail != null) tail.SemantMe();
+		
 		return null;
 	}
 }

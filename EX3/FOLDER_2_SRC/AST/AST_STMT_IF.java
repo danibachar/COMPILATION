@@ -2,6 +2,7 @@ package AST;
 
 import TYPES.*;
 import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
 
 public class AST_STMT_IF extends AST_STMT
 {
@@ -11,13 +12,14 @@ public class AST_STMT_IF extends AST_STMT
 	/*******************/
 	/*  CONSTRUCTOR(S) */
 	/*******************/
-	public AST_STMT_IF(AST_EXP cond,AST_STMT_LIST body)
+	public AST_STMT_IF(AST_EXP cond,AST_STMT_LIST body, Integer lineNumber)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
+		this.lineNumber = lineNumber;
 		this.cond = cond;
 		this.body = body;
 	}
@@ -27,11 +29,6 @@ public class AST_STMT_IF extends AST_STMT
 	/*************************************************/
 	public void PrintMe()
 	{
-		/*************************************/
-		/* AST NODE TYPE = AST SUBSCRIPT VAR */
-		/*************************************/
-		System.out.print("AST NODE STMT IF\n");
-
 		/**************************************/
 		/* RECURSIVELY PRINT left + right ... */
 		/**************************************/
@@ -54,13 +51,20 @@ public class AST_STMT_IF extends AST_STMT
 
 	public TYPE SemantMe() throws Exception
 	{
+		/*************************************/
+		/* AST NODE TYPE = AST SUBSCRIPT VAR */
+		/*************************************/
+		System.out.print("AST NODE STMT IF\n");
 		/****************************/
 		/* [0] Semant the Condition */
 		/****************************/
-		if (cond.SemantMe() != TYPE_INT.getInstance())
+		TYPE condType = cond.SemantMe();
+		System.out.format("condType(%s)\n", condType.name);
+
+		if (condType != TYPE_INT.getInstance())
 		{
-			System.out.format(">> ERROR [%d:%d] condition inside IF is not integral\n",2,2);
-			throw new Exception(" condition inside IF is not integral");
+			System.out.format(">> ERROR [%d] condition inside IF is not integral\n",this.lineNumber);
+			throw new AST_EXCEPTION(this);
 		}
 
 		/*************************/
@@ -71,12 +75,7 @@ public class AST_STMT_IF extends AST_STMT
 		/***************************/
 		/* [2] Semant Data Members */
 		/***************************/
-		try {
-			if (body != null) body.SemantMe();
-		} catch (Exception e) {
-			throw e;
-		}
-
+		if (body != null) body.SemantMe();
 		/*****************/
 		/* [3] End Scope */
 		/*****************/

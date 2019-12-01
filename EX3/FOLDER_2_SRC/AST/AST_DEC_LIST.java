@@ -1,6 +1,8 @@
 package AST;
 
 import TYPES.*;
+import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
 
 public class AST_DEC_LIST extends AST_Node
 {
@@ -13,30 +15,16 @@ public class AST_DEC_LIST extends AST_Node
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_DEC_LIST(AST_DEC head,AST_DEC_LIST tail)
+	public AST_DEC_LIST(AST_DEC head,AST_DEC_LIST tail, Integer lineNumber)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
+		this.lineNumber = lineNumber;
 		this.head = head;
 		this.tail = tail;
-	}
-
-	public TYPE SemantMe() throws Exception
-	{
-		/*************************************/
-		/* RECURSIVELY PRINT HEAD + TAIL ... */
-		/*************************************/
-		try {
-			if (head != null) head.SemantMe();
-			if (tail != null) tail.SemantMe();
-		} catch (Exception e) {
-			throw e;
-		}
-
-		return null;
 	}
 
 	/********************************************************/
@@ -44,11 +32,6 @@ public class AST_DEC_LIST extends AST_Node
 	/********************************************************/
 	public void PrintMe()
 	{
-		/********************************/
-		/* AST NODE TYPE = AST DEC LIST */
-		/********************************/
-		System.out.print("AST NODE DEC LIST\n");
-
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */
 		/*************************************/
@@ -67,5 +50,17 @@ public class AST_DEC_LIST extends AST_Node
 		/****************************************/
 		if (head != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,head.SerialNumber);
 		if (tail != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,tail.SerialNumber);
+	}
+
+	public TYPE SemantMe() throws Exception
+	{
+		System.out.format("DEC_LIST\n");
+		/*************************************/
+		/* RECURSIVELY PRINT HEAD + TAIL ... */
+		/*************************************/
+		if (head != null) head.SemantMe();
+		if (tail != null) tail.SemantMe();
+
+		return null;
 	}
 }

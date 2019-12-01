@@ -8,6 +8,7 @@ package AST;
 /*******************/
 import TYPES.*;
 import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
 
 public class AST_TYPE_NAME extends AST_Node
 {
@@ -20,13 +21,11 @@ public class AST_TYPE_NAME extends AST_Node
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_TYPE_NAME(String type,String name)
+	public AST_TYPE_NAME(String type,String name,Integer lineNumber)
 	{
-		/******************************/
-		/* SET A UNIQUE SERIAL NUMBER */
-		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
+		this.lineNumber = lineNumber;
 		this.type = type;
 		this.name = name;
 	}
@@ -60,9 +59,8 @@ public class AST_TYPE_NAME extends AST_Node
 			/**************************/
 			/* ERROR: undeclared type */
 			/**************************/
-			// System.exit(0);
-			throw new Exception("AST_TYPE_NAME undeclared type");
-			// return null;
+			System.out.print(">> ERROR AST_TYPE_NAME undeclared type");
+			throw new AST_EXCEPTION(this);
 		}
 		else
 		{

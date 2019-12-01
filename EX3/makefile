@@ -7,7 +7,7 @@ CUP_DIR           = ${BASEDIR}/FOLDER_1_CUP
 SRC_DIR           = ${BASEDIR}/FOLDER_2_SRC
 BIN_DIR           = ${BASEDIR}/FOLDER_3_BIN
 INPUT_DIR         = ${BASEDIR}/FOLDER_4_INPUT
-OUTPUT_DIR        = ${BASEDIR}/FOLDER_5_OUTPUT/Input
+OUTPUT_DIR        = ${BASEDIR}/FOLDER_5_OUTPUT
 EXTERNAL_JARS_DIR = ${BASEDIR}/FOLDER_7_EXTERNAL_JARS
 MANIFEST_DIR      = ${BASEDIR}/FOLDER_8_MANIFEST
 
@@ -247,3 +247,19 @@ everything:
 	@echo "*                                                                *"
 	@echo "******************************************************************"
 	eog ${OUTPUT_DIR}/SYMBOL_TABLE_0.jpeg &
+
+
+run: clear
+	@echo "Run compiler on input"
+	java -jar COMPILER ${INPUT} ${OUTPUT} ${OUTPUT_IR}
+	spim -f ${OUTPUT}
+
+clear:
+	mkdir -p ${OUTPUT_DIR}
+	rm -rf ${OUTPUT_DIR}/*
+
+test: clear
+	./run_tests.sh
+
+all_tests: clear
+	./run_tests.sh --all

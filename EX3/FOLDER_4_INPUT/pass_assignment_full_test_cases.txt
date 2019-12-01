@@ -1,0 +1,20 @@
+class Father
+{
+  int i;
+}
+
+class Son extends Father
+{
+  int j;
+}
+
+int main()
+{
+  int i1 := 1;
+  int i2 := 2;
+  string i3 := "asdfas";
+  string i4 := "aasd12421sdfas";
+  string i5 := "123aasd12421sdfas";
+
+  Father f1 := new Father();
+}

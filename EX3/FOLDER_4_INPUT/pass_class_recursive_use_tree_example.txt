@@ -1,0 +1,25 @@
+class Tree
+{
+  int value;
+  Tree left;
+  Tree right;
+  void Print()
+  {
+    //left.Print();
+    //right.Print();
+    PrintInt(value);
+  }
+
+}
+
+void main()
+{
+  Tree root := new Tree;
+  root.value := 10;
+  Tree leftSon := new Tree;
+  leftSon.value := 12;
+  Tree rightSon := new Tree;
+  rightSon.value := 13;
+
+  root.Print();
+}

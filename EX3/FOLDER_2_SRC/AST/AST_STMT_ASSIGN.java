@@ -1,6 +1,8 @@
 package AST;
 
 import TYPES.*;
+import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
 
 public class AST_STMT_ASSIGN extends AST_STMT
 {
@@ -13,7 +15,7 @@ public class AST_STMT_ASSIGN extends AST_STMT
 	/*******************/
 	/*  CONSTRUCTOR(S) */
 	/*******************/
-	public AST_STMT_ASSIGN(AST_EXP_VAR var,AST_EXP exp)
+	public AST_STMT_ASSIGN(AST_EXP_VAR var,AST_EXP exp, Integer lineNumber)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -25,9 +27,7 @@ public class AST_STMT_ASSIGN extends AST_STMT
 		/***************************************/
 		System.out.print("====================== stmt -> var ASSIGN exp SEMICOLON\n");
 
-		/*******************************/
-		/* COPY INPUT DATA NENBERS ... */
-		/*******************************/
+		this.lineNumber = lineNumber;
 		this.var = var;
 		this.exp = exp;
 	}
@@ -65,18 +65,32 @@ public class AST_STMT_ASSIGN extends AST_STMT
 	{
 		TYPE t1 = null;
 		TYPE t2 = null;
-		try {
-			if (var != null) t1 = var.SemantMe();
-			if (exp != null) t2 = exp.SemantMe();
-		} catch(Exception e) {
-			throw e;
+
+		if (var != null) t1 = var.SemantMe();
+		if (exp != null) t2 = exp.SemantMe();
+
+		// Maybe validate that types exists
+
+
+		// allow class and array to get nil
+		boolean isOneClass = t1.isClass() || t2.isClass();
+		boolean isOneNil = t1 == TYPE_NIL.getInstance() || t2 == TYPE_NIL.getInstance();
+		if (isOneClass && isOneNil)
+		{
+			return null;
 		}
 
+		//Allow assignment for inheritance - oneway!
+		if (isOneClass && isOneNil)
+		{
+			return null;
+		}
 
+		// Validate same type
 		if (t1 != t2)
 		{
-			System.out.format(">> ERROR [%d:%d] type mismatch for var := exp\n",6,6);
-			throw new Exception("AST_STMT_ASSIGN type mismatch");
+			System.out.format(">> ERROR [%d] type mismatch for var := exp\n",this.lineNumber);
+			throw new AST_EXCEPTION(this);
 		}
 		return null;
 	}

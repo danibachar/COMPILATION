@@ -1,5 +1,9 @@
 package AST;
 
+import TYPES.*;
+import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
+
 public class AST_STMT_RETURN extends AST_STMT
 {
 	/****************/
@@ -10,13 +14,11 @@ public class AST_STMT_RETURN extends AST_STMT
 	/*******************/
 	/*  CONSTRUCTOR(S) */
 	/*******************/
-	public AST_STMT_RETURN(AST_EXP exp)
+	public AST_STMT_RETURN(AST_EXP exp, Integer lineNumber)
 	{
-		/******************************/
-		/* SET A UNIQUE SERIAL NUMBER */
-		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
+		this.lineNumber = lineNumber;
 		this.exp = exp;
 	}
 
@@ -46,5 +48,18 @@ public class AST_STMT_RETURN extends AST_STMT
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
 		if (exp != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,exp.SerialNumber);
+	}
+
+	public TYPE SemantMe() throws Exception
+	{
+		/****************************/
+		/* [0] Semant the Condition */
+		/****************************/
+
+
+		/*********************************************************/
+		/* [4] Return value is irrelevant for class declarations */
+		/*********************************************************/
+		return null;
 	}
 }

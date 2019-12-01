@@ -12,7 +12,7 @@ public class TokenNames {
   public static final int SEMICOLON = 26;
   public static final int CLASS = 11;
   public static final int PLUS = 7;
-  public static final int INT = 29;
+  public static final int INT = 28;
   public static final int RBRACE = 24;
   public static final int RPAREN = 20;
   public static final int WHILE = 16;
@@ -23,7 +23,7 @@ public class TokenNames {
   public static final int LBRACE = 23;
   public static final int LPAREN = 19;
   public static final int GT = 4;
-  public static final int ID = 28;
+  public static final int ID = 29;
   public static final int STRING = 30;
   public static final int COMMA = 15;
   public static final int EOF = 0;
@@ -66,8 +66,8 @@ public class TokenNames {
   "ASSIGN",
   "SEMICOLON",
   "NIL",
-  "ID",
   "INT",
+  "ID",
   "STRING"
   };
 }

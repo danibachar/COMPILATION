@@ -7,6 +7,7 @@ package SYMBOL_TABLE;
 /* GENERAL IMPORTS */
 /*******************/
 import java.io.PrintWriter;
+import java.util.List;
 
 /*******************/
 /* PROJECT IMPORTS */
@@ -26,6 +27,8 @@ public class SYMBOL_TABLE
 	private SYMBOL_TABLE_ENTRY[] table = new SYMBOL_TABLE_ENTRY[hashArraySize];
 	private SYMBOL_TABLE_ENTRY top;
 	private int top_index = 0;
+	// private List<TYPE_CLASS> registeredClasses = new List<TYPE_CLASS>();
+	// private List<TYPE_ARRAY> registeredArrays = new List<TYPE_ARRAY>();
 
 	/**************************************************************/
 	/* A very primitive hash function for exposition purposes ... */
@@ -46,7 +49,7 @@ public class SYMBOL_TABLE
 	/****************************************************************************/
 	/* Enter a variable, function, class type or array type to the symbol table */
 	/****************************************************************************/
-	public void enter(String name,TYPE t)
+	public void enter(String name, TYPE t)
 	{
 		/*************************************************/
 		/* [1] Compute the hash value for this new entry */
@@ -85,8 +88,8 @@ public class SYMBOL_TABLE
 	/***********************************************/
 	public TYPE find(String name)
 	{
+		
 		SYMBOL_TABLE_ENTRY e;
-
 		for (e = table[hash(name)]; e != null; e = e.next)
 		{
 			if (name.equals(e.name))
@@ -95,6 +98,22 @@ public class SYMBOL_TABLE
 			}
 		}
 
+		return null;
+	}
+
+	public TYPE findInCurrentScope(String name)
+	{
+
+		SYMBOL_TABLE_ENTRY top = this.top;
+		SYMBOL_TABLE_ENTRY e = top.next;
+		// Searching until we reach current scope BOUNDARY
+		while (e != null && e.name != "SCOPE-BOUNDARY")
+		{
+			if (name.equals(e.name)) {
+				return e.type;
+			}
+			e = e.next;
+		}
 		return null;
 	}
 
@@ -109,9 +128,12 @@ public class SYMBOL_TABLE
 		/* a special TYPE_FOR_SCOPE_BOUNDARIES was developed for them. This     */
 		/* class only contain their type name which is the bottom sign: _|_     */
 		/************************************************************************/
+		System.out.print("######### - BEGIN - SCOPE-BOUNDARY\n");
+
 		enter(
 			"SCOPE-BOUNDARY",
-			new TYPE_FOR_SCOPE_BOUNDARIES("NONE"));
+			new TYPE_FOR_SCOPE_BOUNDARIES("NONE")
+		);
 
 		/*********************************************/
 		/* Print the symbol table after every change */
@@ -128,6 +150,7 @@ public class SYMBOL_TABLE
 		/**************************************************************************/
 		/* Pop elements from the symbol table stack until a SCOPE-BOUNDARY is hit */
 		/**************************************************************************/
+		System.out.print("######### - ENDING - SCOPE-BOUNDARY\n");
 		while (top.name != "SCOPE-BOUNDARY")
 		{
 			table[top.index] = top.next;
@@ -140,7 +163,7 @@ public class SYMBOL_TABLE
 		table[top.index] = top.next;
 		top_index = top_index-1;
 		top = top.prevtop;
-
+		System.out.print("######### - ENDED - SCOPE-BOUNDARY\n");
 		/*********************************************/
 		/* Print the symbol table after every change */
 		/*********************************************/
@@ -153,7 +176,7 @@ public class SYMBOL_TABLE
 	{
 		int i=0;
 		int j=0;
-		String dirname="./FOLDER_5_OUTPUT/Input/";
+		String dirname="./FOLDER_5_OUTPUT/";
 		String filename=String.format("SYMBOL_TABLE_%d_IN_GRAPHVIZ_DOT_FORMAT.txt",n++);
 
 		try
@@ -250,8 +273,9 @@ public class SYMBOL_TABLE
 			/*****************************************/
 			/* [1] Enter primitive types int, string */
 			/*****************************************/
-			instance.enter("int",   TYPE_INT.getInstance());
-			instance.enter("string",TYPE_STRING.getInstance());
+			instance.enter("int",    TYPE_INT.getInstance());
+			instance.enter("string", TYPE_STRING.getInstance());
+			instance.enter("void",   TYPE_VOID.getInstance());
 
 			/*************************************/
 			/* [2] How should we handle void ??? */
@@ -267,7 +291,9 @@ public class SYMBOL_TABLE
 					"PrintInt",
 					new TYPE_LIST(
 						TYPE_INT.getInstance(),
-						null)));
+						null)
+				)
+			);
 
 		}
 		return instance;

@@ -1,11 +1,15 @@
 package AST;
 
+import TYPES.*;
+import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
+
 public class AST_EXP_NIL extends AST_EXP
 {
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_EXP_NIL()
+	public AST_EXP_NIL(Integer lineNumber)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -13,6 +17,7 @@ public class AST_EXP_NIL extends AST_EXP
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
 		System.out.format("====================== exp -> NIL\n");
+		this.lineNumber = lineNumber;
 	}
 
 	/******************************************************/
@@ -20,11 +25,6 @@ public class AST_EXP_NIL extends AST_EXP
 	/******************************************************/
 	public void PrintMe()
 	{
-		/*******************************/
-		/* AST NODE TYPE = AST STRING EXP */
-		/*******************************/
-		System.out.format("AST NODE NIL\n");
-
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
@@ -32,6 +32,15 @@ public class AST_EXP_NIL extends AST_EXP
 			SerialNumber,
 			String.format("NIL\n")
 		);
+	}
+
+	public TYPE SemantMe() throws Exception
+	{
+		/*******************************/
+		/* AST NODE TYPE = AST STRING EXP */
+		/*******************************/
+		System.out.format("AST NODE NIL\n");
+		return TYPE_NIL.getInstance();
 	}
 
 }

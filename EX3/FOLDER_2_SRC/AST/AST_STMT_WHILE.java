@@ -2,6 +2,7 @@ package AST;
 
 import TYPES.*;
 import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
 
 public class AST_STMT_WHILE extends AST_STMT
 {
@@ -11,14 +12,14 @@ public class AST_STMT_WHILE extends AST_STMT
 	/*******************/
 	/*  CONSTRUCTOR(S) */
 	/*******************/
-	public AST_STMT_WHILE(AST_EXP cond,AST_STMT_LIST body)
+	public AST_STMT_WHILE(AST_EXP cond,AST_STMT_LIST body, Integer lineNumber)
 	{
 
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
-
+		this.lineNumber = lineNumber;
 		this.cond = cond;
 		this.body = body;
 	}
@@ -64,11 +65,7 @@ public class AST_STMT_WHILE extends AST_STMT
 		/***************************/
 		/* [2] Semant Data Members */
 		/***************************/
-		try {
-			if (body != null) body.SemantMe();
-		} catch (Exception e) {
-			throw e;
-		}
+		if (body != null) body.SemantMe();
 
 
 		/*****************/

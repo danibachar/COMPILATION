@@ -2,6 +2,7 @@ package AST;
 
 import TYPES.*;
 import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
 
 public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 {
@@ -13,7 +14,7 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_EXP_VAR_SIMPLE(String name)
+	public AST_EXP_VAR_SIMPLE(String name, Integer lineNumber)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -21,6 +22,7 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
 		System.out.format("====================== var -> ID( %s )\n",name);
+		this.lineNumber = lineNumber;
 		this.name = name;
 	}
 
@@ -43,6 +45,7 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 	}
 	public TYPE SemantMe() throws Exception
 	{
+		// Search Full Scope for any declaration, will return null if not found
 		return SYMBOL_TABLE.getInstance().find(name);
 	}
 }
