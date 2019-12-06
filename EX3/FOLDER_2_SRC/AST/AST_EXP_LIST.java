@@ -31,6 +31,10 @@ public class AST_EXP_LIST extends AST_Node
 	/******************************************************/
 	public void PrintMe()
 	{
+		/********************************/
+		/* AST NODE TYPE = AST EXP LIST */
+		/********************************/
+		System.out.print("AST_EXP_LIST\n");
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */
 		/*************************************/
@@ -52,17 +56,12 @@ public class AST_EXP_LIST extends AST_Node
 	}
 	public TYPE_LIST SemantMe() throws Exception
 	{
-		/********************************/
-		/* AST NODE TYPE = AST EXP LIST */
-		/********************************/
-		System.out.print("AST NODE EXP LIST\n");
+		System.out.print("SEMANTME - AST_EXP_LIST\n");
+
 		if (tail == null)
 		{
 			try {
-				return new TYPE_LIST(
-					head.SemantMe(),
-					null
-				);
+				return new TYPE_LIST(head.SemantMe(),null);
 			} catch (Exception e) {
 				System.out.print(e);
 				e.printStackTrace();
@@ -73,10 +72,7 @@ public class AST_EXP_LIST extends AST_Node
 		else
 		{
 			try {
-				return new TYPE_LIST(
-					head.SemantMe(),
-					tail.SemantMe()
-				);
+				return new TYPE_LIST(head.SemantMe(),tail.SemantMe());
 			} catch (Exception e) {
 				System.out.print(e);
 				e.printStackTrace();

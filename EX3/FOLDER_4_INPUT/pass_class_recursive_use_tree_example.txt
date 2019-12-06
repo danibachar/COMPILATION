@@ -5,8 +5,8 @@ class Tree
   Tree right;
   void Print()
   {
-    //left.Print();
-    //right.Print();
+    left.Print();
+    right.Print();
     PrintInt(value);
   }
 

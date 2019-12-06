@@ -9,7 +9,7 @@ public class AST_DEC_ARRAY extends AST_DEC
 	/********/
 	/* NAME */
 	/********/
-	public String name;
+	// public String name;
 	public String type;
 
 	/******************/
@@ -34,8 +34,7 @@ public class AST_DEC_ARRAY extends AST_DEC
 
 	public void PrintMe()
 	{
-		System.out.format("ARRAY DEC = %s\n",name);
-
+		System.out.format("AST_DEC_ARRAY name = %s, type = %s\n",name, type);
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
@@ -47,7 +46,7 @@ public class AST_DEC_ARRAY extends AST_DEC
 	public TYPE SemantMe() throws Exception
 	{
 		TYPE t;
-		System.out.format("AST_DEC_ARRAY name = %s, type = %s\n",name, type);
+		System.out.format("SEMANTME - AST_DEC_ARRAY name = %s, type = %s\n",name, type);
 		/****************************/
 		/* [1] Check If Type exists */
 		/****************************/

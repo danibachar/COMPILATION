@@ -27,7 +27,8 @@ public class AST_STMT_CALL extends AST_STMT
 
 	public void PrintMe()
 	{
-		callExp.PrintMe();
+		System.out.print("AST_STMT_CALLT\n");
+		if (callExp != null) callExp.PrintMe();
 
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
@@ -44,6 +45,7 @@ public class AST_STMT_CALL extends AST_STMT
 
 	public TYPE SemantMe() throws Exception
 	{
+		System.out.print("SEMANTME - AST_STMT_CALLT\n");
 		return callExp.SemantMe();
 	}
 }

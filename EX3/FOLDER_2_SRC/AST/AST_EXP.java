@@ -8,7 +8,7 @@ public abstract class AST_EXP extends AST_Node
 {
 	public TYPE SemantMe() throws Exception
 	{
-		System.out.print("AST_EXP - unknown expression\n");
+		System.out.print("SEMANTME - AST_EXP - unknown expression\n");
 		return null;
 	}
 }

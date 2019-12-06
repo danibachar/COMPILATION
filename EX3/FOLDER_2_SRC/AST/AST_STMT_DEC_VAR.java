@@ -25,15 +25,11 @@ public class AST_STMT_DEC_VAR extends AST_STMT
 		this.var = var;
 	}
 
-	public TYPE SemantMe() throws Exception
-	{
-		return var.SemantMe();
-	}
-
 	public void PrintMe()
 	{
-		var.PrintMe();
 
+		System.out.print("AST_STMT_DEC_VAR\n");
+		if (var != null) var.PrintMe();
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
@@ -45,5 +41,11 @@ public class AST_STMT_DEC_VAR extends AST_STMT
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
 		AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,var.SerialNumber);
+	}
+
+	public TYPE SemantMe() throws Exception
+	{
+		System.out.print("SEMANTME - AST_STMT_DEC_VAR\n");
+		return var.SemantMe();
 	}
 }

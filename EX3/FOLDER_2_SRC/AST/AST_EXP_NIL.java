@@ -25,6 +25,10 @@ public class AST_EXP_NIL extends AST_EXP
 	/******************************************************/
 	public void PrintMe()
 	{
+		/*******************************/
+		/* AST NODE TYPE = AST STRING EXP */
+		/*******************************/
+		System.out.format("AST_EXP_NIL\n");
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
@@ -36,10 +40,7 @@ public class AST_EXP_NIL extends AST_EXP
 
 	public TYPE SemantMe() throws Exception
 	{
-		/*******************************/
-		/* AST NODE TYPE = AST STRING EXP */
-		/*******************************/
-		System.out.format("AST NODE NIL\n");
+		System.out.format("SEMANTME -AST_EXP_NIL\n");
 		return TYPE_NIL.getInstance();
 	}
 

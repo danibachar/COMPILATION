@@ -28,6 +28,10 @@ public class AST_EXP_INT extends AST_EXP
 	/************************************************/
 	public void PrintMe()
 	{
+		/*******************************/
+		/* AST NODE TYPE = AST INT EXP */
+		/*******************************/
+		System.out.format("AST_EXP_INT( %d )\n",value);
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
@@ -38,10 +42,7 @@ public class AST_EXP_INT extends AST_EXP
 
 	public TYPE SemantMe() throws Exception
 	{
-		/*******************************/
-		/* AST NODE TYPE = AST INT EXP */
-		/*******************************/
-		System.out.format("AST NODE INT( %d )\n",value);
+		System.out.format("SEMANTME - AST_EXP_INT( %d )\n",value);
 		return TYPE_INT.getInstance();
 	}
 }

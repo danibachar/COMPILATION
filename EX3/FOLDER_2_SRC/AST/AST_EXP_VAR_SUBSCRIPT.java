@@ -28,8 +28,7 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 		/*************************************/
 		/* AST NODE TYPE = AST SUBSCRIPT VAR */
 		/*************************************/
-		System.out.print("AST NODE SUBSCRIPT VAR\n");
-
+		System.out.print("AST_EXP_VAR_SUBSCRIPT\n");
 		/****************************************/
 		/* RECURSIVELY PRINT VAR + SUBSRIPT ... */
 		/****************************************/
@@ -54,8 +53,8 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 	{
 		TYPE varType;
 		TYPE subscriptType;
-
-		System.out.print("AST_EXP_VAR_SUBSCRIPT\n");
+		
+		System.out.print("SEMANTME - AST_EXP_VAR_SUBSCRIPT\n");
 
 		// Validate that the var is kind of array AST_EXP_VAR
 		if (var != null)

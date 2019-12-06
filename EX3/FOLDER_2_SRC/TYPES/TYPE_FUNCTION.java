@@ -11,7 +11,7 @@ public class TYPE_FUNCTION extends TYPE
 	/* types of input params */
 	/*************************/
 	public TYPE_LIST params;
-	
+
 	/****************/
 	/* CTROR(S) ... */
 	/****************/
@@ -20,5 +20,12 @@ public class TYPE_FUNCTION extends TYPE
 		this.name = name;
 		this.returnType = returnType;
 		this.params = params;
+		if (params != null) {
+			System.out.format("### TYPE_FUNCTION = %s, params TYPE_LIST\n",name);
+			// params.PrintMyType();
+		} else {
+			System.out.format("### TYPE_FUNCTION `%s` was initialized without params\n",name);
+		}
+
 	}
 }

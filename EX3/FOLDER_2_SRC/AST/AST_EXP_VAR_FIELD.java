@@ -30,6 +30,10 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 	/*************************************************/
 	public void PrintMe()
 	{
+		/*********************************/
+		/* AST NODE TYPE = AST FIELD VAR */
+		/*********************************/
+		System.out.format("AST_EXP_VAR_FIELD\n(___.%s)\n",fieldName);
 		/**********************************************/
 		/* RECURSIVELY PRINT VAR, then FIELD NAME ... */
 		/**********************************************/
@@ -51,10 +55,7 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 	{
 		TYPE t = null;
 		TYPE_CLASS tc = null;
-		/*********************************/
-		/* AST NODE TYPE = AST FIELD VAR */
-		/*********************************/
-		System.out.format("FIELD\nNAME\n(___.%s)\n",fieldName);
+		System.out.format("SEMANTME - AST_EXP_VAR_FIELD\n(___.%s)\n",fieldName);
 		/******************************/
 		/* [1] Recursively semant var */
 		/******************************/
@@ -77,18 +78,24 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 		/************************************/
 		/* [3] Look for fiedlName inside tc */
 		/************************************/
-		for (TYPE_LIST it=tc.data_members;it != null;it=it.tail)
+		System.out.format("Start Looking for supported fields names = %s in class =  %s\n",fieldName,tc.name);
+		for (TYPE_CLASS_VAR_DEC_LIST it=tc.data_members;it != null;it=it.tail)
 		{
-			if (it.head.name == fieldName)
+			System.out.format("Looking for fieldlName head - %s \n",it.head);
+			System.out.format("Looking for fieldlName tail - %s \n",it.tail);
+			if (it.head != null)
 			{
-				return it.head;
+				if (it.head.name.equals(fieldName)) {
+					System.out.format("Found Head Name %s  with type %s\n",it.head.name, it.head.t.name);
+					return it.head.t;
+				}
 			}
 		}
 
 		/*********************************************/
 		/* [4] fieldName does not exist in class var */
 		/*********************************************/
-		System.out.format(">> ERROR [%d:%d] field %s does not exist in class\n",6,6,fieldName);
+		System.out.format(">> ERROR [%d] field %s does not exist in class\n",this.lineNumber,fieldName);
 		throw new AST_EXCEPTION(this);
 	}
 }

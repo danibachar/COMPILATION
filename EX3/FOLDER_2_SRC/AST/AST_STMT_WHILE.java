@@ -26,7 +26,7 @@ public class AST_STMT_WHILE extends AST_STMT
 
 	public void PrintMe()
 	{
-		System.out.print("AST NODE STMT WHILE\n");
+		System.out.print("AST_STMT_WHILE\n");
 
 		if (cond != null) cond.PrintMe();
 		if (body != null) body.PrintMe();
@@ -47,14 +47,15 @@ public class AST_STMT_WHILE extends AST_STMT
 
 	public TYPE SemantMe() throws Exception
 	{
+
+		System.out.print("SEMANTME - AST_STMT_WHILE\n");
 		/****************************/
 		/* [0] Semant the Condition */
 		/****************************/
 		if (cond.SemantMe() != TYPE_INT.getInstance())
 		{
-			System.out.format(">> ERROR [%d:%d] condition inside WHILE is not integral\n",2,2);
-			throw new Exception("AST_STMT_WHILE condition inside WHILE is not integral");
-			// System.exit(0);
+			System.out.format(">> ERROR [%d] condition inside WHILE is not integral\n",this.lineNumber);
+			throw new AST_EXCEPTION(this);
 		}
 
 		/*************************/

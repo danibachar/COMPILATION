@@ -51,7 +51,7 @@ CUP_FLAGS =                                \
 #########################
 # DEFINITIONS :: PARSER #
 #########################
-INPUT    = ${INPUT_DIR}/Input.txt
+INPUT    = ${INPUT_DIR}/pass_class_recursive_use_tree_example.txt
 OUTPUT   = ${OUTPUT_DIR}/SemanticStatus.txt
 
 ##########

@@ -54,6 +54,7 @@ public class SYMBOL_TABLE
 		/*************************************************/
 		/* [1] Compute the hash value for this new entry */
 		/*************************************************/
+		System.out.format("entering `%s` to table symbole with type = `%s`\n",name, t.name);
 		int hashValue = hash(name);
 
 		/******************************************************************************/
@@ -88,7 +89,7 @@ public class SYMBOL_TABLE
 	/***********************************************/
 	public TYPE find(String name)
 	{
-		
+
 		SYMBOL_TABLE_ENTRY e;
 		for (e = table[hash(name)]; e != null; e = e.next)
 		{
@@ -103,12 +104,11 @@ public class SYMBOL_TABLE
 
 	public TYPE findInCurrentScope(String name)
 	{
-
-		SYMBOL_TABLE_ENTRY top = this.top;
 		SYMBOL_TABLE_ENTRY e = top.next;
 		// Searching until we reach current scope BOUNDARY
 		while (e != null && e.name != "SCOPE-BOUNDARY")
 		{
+			// System.out.format("findInCurrentScope `%s`\n checking - `%s`\n",name ,e.name);
 			if (name.equals(e.name)) {
 				return e.type;
 			}
@@ -150,9 +150,10 @@ public class SYMBOL_TABLE
 		/**************************************************************************/
 		/* Pop elements from the symbol table stack until a SCOPE-BOUNDARY is hit */
 		/**************************************************************************/
-		System.out.print("######### - ENDING - SCOPE-BOUNDARY\n");
+		System.out.print("######### - ENDING - Start Poping - SCOPE-BOUNDARY\n");
 		while (top.name != "SCOPE-BOUNDARY")
 		{
+			System.out.format("poping elemets in scope `%s`\n",top.name);
 			table[top.index] = top.next;
 			top_index = top_index-1;
 			top = top.prevtop;
@@ -289,12 +290,18 @@ public class SYMBOL_TABLE
 				new TYPE_FUNCTION(
 					TYPE_VOID.getInstance(),
 					"PrintInt",
-					new TYPE_LIST(
-						TYPE_INT.getInstance(),
-						null)
+					new TYPE_LIST(TYPE_INT.getInstance(), null)
 				)
 			);
 
+			instance.enter(
+				"PrintString",
+				new TYPE_FUNCTION(
+					TYPE_VOID.getInstance(),
+					"PrintString",
+					new TYPE_LIST(TYPE_STRING.getInstance(),null)
+				)
+			);
 		}
 		return instance;
 	}

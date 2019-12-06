@@ -29,6 +29,10 @@ public class AST_STMT_IF extends AST_STMT
 	/*************************************************/
 	public void PrintMe()
 	{
+		/*************************************/
+		/* AST NODE TYPE = AST SUBSCRIPT VAR */
+		/*************************************/
+		System.out.print("AST_STMT_IF\n");
 		/**************************************/
 		/* RECURSIVELY PRINT left + right ... */
 		/**************************************/
@@ -51,10 +55,7 @@ public class AST_STMT_IF extends AST_STMT
 
 	public TYPE SemantMe() throws Exception
 	{
-		/*************************************/
-		/* AST NODE TYPE = AST SUBSCRIPT VAR */
-		/*************************************/
-		System.out.print("AST NODE STMT IF\n");
+		System.out.print("SEMANTME - AST_STMT_IF\n");
 		/****************************/
 		/* [0] Semant the Condition */
 		/****************************/

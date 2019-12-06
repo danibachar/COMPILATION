@@ -10,7 +10,7 @@ public class AST_DEC_FUNC extends AST_DEC
 	/* DATA MEMBERS */
 	/****************/
 	public String returnTypeName;
-	public String name;
+	// public String name;
 	public AST_TYPE_NAME_LIST params;
 	public AST_STMT_LIST body;
 
@@ -41,6 +41,10 @@ public class AST_DEC_FUNC extends AST_DEC
 	/************************************************************/
 	public void PrintMe()
 	{
+		/*************************************************/
+		/* AST NODE TYPE = AST NODE FUNCTION DECLARATION */
+		/*************************************************/
+		System.out.format("AST_DEC_FUNC(%s):%s\n",name,returnTypeName);
 		/***************************************/
 		/* RECURSIVELY PRINT params + body ... */
 		/***************************************/
@@ -66,11 +70,7 @@ public class AST_DEC_FUNC extends AST_DEC
 		TYPE t;
 		TYPE returnType = null;
 		TYPE_LIST type_list = null;
-
-		/*************************************************/
-		/* AST NODE TYPE = AST NODE FUNCTION DECLARATION */
-		/*************************************************/
-		System.out.format("FUNC(%s):%s\n",name,returnTypeName);
+		System.out.format("SEMANTME - AST_DEC_FUNC(%s):%s\n",name,returnTypeName);
 
 		/*******************/
 		/* [0] return type */
@@ -80,7 +80,6 @@ public class AST_DEC_FUNC extends AST_DEC
 		{
 			System.out.format(">> ERROR [%d] non existing return type %s\n",this.lineNumber,returnType);
 			throw new AST_EXCEPTION(this);
-			// System.exit(0);
 		}
 
 		/****************************/
@@ -109,11 +108,17 @@ public class AST_DEC_FUNC extends AST_DEC
 			}
 		}
 
+		// Adding before the body Semantic Analysis for recursive purpuse
+		// After the scope will get close it will remove the symbole from the TABLE
+		// So we are adding it once more after the scope closed
+		SYMBOL_TABLE.getInstance().enter(name,new TYPE_FUNCTION(returnType,name,type_list));
+
 		/*******************/
 		/* [3] Semant Body */
 		/*******************/
-		body.SemantMe();
-
+		TYPE actualReturnType = body.SemantMe();
+		// Validate the the actual return type from the body is identical to the retuen type configured
+		// TODO -- actualReturnType == returnType
 
 		/*****************/
 		/* [4] End Scope */
@@ -123,7 +128,8 @@ public class AST_DEC_FUNC extends AST_DEC
 		/***************************************************/
 		/* [5] Enter the Function Type to the Symbol Table */
 		/***************************************************/
-		SYMBOL_TABLE.getInstance().enter(name,new TYPE_FUNCTION(returnType,name,type_list));
+		TYPE_FUNCTION f = new TYPE_FUNCTION(returnType,name,type_list);
+		SYMBOL_TABLE.getInstance().enter(name,f);
 
 		/*********************************************************/
 		/* [6] Return value is irrelevant for class declarations */

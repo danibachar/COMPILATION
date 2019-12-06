@@ -27,11 +27,7 @@ public class AST_STMT_RETURN extends AST_STMT
 	/************************************************************/
 	public void PrintMe()
 	{
-		/*************************************/
-		/* AST NODE TYPE = AST SUBSCRIPT VAR */
-		/*************************************/
-		System.out.print("AST NODE STMT RETURN\n");
-
+		System.out.print("AST_STMT_RETURN\n");
 		/*****************************/
 		/* RECURSIVELY PRINT exp ... */
 		/*****************************/
@@ -52,10 +48,14 @@ public class AST_STMT_RETURN extends AST_STMT
 
 	public TYPE SemantMe() throws Exception
 	{
+		/*************************************/
+		/* AST NODE TYPE = AST SUBSCRIPT VAR */
+		/*************************************/
+		System.out.print("SEMANTME - AST_STMT_RETURN\n");
+
 		/****************************/
 		/* [0] Semant the Condition */
 		/****************************/
-
 
 		/*********************************************************/
 		/* [4] Return value is irrelevant for class declarations */

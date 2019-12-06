@@ -41,8 +41,7 @@ public class AST_STMT_LIST extends AST_Node
 		/**************************************/
 		/* AST NODE TYPE = AST STATEMENT LIST */
 		/**************************************/
-		System.out.print("AST NODE STMT LIST\n");
-
+		System.out.print("AST_STMT_LIST\n");
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */
 		/*************************************/
@@ -65,10 +64,11 @@ public class AST_STMT_LIST extends AST_Node
 
 	public TYPE SemantMe() throws Exception
 	{
-
+		System.out.print("SEMANTME - AST_STMT_LIST\n");
+		
 		if (head != null) head.SemantMe();
 		if (tail != null) tail.SemantMe();
-		
+
 		return null;
 	}
 }

@@ -10,7 +10,7 @@ public class AST_DEC_VAR extends AST_DEC
 	/* DATA MEMBERS */
 	/****************/
 	public String type;
-	public String name;
+	// public String name;
 	public AST_EXP initialValue;
 
 	/******************/
@@ -34,6 +34,11 @@ public class AST_DEC_VAR extends AST_DEC
 	/********************************************************/
 	public void PrintMe()
 	{
+		/********************************/
+		/* AST NODE TYPE = AST DEC LIST */
+		/********************************/
+		if (initialValue != null) System.out.format("VAR-DEC(%s):%s := initialValue\n",name,type);
+		if (initialValue == null) System.out.format("VAR-DEC(%s):%s                \n",name,type);
 		/**************************************/
 		/* RECURSIVELY PRINT initialValue ... */
 		/**************************************/
@@ -61,30 +66,26 @@ public class AST_DEC_VAR extends AST_DEC
 	{
 		TYPE t;
 
-		/********************************/
-		/* AST NODE TYPE = AST DEC LIST */
-		/********************************/
-		if (initialValue != null) System.out.format("VAR-DEC(%s):%s := initialValue\n",name,type);
-		if (initialValue == null) System.out.format("VAR-DEC(%s):%s                \n",name,type);
-
+		if (initialValue != null) System.out.format("SEMANTME - VAR-DEC(%s):%s := initialValue\n",name,type);
+		if (initialValue == null) System.out.format("SEMANTME - VAR-DEC(%s):%s                \n",name,type);
 		/****************************/
 		/* [1] Check If Type exists */
 		/****************************/
 		t = SYMBOL_TABLE.getInstance().find(type);
 		if (t == null)
 		{
-			// if type is class we check if there was a previous TYPE_CLASS_VAR_DEC 
+			// if type is class we check if there was a previous TYPE_CLASS_VAR_DEC
 			System.out.format(">> ERROR [%d] non existing type %s\n",this.lineNumber,type);
 			throw new AST_EXCEPTION(this);
-			// System.exit(0);
 		}
 
 		/**************************************/
 		/* [2] Check That Name does NOT exist */
 		/**************************************/
-		if (SYMBOL_TABLE.getInstance().findInCurrentScope(name) != null)
+		TYPE temp = SYMBOL_TABLE.getInstance().findInCurrentScope(name);
+		if (temp != null)
 		{
-			System.out.format(">> ERROR [%d] variable %s already exists in scope\n",this.lineNumber,name);
+			System.out.format(">> ERROR [%d] variable `%s` already exists in scope, found `%s`\n",this.lineNumber,name, temp.name);
 			throw new AST_EXCEPTION(this);
 		}
 
@@ -111,7 +112,7 @@ public class AST_DEC_VAR extends AST_DEC
 		/*********************************************************/
 		/* [4] Return value is irrelevant for class declarations */
 		/*********************************************************/
-		return null;
+		return t;
 	}
 
 }

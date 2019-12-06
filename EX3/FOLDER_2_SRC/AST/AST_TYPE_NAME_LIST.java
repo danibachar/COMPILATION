@@ -29,11 +29,7 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 	/******************************************************/
 	public void PrintMe()
 	{
-		/**************************************/
-		/* AST NODE TYPE = AST TYPE NAME LIST */
-		/**************************************/
-		System.out.print("AST TYPE NAME LIST\n");
-
+		System.out.print("AST_TYPE_NAME_LIST\n");
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */
 		/*************************************/
@@ -56,13 +52,12 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 
 	public TYPE_LIST SemantMe() throws Exception
 	{
+		System.out.print("SEMANTME - AST_TYPE_NAME_LIST\n");
 		if (tail == null)
 		{
+			System.out.print("AST TYPE NAME LIST, tail == null\n");
 			try {
-				return new TYPE_LIST(
-					head.SemantMe(),
-					null
-				);
+				return new TYPE_LIST(head.SemantMe(),null);
 			} catch (Exception e) {
 				throw new AST_EXCEPTION(this);
 			}
@@ -70,11 +65,9 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 		}
 		else
 		{
+			System.out.print("AST TYPE NAME LIST, tail != null\n");
 			try {
-				return new TYPE_LIST(
-					head.SemantMe(),
-					tail.SemantMe()
-				);
+				return new TYPE_LIST(head.SemantMe(),tail.SemantMe());
 			} catch (Exception e) {
 				throw new AST_EXCEPTION(this);
 			}

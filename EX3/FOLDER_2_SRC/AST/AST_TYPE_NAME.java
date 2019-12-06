@@ -39,7 +39,6 @@ public class AST_TYPE_NAME extends AST_Node
 		/* AST NODE TYPE = AST TYPE NAME NODE */
 		/**************************************/
 		System.out.format("NAME(%s):TYPE(%s)\n",name,type);
-
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
@@ -53,9 +52,9 @@ public class AST_TYPE_NAME extends AST_Node
 	/*****************/
 	public TYPE SemantMe() throws Exception
 	{
+		System.out.format("SEMANTME - NAME(%s):TYPE(%s)\n",name,type);
 		TYPE t = SYMBOL_TABLE.getInstance().find(type);
-		if (t == null)
-		{
+		if (t == null) {
 			/**************************/
 			/* ERROR: undeclared type */
 			/**************************/

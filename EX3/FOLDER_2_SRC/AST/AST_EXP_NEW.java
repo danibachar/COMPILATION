@@ -34,7 +34,7 @@ public class AST_EXP_NEW extends AST_EXP
 	/************************************************/
   public void PrintMe()
   {
-
+		System.out.format("AST_EXP_NEW type - %s\n" ,type);
     /**************************************/
     /* RECURSIVELY PRINT initialValue ... */
     /**************************************/
@@ -57,13 +57,12 @@ public class AST_EXP_NEW extends AST_EXP
 	public TYPE SemantMe() throws Exception
 	{
 		TYPE t;
-		System.out.format("AST_EXP_NEW type - %s\n" ,type);
-
+		System.out.format("SEMANTME - AST_EXP_NEW type - %s\n" ,type);
 		/************************************************/
 		/* Check That Class Type Was previously declared*/
 		/************************************************/
 		t = SYMBOL_TABLE.getInstance().find(type);
-		if (t != null)
+		if (t == null)
 		{
 			System.out.format(">> ERROR [%d] Class type(%s) was not declared\n",this.lineNumber,type);
 			throw new AST_EXCEPTION(this);
@@ -77,6 +76,6 @@ public class AST_EXP_NEW extends AST_EXP
 			throw new AST_EXCEPTION(this);
 		}
 
-		return null;
+		return t;
 	}
 }

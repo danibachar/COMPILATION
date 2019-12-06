@@ -52,7 +52,10 @@ public class AST_EXP_BINOP extends AST_EXP
 	public void PrintMe()
 	{
 		String sOP=opSymbol();
-
+		/*************************************/
+		/* AST NODE TYPE = AST SUBSCRIPT VAR */
+		/*************************************/
+		System.out.format("AST_EXP_BINOP(%s)\n",opSymbol());
 		/**************************************/
 		/* RECURSIVELY PRINT left + right ... */
 		/**************************************/
@@ -74,10 +77,7 @@ public class AST_EXP_BINOP extends AST_EXP
 	}
 	public TYPE SemantMe() throws Exception
 	{
-		/*************************************/
-		/* AST NODE TYPE = AST SUBSCRIPT VAR */
-		/*************************************/
-		System.out.format("AST NODE BINOP EXP(%s)\n",opSymbol());
+		System.out.format("SEMANTME - AST_EXP_BINOP(%s)\n",opSymbol());
 
 		TYPE t1 = null;
 		TYPE t2 = null;

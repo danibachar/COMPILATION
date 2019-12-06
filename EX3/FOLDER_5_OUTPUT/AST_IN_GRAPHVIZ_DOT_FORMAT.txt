@@ -1,0 +1,201 @@
+digraph
+{
+graph [ordering = "out"]
+v0 [label = "VAR
+DEC(value)
+:int"];
+v1 [label = "VAR
+DEC(left)
+:Tree"];
+v2 [label = "VAR
+DEC(right)
+:Tree"];
+v3 [label = "SIMPLE
+VAR
+(left)"];
+v4 [label = "CALL(Print)
+WITH"];
+v4 -> v3;
+v5 [label = "STMT
+CALL"];
+v5 -> v4;
+v6 [label = "SIMPLE
+VAR
+(right)"];
+v7 [label = "CALL(Print)
+WITH"];
+v7 -> v6;
+v8 [label = "STMT
+CALL"];
+v8 -> v7;
+v9 [label = "SIMPLE
+VAR
+(value)"];
+v10 [label = "EXP
+LIST
+"];
+v10 -> v9;
+v11 [label = "CALL(PrintInt)
+WITH"];
+v11 -> v10;
+v12 [label = "STMT
+CALL"];
+v12 -> v11;
+v13 [label = "STMT
+LIST
+"];
+v13 -> v12;
+v14 [label = "STMT
+LIST
+"];
+v14 -> v8;
+v14 -> v13;
+v15 [label = "STMT
+LIST
+"];
+v15 -> v5;
+v15 -> v14;
+v16 [label = "FUNC(Print)
+:void
+"];
+v16 -> v15;
+v17 [label = "CFIELDS"];
+v17 -> v16;
+v18 [label = "CFIELDS"];
+v18 -> v2;
+v18 -> v17;
+v19 [label = "CFIELDS"];
+v19 -> v1;
+v19 -> v18;
+v20 [label = "CFIELDS"];
+v20 -> v0;
+v20 -> v19;
+v21 [label = "CLASS
+Tree"];
+v21 -> v20;
+v22 [label = "NEW(Tree)
+"];
+v23 [label = "VAR
+DEC(root)
+:Tree"];
+v23 -> v22;
+v24 [label = "STMT
+DEC
+VAR"];
+v24 -> v23;
+v25 [label = "SIMPLE
+VAR
+(root)"];
+v26 [label = "FIELD
+VAR
+___.value"];
+v26 -> v25;
+v27 [label = "INT(10)"];
+v28 [label = "ASSIGN
+left := right
+"];
+v28 -> v26;
+v28 -> v27;
+v29 [label = "NEW(Tree)
+"];
+v30 [label = "VAR
+DEC(leftSon)
+:Tree"];
+v30 -> v29;
+v31 [label = "STMT
+DEC
+VAR"];
+v31 -> v30;
+v32 [label = "SIMPLE
+VAR
+(leftSon)"];
+v33 [label = "FIELD
+VAR
+___.value"];
+v33 -> v32;
+v34 [label = "INT(12)"];
+v35 [label = "ASSIGN
+left := right
+"];
+v35 -> v33;
+v35 -> v34;
+v36 [label = "NEW(Tree)
+"];
+v37 [label = "VAR
+DEC(rightSon)
+:Tree"];
+v37 -> v36;
+v38 [label = "STMT
+DEC
+VAR"];
+v38 -> v37;
+v39 [label = "SIMPLE
+VAR
+(rightSon)"];
+v40 [label = "FIELD
+VAR
+___.value"];
+v40 -> v39;
+v41 [label = "INT(13)"];
+v42 [label = "ASSIGN
+left := right
+"];
+v42 -> v40;
+v42 -> v41;
+v43 [label = "SIMPLE
+VAR
+(root)"];
+v44 [label = "CALL(Print)
+WITH"];
+v44 -> v43;
+v45 [label = "STMT
+CALL"];
+v45 -> v44;
+v46 [label = "STMT
+LIST
+"];
+v46 -> v45;
+v47 [label = "STMT
+LIST
+"];
+v47 -> v42;
+v47 -> v46;
+v48 [label = "STMT
+LIST
+"];
+v48 -> v38;
+v48 -> v47;
+v49 [label = "STMT
+LIST
+"];
+v49 -> v35;
+v49 -> v48;
+v50 [label = "STMT
+LIST
+"];
+v50 -> v31;
+v50 -> v49;
+v51 [label = "STMT
+LIST
+"];
+v51 -> v28;
+v51 -> v50;
+v52 [label = "STMT
+LIST
+"];
+v52 -> v24;
+v52 -> v51;
+v53 [label = "FUNC(main)
+:void
+"];
+v53 -> v52;
+v54 [label = "DEC
+LIST
+"];
+v54 -> v53;
+v55 [label = "DEC
+LIST
+"];
+v55 -> v21;
+v55 -> v54;
+}
