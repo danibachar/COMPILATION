@@ -59,27 +59,34 @@ public class AST_STMT_RETURN extends AST_STMT
 			throw new AST_EXCEPTION(this);
 		}
 
-
-
 		/****************************/
 		/* [0] Semant the Condition */
 		/****************************/
 		TYPE exp_type = null;
 		if (exp != null) exp_type = exp.SemantMe();
 
-		if (func.returnType == null && exp == null) {
-			return null;
+		if (exp_type == null) {
+			if (func.returnType == null) {
+				return null;
+			}
+			if (func.returnType == TYPE_VOID.getInstance()) {
+				return null;
+			}
+			System.out.format(">> ERROR [%d] trying return void from non-void return type(%s) function)\n",this.lineNumber, func.returnType);
+			throw new AST_EXCEPTION(this);
 		}
 
 		// If no exp_type func.returnType must be void!
-		if (exp_type != null && func.returnType == TYPE_VOID.getInstance()) {
-			System.out.format(">> ERROR [%d] trying return type(%s) from void function)\n",this.lineNumber, exp_type);
-			throw new AST_EXCEPTION(this);
-		}
+		if (exp_type != null) {
+			if (func.returnType == null) {
+				System.out.format(">> ERROR [%d] trying return type(%s) from void or non existsfunction)\n",this.lineNumber, exp_type);
+				throw new AST_EXCEPTION(this);
+			}
+			if (func.returnType == TYPE_VOID.getInstance()) {
+				System.out.format(">> ERROR [%d] trying return type(%s) from void function)\n",this.lineNumber, exp_type);
+				throw new AST_EXCEPTION(this);
+			}
 
-		if (exp_type == null) {
-			System.out.format(">> ERROR [%d] trying return void from non-void return type(%s) function)\n",this.lineNumber, func.returnType);
-			throw new AST_EXCEPTION(this);
 		}
 
 		if (func.returnType.getClass() != exp_type.getClass()) {

@@ -13,6 +13,8 @@ public class AST_DEC_CLASS extends AST_DEC
 	// public String name;
 	public String parent;
 	public AST_DEC_CFIELDS body;
+
+	public boolean isClassDec() { return true;}
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/

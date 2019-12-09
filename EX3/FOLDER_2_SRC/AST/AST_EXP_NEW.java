@@ -60,6 +60,7 @@ public class AST_EXP_NEW extends AST_EXP
 	{
 		TYPE t;
 		// System.out.format("SEMANTME - AST_EXP_NEW type - %s\n" ,type);
+
 		/************************************************/
 		/* Check That Type Was previously declared*/
 		/************************************************/
@@ -69,6 +70,9 @@ public class AST_EXP_NEW extends AST_EXP
 			System.out.format(">> ERROR [%d] Class type(%s) was not declared\n",this.lineNumber,type);
 			throw new AST_EXCEPTION(this);
 		}
+		/************************************************/
+		/*          Cannot assign void                  */
+		/************************************************/
 		if (t == TYPE_VOID.getInstance())
 		{
 			System.out.format(">> ERROR [%d] Cannot ask to create new void, daaa!\n",this.lineNumber,type);
@@ -77,14 +81,23 @@ public class AST_EXP_NEW extends AST_EXP
 		/***********************************************************/
 		/* Check That the Type is actually a class type or an array*/
 		/***********************************************************/
-		if (!t.isClass() && exp == null)
-		{
-			System.out.format(">> ERROR [%d] trying to create new entity that is not a class/array type(%s)\n",this.lineNumber,type);
-			throw new AST_EXCEPTION(this);
+		if (!t.isClass() && !t.isArray()) {
+			if (t.isClassVar()) {
+				TYPE_CLASS_VAR_DEC tcv = (TYPE_CLASS_VAR_DEC)t;
+				if (!tcv.isClass() && !tcv.isArray()) {
+					System.out.format(">> ERROR [%d] trying to create new entity that is not a class/array type(%s)\n",this.lineNumber,type);
+					throw new AST_EXCEPTION(this);
+				}
+			} else {
+				System.out.format(">> ERROR [%d] trying to create new entity that is not a class/array type(%s)\n",this.lineNumber,type);
+				throw new AST_EXCEPTION(this);
+			}
 		}
 
 		// Validate inheritance assignment
+		if (t.isClass()) {
 
+		}
 
 		// Validating array
 		if (exp != null) {

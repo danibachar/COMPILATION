@@ -12,7 +12,7 @@ public class AST_DEC_ARRAY extends AST_DEC
 	/********/
 	// public String name;
 	public String type;
-
+	public boolean isArrayDec() { return true;}
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/

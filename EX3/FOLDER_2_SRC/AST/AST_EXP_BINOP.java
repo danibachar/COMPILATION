@@ -91,18 +91,18 @@ public class AST_EXP_BINOP extends AST_EXP
 		// Check if we are using class var as it might have a different
 		TYPE_CLASS_VAR_DEC t1_var = null;
 		TYPE_CLASS_VAR_DEC t2_var = null;
-		if (t1.isClassVar()) {
+		if (t1 != null && t1.isClassVar()) {
 				t1_var = (TYPE_CLASS_VAR_DEC)t1;
-				if ((t1_var.t == TYPE_INT.getInstance()) && (t2 == TYPE_INT.getInstance())) {
+				if ((t1_var.t != null && t1_var.t == TYPE_INT.getInstance()) && (t2 == TYPE_INT.getInstance())) {
 					return TYPE_INT.getInstance();
 				}
 				if (OP == 0) {
-					if ((t2_var.t == TYPE_STRING.getInstance()) && (t1 == TYPE_STRING.getInstance())) {
+					if ((t2_var.t != null && t2_var.t == TYPE_STRING.getInstance()) && (t1 == TYPE_STRING.getInstance())) {
 						return TYPE_INT.getInstance();
 					}
 				}
 		}
-		if (t2.isClassVar()) {
+		if (t2 != null && t2.isClassVar()) {
 				t2_var = (TYPE_CLASS_VAR_DEC)t2;
 				if ((t2_var.t == TYPE_INT.getInstance()) && (t1 == TYPE_INT.getInstance())) {
 					return TYPE_INT.getInstance();
@@ -122,6 +122,12 @@ public class AST_EXP_BINOP extends AST_EXP
 				if ((t2_var.t == TYPE_STRING.getInstance()) && (t1_var.t == TYPE_STRING.getInstance())) {
 					return TYPE_INT.getInstance();
 				}
+				// Check class? and array
+				if (t1_var.t.isArray() && t2_var.t.isArray()) {
+					if (t1_var.t.equals(t2_var.t)) {
+						return TYPE_INT.getInstance();
+					}
+				}
 			}
 		}
 
@@ -133,11 +139,11 @@ public class AST_EXP_BINOP extends AST_EXP
 				return TYPE_INT.getInstance();
 			}
 			// Allow compare nil to class
-			if ((t1.isClass() && t2 == TYPE_NIL.getInstance()) || (t2.isClass() && t1 == TYPE_NIL.getInstance())) {
+			if ((t1 != null && t1.isClass() && t2 == TYPE_NIL.getInstance()) || (t2 != null && t2.isClass() && t1 == TYPE_NIL.getInstance())) {
 				return TYPE_INT.getInstance();
 			}
 			// Allow compare nil to array
-			if ((t1.isArray() && t2 == TYPE_NIL.getInstance()) || (t2.isArray() && t1 == TYPE_NIL.getInstance())) {
+			if ((t1 != null && t1.isArray() && t2 == TYPE_NIL.getInstance()) || (t2 != null && t2.isArray() && t1 == TYPE_NIL.getInstance())) {
 				return TYPE_INT.getInstance();
 			}
 			// Allow compare 2 nils

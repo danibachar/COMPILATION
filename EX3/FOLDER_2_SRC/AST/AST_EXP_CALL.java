@@ -150,10 +150,13 @@ public class AST_EXP_CALL extends AST_EXP
 			// TODO - Validate Params!!!
 			if (params != null)
 			{
+				if (funcTypeValidated.params == null) {
+					System.out.format(">> ERROR [%d] params mismatch for global function call - %s ###\n",this.lineNumber,funcName);
+					throw new AST_EXCEPTION(this);
+				}
 				// We should have params to check
-				if (paramsTypes == null || !areParamsValid(funcTypeValidated.params, paramsTypes))
-				{
-					System.out.format(">> ERROR [%d] params mismatch for global function call -  %s\n",this.lineNumber,funcName);
+				if (paramsTypes == null || !areParamsValid(funcTypeValidated.params, paramsTypes)) {
+					System.out.format(">> ERROR [%d] params mismatch for global function call - %s 123\n",this.lineNumber,funcName);
 					throw new AST_EXCEPTION(this);
 				}
 
@@ -199,6 +202,11 @@ public class AST_EXP_CALL extends AST_EXP
 				TYPE_CLASS_VAR_DEC tmp = (TYPE_CLASS_VAR_DEC)expected;
 				expected = tmp.t;
 			}
+			if (send.isClassVar()) {
+				TYPE_CLASS_VAR_DEC tmp = (TYPE_CLASS_VAR_DEC)send;
+				send = tmp.t;
+			}
+
 			if (expected.isClass()) {
 				TYPE_CLASS c = (TYPE_CLASS)expected;
 				if (!c.isAssignableFrom(send)) {

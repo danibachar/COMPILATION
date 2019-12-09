@@ -109,7 +109,7 @@ public class AST_STMT_ASSIGN extends AST_STMT
 
 		// Validate same type
 		if (t1 != t2) {
-			// System.out.format("###### - AST_STMT_ASSIGN t1(%s), t2(%s)\n", t1, t2);
+			// System.out.format("SEMANTME - AST_STMT_ASSIGN t1(%s), t2(%s)\n", t1, t2);
 			// Check if we are using class var as it might have a different
 			if (t1.isClassVar()) {
 					TYPE_CLASS_VAR_DEC t1_var = (TYPE_CLASS_VAR_DEC)t1;
@@ -128,6 +128,7 @@ public class AST_STMT_ASSIGN extends AST_STMT
 			System.out.format(">> ERROR [%d] type mismatch for var := exp\n",this.lineNumber);
 			throw new AST_EXCEPTION(this);
 		}
+		// System.out.format("###### - AST_STMT_ASSIGN t1(%s), t2(%s)\n", t1, t2);
 		return null;
 	}
 }

@@ -94,14 +94,72 @@ public class AST_DEC_VAR extends AST_DEC
 		if (initialValue != null)
 		{
 			TYPE initValueType = initialValue.SemantMe();
-			if (initValueType == null)
-			{
+			if (initValueType == null) {
 				System.out.format(">> ERROR [%d] initialValue that assigned to the var is not exists\n",this.lineNumber,name);
 				throw new AST_EXCEPTION(this);
 			}
-			if (initValueType.getClass() != t.getClass())
-			{
-				// Allow nil into class and array
+			// Allow Assignment for class nil or inheritance support
+			if (t.isClass()) {
+				TYPE_CLASS tc = (TYPE_CLASS)t;
+				if (initValueType.isClassVar()) {
+					TYPE_CLASS_VAR_DEC testInitVlueType = (TYPE_CLASS_VAR_DEC)initValueType;
+					if (!tc.isAssignableFrom(testInitVlueType.t)) {
+						System.out.format(">> ERROR [%d] 1-trying assign class(%s) with the value(%s) \n",this.lineNumber,t, testInitVlueType.t);
+						throw new AST_EXCEPTION(this);
+					}
+				} else if (!tc.isAssignableFrom(initValueType)) {
+					System.out.format(">> ERROR [%d] 2-trying assign class(%s) with the value(%s) \n",this.lineNumber,t, initValueType);
+					throw new AST_EXCEPTION(this);
+				}
+			}
+			// Allow Assignment for array - nil or same array?
+			if (t.isArray()) {
+				TYPE_ARRAY tc = (TYPE_ARRAY)t;
+				if (initValueType.isClassVar()) {
+					TYPE_CLASS_VAR_DEC testInitVlueType = (TYPE_CLASS_VAR_DEC)initValueType;
+					if (!tc.isAssignableFrom(testInitVlueType.t)) {
+						System.out.format(">> ERROR [%d] trying assign array(%s) with the value(%s) \n",this.lineNumber,t, testInitVlueType.t);
+						throw new AST_EXCEPTION(this);
+					}
+				} else if (!tc.isAssignableFrom(initValueType)) {
+					System.out.format(">> ERROR [%d] trying assign array(%s) with the value(%s) \n",this.lineNumber,t, initValueType);
+					throw new AST_EXCEPTION(this);
+				}
+			}
+
+			if (t.isClassVar()) {
+				TYPE_CLASS_VAR_DEC tcv = (TYPE_CLASS_VAR_DEC)t;
+				// Allow Assignment for class nil or inheritance support
+				if (tcv.t.isClass()) {
+					TYPE_CLASS tc = (TYPE_CLASS)tcv.t;
+					if (initValueType.isClassVar()) {
+						TYPE_CLASS_VAR_DEC testInitVlueType = (TYPE_CLASS_VAR_DEC)initValueType;
+						if (!tc.isAssignableFrom(testInitVlueType.t)) {
+							System.out.format(">> ERROR [%d] trying assign class(%s) with the value(%s) \n",this.lineNumber,t, testInitVlueType.t);
+							throw new AST_EXCEPTION(this);
+						}
+					} else if (!tc.isAssignableFrom(initValueType)) {
+						System.out.format(">> ERROR [%d] trying assign class(%s) with the value(%s) \n",this.lineNumber,t, initValueType);
+						throw new AST_EXCEPTION(this);
+					}
+				}
+				// Allow Assignment for array - nil or same array?
+				if (tcv.t.isArray()) {
+					TYPE_ARRAY tc = (TYPE_ARRAY)initValueType;
+					if (initValueType.isClassVar()) {
+						TYPE_CLASS_VAR_DEC testInitVlueType = (TYPE_CLASS_VAR_DEC)initValueType;
+						if (!tc.isAssignableFrom(testInitVlueType.t)) {
+							System.out.format(">> ERROR [%d] trying assign class(%s) with the value(%s) \n",this.lineNumber,t, testInitVlueType.t);
+							throw new AST_EXCEPTION(this);
+						}
+					} else if (!tc.isAssignableFrom(initValueType)) {
+						System.out.format(">> ERROR [%d] trying assign class(%s) with the value(%s) \n",this.lineNumber,t, initValueType);
+						throw new AST_EXCEPTION(this);
+					}
+				}
+			}
+
+			if (initValueType.getClass() != t.getClass()) {
 				boolean isArrayOrClass = t.isClass() || t.isArray();
 				boolean isAssigningNil = initValueType == TYPE_NIL.getInstance();
 				if (!isAssigningNil || !isArrayOrClass) {
@@ -111,6 +169,7 @@ public class AST_DEC_VAR extends AST_DEC
 							if (!ta.isAssignableFrom(initValueType)) {
 								System.out.format(">> ERROR [%d] Array initialValue(%s), t(%s)\n",this.lineNumber,initValueType, ta.type);
 								System.out.format(">> ERROR [%d] Array initialValue that assigned to the var(%s) is not the same type of the var\n",this.lineNumber,name);
+								throw new AST_EXCEPTION(this);
 							}
 					} else {
 						System.out.format(">> ERROR [%d] initialValue(%s), t(%s)\n",this.lineNumber,initValueType, t);

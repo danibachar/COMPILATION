@@ -16,5 +16,6 @@ int main()
   string i4 := "aasd12421sdfas";
   string i5 := "123aasd12421sdfas";
 
-  Father f1 := new Father();
+  Father f1 := new Father;
+  Father f2 := new Son;
 }
