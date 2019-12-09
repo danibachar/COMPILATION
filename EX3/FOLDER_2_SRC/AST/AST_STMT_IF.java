@@ -32,7 +32,7 @@ public class AST_STMT_IF extends AST_STMT
 		/*************************************/
 		/* AST NODE TYPE = AST SUBSCRIPT VAR */
 		/*************************************/
-		System.out.print("AST_STMT_IF\n");
+		// System.out.print("AST_STMT_IF\n");
 		/**************************************/
 		/* RECURSIVELY PRINT left + right ... */
 		/**************************************/
@@ -59,10 +59,7 @@ public class AST_STMT_IF extends AST_STMT
 		/****************************/
 		/* [0] Semant the Condition */
 		/****************************/
-		TYPE condType = cond.SemantMe();
-		System.out.format("condType(%s)\n", condType.name);
-
-		if (condType != TYPE_INT.getInstance())
+		if (cond.SemantMe() != TYPE_INT.getInstance())
 		{
 			System.out.format(">> ERROR [%d] condition inside IF is not integral\n",this.lineNumber);
 			throw new AST_EXCEPTION(this);

@@ -9,7 +9,7 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 	/************************/
 	/* simple variable name */
 	/************************/
-	public String name;
+	// public String name;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -21,7 +21,7 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
-		System.out.format("====================== var -> ID( %s )\n",name);
+		// System.out.format("====================== var -> ID( %s )\n",name);
 		this.lineNumber = lineNumber;
 		this.name = name;
 	}
@@ -34,7 +34,7 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 		/**********************************/
 		/* AST NODE TYPE = AST SIMPLE VAR */
 		/**********************************/
-		System.out.format("AST_EXP_VAR_SIMPLE( %s )\n",name);
+		// System.out.format("AST_EXP_VAR_SIMPLE( %s )\n",name);
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
@@ -45,7 +45,6 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 	public TYPE SemantMe() throws Exception
 	{
 		System.out.format("SEMANTME - AST_EXP_VAR_SIMPLE( %s )\n",name);
-		// Search Full Scope for any declaration, will return null if not found
-		return SYMBOL_TABLE.getInstance().find(name);
+		return SYMBOL_TABLE.getInstance().findField(name,false);
 	}
 }

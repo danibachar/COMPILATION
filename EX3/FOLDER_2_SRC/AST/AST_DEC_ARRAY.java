@@ -3,6 +3,7 @@ package AST;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
+import java.util.ArrayList;
 
 public class AST_DEC_ARRAY extends AST_DEC
 {
@@ -25,7 +26,7 @@ public class AST_DEC_ARRAY extends AST_DEC
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== arrayDec -> ARRAY( %s ) ID( %s ) = ID []\n", type, name);
+		// System.out.format("====================== arrayDec -> ARRAY( %s ) ID( %s ) \n", type, name);
 
 		this.lineNumber = lineNumber;
 		this.name = name;
@@ -34,7 +35,7 @@ public class AST_DEC_ARRAY extends AST_DEC
 
 	public void PrintMe()
 	{
-		System.out.format("AST_DEC_ARRAY name = %s, type = %s\n",name, type);
+		// System.out.format("AST_DEC_ARRAY name = %s, type = %s\n",name, type);
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
@@ -47,9 +48,18 @@ public class AST_DEC_ARRAY extends AST_DEC
 	{
 		TYPE t;
 		System.out.format("SEMANTME - AST_DEC_ARRAY name = %s, type = %s\n",name, type);
+		/********************************************/
+		/*Make sure we are at the most outer scope	*/
+		/********************************************/
+		if (SYMBOL_TABLE.getInstance().scopeCount > 0) {
+			System.out.format(">> ERROR [%d] Array %s defined not in most outer scope\n",this.lineNumber,name);
+			throw new AST_EXCEPTION(this);
+		}
 		/****************************/
 		/* [1] Check If Type exists */
 		/****************************/
+		// System.out.format("@@@@ AST_DEC_ARRAY type:%s\n",type);
+		// System.out.format("@@@@ AST_DEC_ARRAY name:%s\n",name);
 		t = SYMBOL_TABLE.getInstance().find(type);
 		if (t == null)
 		{
@@ -66,10 +76,20 @@ public class AST_DEC_ARRAY extends AST_DEC
 			throw new AST_EXCEPTION(this);
 		}
 
+		/**************************************/
+		/* [2] Dont allow void arrays 				*/
+		/**************************************/
+		if (t == TYPE_VOID.getInstance())
+		{
+			System.out.format(">> ERROR [%d] array %s cannot be of type void\n",this.lineNumber,name);
+			throw new AST_EXCEPTION(this);
+		}
+
 		/***************************************************/
 		/* [3] Enter the Function Type to the Symbol Table */
 		/***************************************************/
-		SYMBOL_TABLE.getInstance().enter(name,t);
+		TYPE_ARRAY newT = new TYPE_ARRAY(name, t);
+		SYMBOL_TABLE.getInstance().enter(name,newT);
 
 		/*********************************************************/
 		/* [4] Return value is irrelevant for class declarations */

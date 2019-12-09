@@ -25,7 +25,7 @@ public class AST_STMT_ASSIGN extends AST_STMT
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.print("====================== stmt -> var ASSIGN exp SEMICOLON\n");
+		// System.out.print("====================== stmt -> var ASSIGN exp SEMICOLON\n");
 
 		this.lineNumber = lineNumber;
 		this.var = var;
@@ -40,7 +40,7 @@ public class AST_STMT_ASSIGN extends AST_STMT
 		/********************************************/
 		/* AST NODE TYPE = AST ASSIGNMENT STATEMENT */
 		/********************************************/
-		System.out.print("AST_STMT_ASSIGN\n");
+		// System.out.print("AST_STMT_ASSIGN\n");
 		/***********************************/
 		/* RECURSIVELY PRINT VAR + EXP ... */
 		/***********************************/
@@ -68,11 +68,11 @@ public class AST_STMT_ASSIGN extends AST_STMT
 
 		if (var != null) {
 			t1 = var.SemantMe();
-			System.out.format("SEMANTME - AST_STMT_ASSIGN var name = %s\n", t1.name);
+			// System.out.format("SEMANTME - AST_STMT_ASSIGN var name = %s\n", t1.name);
 		}
 		if (exp != null) {
 			t2 = exp.SemantMe();
-			System.out.format("SEMANTME - AST_STMT_ASSIGN exp name = %s\n", t2.name);
+			// System.out.format("SEMANTME - AST_STMT_ASSIGN exp name = %s\n", t2.name);
 		}
 
 
@@ -80,14 +80,12 @@ public class AST_STMT_ASSIGN extends AST_STMT
 
 
 		// allow class and array to get nil
-		if (t1.isClass() && t2 == TYPE_NIL.getInstance())
-		{
-			System.out.format("SEMANTME - AST_STMT_ASSIGN allow class to be nil\n");
+		if (t1.isClass() && t2 == TYPE_NIL.getInstance()) {
+			// System.out.format("SEMANTME - AST_STMT_ASSIGN allow class to be nil\n");
 			return null;
 		}
-		if (t1.isArray() && t2 == TYPE_NIL.getInstance())
-		{
-			System.out.format("SEMANTME - AST_STMT_ASSIGN allow array to be nil\n");
+		if (t1.isArray() && t2 == TYPE_NIL.getInstance()) {
+			// System.out.format("SEMANTME - AST_STMT_ASSIGN allow array to be nil\n");
 			return null;
 		}
 		//Allow assignment for inheritance - oneway!
@@ -95,16 +93,38 @@ public class AST_STMT_ASSIGN extends AST_STMT
 		{
 			TYPE_CLASS t1_cast = (TYPE_CLASS)t1;
 			TYPE_CLASS t2_cast = (TYPE_CLASS)t2;
-			if (t1_cast.isAssignableFrom(t2_cast))
-			{
-				System.out.format("SEMANTME - AST_STMT_ASSIGN t1 can be assigned t2\n");
+			if (t1_cast.isAssignableFrom(t2_cast)) {
+				// System.out.format("SEMANTME - AST_STMT_ASSIGN allow class inheritance\n");
+				return null;
+			}
+		}
+
+		if (t1.isArray()) {
+			TYPE_ARRAY t1_array = (TYPE_ARRAY)t1;
+			if (t1_array.isAssignableFrom(t2)) {
+				// System.out.format("SEMANTME - AST_STMT_ASSIGN allow array\n");
 				return null;
 			}
 		}
 
 		// Validate same type
-		if (t1 != t2)
-		{
+		if (t1 != t2) {
+			// System.out.format("###### - AST_STMT_ASSIGN t1(%s), t2(%s)\n", t1, t2);
+			// Check if we are using class var as it might have a different
+			if (t1.isClassVar()) {
+					TYPE_CLASS_VAR_DEC t1_var = (TYPE_CLASS_VAR_DEC)t1;
+					if (t1_var.t.getClass() == t2.getClass() ) {
+						return null;
+					}
+			}
+
+			if (t2.isClassVar()) {
+					TYPE_CLASS_VAR_DEC t2_var = (TYPE_CLASS_VAR_DEC)t2;
+					if ( t2_var.t.getClass() == t1.getClass() ) {
+						return null;
+					}
+			}
+
 			System.out.format(">> ERROR [%d] type mismatch for var := exp\n",this.lineNumber);
 			throw new AST_EXCEPTION(this);
 		}

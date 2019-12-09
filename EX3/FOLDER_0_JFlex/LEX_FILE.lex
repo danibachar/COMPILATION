@@ -78,7 +78,7 @@ INTEGER			= 0 | [1-9][0-9]*
 NEG_NUMBER = -{INTEGER}
 ID				= [A-Za-z]+[A-Za-z0-9]*
 //ID = [A-Za-z0-9]*
-STRING    = \"[a-zA-Z/]+\"
+STRING    = \"[a-zA-Z0-9/]+\"
 
 ILLEGAL_CHARS = [^0-9a-zA-Z(){}!?+/*.;\-\t\n\r\[\]\f\= <>,: ]+
 

@@ -34,7 +34,7 @@ public class AST_EXP_LIST extends AST_Node
 		/********************************/
 		/* AST NODE TYPE = AST EXP LIST */
 		/********************************/
-		System.out.print("AST_EXP_LIST\n");
+		// System.out.print("AST_EXP_LIST\n");
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */
 		/*************************************/

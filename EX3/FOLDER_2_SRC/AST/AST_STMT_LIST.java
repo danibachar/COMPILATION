@@ -25,8 +25,8 @@ public class AST_STMT_LIST extends AST_Node
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		if (tail != null) System.out.print("====================== stmts -> stmt stmts\n");
-		if (tail == null) System.out.print("====================== stmts -> stmt      \n");
+		// if (tail != null) System.out.print("====================== stmts -> stmt stmts\n");
+		// if (tail == null) System.out.print("====================== stmts -> stmt      \n");
 
 		this.lineNumber = lineNumber;
 		this.head = head;
@@ -41,7 +41,7 @@ public class AST_STMT_LIST extends AST_Node
 		/**************************************/
 		/* AST NODE TYPE = AST STATEMENT LIST */
 		/**************************************/
-		System.out.print("AST_STMT_LIST\n");
+		// System.out.print("AST_STMT_LIST\n");
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */
 		/*************************************/
@@ -65,7 +65,7 @@ public class AST_STMT_LIST extends AST_Node
 	public TYPE SemantMe() throws Exception
 	{
 		System.out.print("SEMANTME - AST_STMT_LIST\n");
-		
+
 		if (head != null) head.SemantMe();
 		if (tail != null) tail.SemantMe();
 

@@ -20,7 +20,7 @@ public class AST_EXP_BINOP extends AST_EXP
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
-		System.out.print("====================== exp -> exp BINOP exp\n");
+		// System.out.print("====================== exp -> exp BINOP exp\n");
 
 		this.lineNumber = lineNumber;
 		this.left = left;
@@ -77,25 +77,72 @@ public class AST_EXP_BINOP extends AST_EXP
 	}
 	public TYPE SemantMe() throws Exception
 	{
-		System.out.format("SEMANTME - AST_EXP_BINOP(%s)\n",opSymbol());
-
 		TYPE t1 = null;
 		TYPE t2 = null;
 
 		if (left  != null) t1 = left.SemantMe();
 		if (right != null) t2 = right.SemantMe();
 
-		//Validate operation of the same type
-		if ((t1 == TYPE_INT.getInstance()) && (t2 == TYPE_INT.getInstance()))
-		{
+		System.out.format("SEMANTME - AST_EXP_BINOP(%s) between t1=%s, t2=%s\n",opSymbol(), t1, t2);
+		// Allow any kind of operation between 2 ints
+		if ((t1 == TYPE_INT.getInstance()) && (t2 == TYPE_INT.getInstance())) {
 			return TYPE_INT.getInstance();
 		}
+		// Check if we are using class var as it might have a different
+		if (t1.isClassVar()) {
 
-		if ((OP == 3) && (t1 == TYPE_STRING.getInstance()) && (t2 == TYPE_STRING.getInstance()))
-		{
-			return TYPE_STRING.getInstance();
+				TYPE_CLASS_VAR_DEC t1_var = (TYPE_CLASS_VAR_DEC)t1;
+				if ((t1_var.t == TYPE_INT.getInstance()) && (t2 == TYPE_INT.getInstance())) {
+					return TYPE_INT.getInstance();
+				}
 		}
 
+		if (t2.isClassVar()) {
+				TYPE_CLASS_VAR_DEC t2_var = (TYPE_CLASS_VAR_DEC)t2;
+				// System.out.format("###### - AST_EXP_BINOP t2 is classVar(%s)\n",t2_var.t);
+				if ((t2_var.t == TYPE_INT.getInstance()) && (t1 == TYPE_INT.getInstance())) {
+					return TYPE_INT.getInstance();
+				}
+		}
+
+		// Equality Testing
+		if (OP == 0) {
+			// Allow Strings Comparing
+			if ((t1 == TYPE_STRING.getInstance()) && (t2 == TYPE_STRING.getInstance())) {
+				return TYPE_INT.getInstance();
+			}
+			// Allow compare nil to class
+			if ((t1.isClass() && t2 == TYPE_NIL.getInstance()) || (t2.isClass() && t1 == TYPE_NIL.getInstance())) {
+				return TYPE_INT.getInstance();
+			}
+			// Allow compare nil to array
+			if ((t1.isArray() && t2 == TYPE_NIL.getInstance()) || (t2.isArray() && t1 == TYPE_NIL.getInstance())) {
+				return TYPE_INT.getInstance();
+			}
+			// Allow compare 2 nils
+			if ((t1 == TYPE_NIL.getInstance()) && (t2 == TYPE_NIL.getInstance())) {
+				return TYPE_INT.getInstance();
+			}
+			// Allow compare classes that extends each other
+			if (t1.isClass() && t2.isClass()) {
+				TYPE_CLASS castT1 = (TYPE_CLASS)t1;
+				TYPE_CLASS castT2 = (TYPE_CLASS)t2;
+				if (castT1.isAssignableFrom(castT2) || castT2.isAssignableFrom(castT1)) {
+						return TYPE_INT.getInstance();
+				}
+			}
+		}
+
+		// Plus Operation Testing
+		if (OP == 3) {
+			// Allow concatenation of strings
+			if ((t1 == TYPE_STRING.getInstance()) && (t2 == TYPE_STRING.getInstance())) {
+				return TYPE_STRING.getInstance();
+			}
+		}
+
+
+		System.out.format("SEMANTME - AST_EXP_BINOP Fail!!!\n");
 		throw new AST_EXCEPTION(this);
 	}
 

@@ -27,7 +27,7 @@ public class AST_STMT_CALL extends AST_STMT
 
 	public void PrintMe()
 	{
-		System.out.print("AST_STMT_CALLT\n");
+		// System.out.print("AST_STMT_CALLT\n");
 		if (callExp != null) callExp.PrintMe();
 
 		/***************************************/
@@ -45,7 +45,7 @@ public class AST_STMT_CALL extends AST_STMT
 
 	public TYPE SemantMe() throws Exception
 	{
-		System.out.print("SEMANTME - AST_STMT_CALLT\n");
+		System.out.print("SEMANTME - AST_STMT_CALL\n");
 		return callExp.SemantMe();
 	}
 }

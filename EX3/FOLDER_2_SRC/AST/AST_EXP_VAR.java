@@ -6,7 +6,7 @@ import AST_EXCEPTION.*;
 
 public abstract class AST_EXP_VAR extends AST_EXP
 {
-
+	public String name=null;
 	public void PrintMe()
 	{
 		System.out.print("UNKNOWN AST_EXP_VAR");

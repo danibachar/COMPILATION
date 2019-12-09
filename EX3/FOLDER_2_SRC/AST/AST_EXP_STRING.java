@@ -11,6 +11,7 @@ public class AST_EXP_STRING extends AST_EXP
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
+	public boolean isConstExp() { return true;}
 	public AST_EXP_STRING(String value, Integer lineNumber)
 	{
 		/******************************/
@@ -18,7 +19,7 @@ public class AST_EXP_STRING extends AST_EXP
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
-		System.out.format("====================== exp -> STRING( %s )\n", value);
+		// System.out.format("====================== exp -> STRING( %s )\n", value);
 		this.lineNumber = lineNumber;
 		this.value = value;
 	}
@@ -31,7 +32,7 @@ public class AST_EXP_STRING extends AST_EXP
 		/*******************************/
 		/* AST NODE TYPE = AST STRING EXP */
 		/*******************************/
-		System.out.format("AST_EXP_STRING( %s )\n",value);
+		// System.out.format("AST_EXP_STRING( %s )\n",value);
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
@@ -41,7 +42,7 @@ public class AST_EXP_STRING extends AST_EXP
 	}
 	public TYPE SemantMe() throws Exception
 	{
-		System.out.format("SEMANTME - AST_EXP_STRING( %s )\n",value);	
+		System.out.format("SEMANTME - AST_EXP_STRING( %s )\n",value);
 		return TYPE_STRING.getInstance();
 	}
 }

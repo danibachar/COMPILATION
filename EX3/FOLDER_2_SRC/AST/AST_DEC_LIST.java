@@ -32,7 +32,7 @@ public class AST_DEC_LIST extends AST_Node
 	/********************************************************/
 	public void PrintMe()
 	{
-		System.out.format("DEC_LIST\n");
+		// System.out.format("DEC_LIST\n");
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */
 		/*************************************/

@@ -19,7 +19,7 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
-		System.out.format("====================== var -> var DOT ID( %s )\n",fieldName);
+		// System.out.format("====================== var -> var DOT ID( %s )\n",fieldName);
 		this.lineNumber = lineNumber;
 		this.var = var;
 		this.fieldName = fieldName;
@@ -33,7 +33,7 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 		/*********************************/
 		/* AST NODE TYPE = AST FIELD VAR */
 		/*********************************/
-		System.out.format("AST_EXP_VAR_FIELD\n(___.%s)\n",fieldName);
+		// System.out.format("AST_EXP_VAR_FIELD\n(___.%s)\n",fieldName);
 		/**********************************************/
 		/* RECURSIVELY PRINT VAR, then FIELD NAME ... */
 		/**********************************************/
@@ -64,33 +64,23 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 		/*********************************/
 		/* [2] Make sure type is a class */
 		/*********************************/
-		if (t.isClass() == false)
-		{
-			System.out.format(">> ERROR [%d:%d] access %s field of a non-class variable\n",6,6,fieldName);
+		if (!t.isClass()) {
+			System.out.format(">> ERROR [%d] access %s field of a non-class variable\n",this.lineNumber,fieldName);
 			throw new AST_EXCEPTION(this);
-			// System.exit(0);
-		}
-		else
-		{
+		} else {
 			tc = (TYPE_CLASS) t;
 		}
 
 		/************************************/
 		/* [3] Look for fiedlName inside tc */
 		/************************************/
-		System.out.format("Start Looking for supported fields names = %s in class =  %s\n",fieldName,tc.name);
-		for (TYPE_CLASS_VAR_DEC_LIST it=tc.data_members;it != null;it=it.tail)
-		{
-			System.out.format("Looking for fieldlName head - %s \n",it.head);
-			System.out.format("Looking for fieldlName tail - %s \n",it.tail);
-			if (it.head != null)
-			{
-				if (it.head.name.equals(fieldName)) {
-					System.out.format("Found Head Name %s  with type %s\n",it.head.name, it.head.t.name);
-					return it.head.t;
-				}
+		if (tc != null) {
+			TYPE_CLASS_VAR_DEC data_member_type = tc.queryDataMembersReqursivly(fieldName);
+			if (data_member_type != null) {
+					return data_member_type.t;
 			}
 		}
+
 
 		/*********************************************/
 		/* [4] fieldName does not exist in class var */

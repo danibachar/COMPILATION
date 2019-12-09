@@ -3,6 +3,7 @@ package AST;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
+import java.util.ArrayList;
 
 public class AST_DEC_VAR extends AST_DEC
 {
@@ -13,6 +14,7 @@ public class AST_DEC_VAR extends AST_DEC
 	// public String name;
 	public AST_EXP initialValue;
 
+	public boolean isVarDec() { return true;}
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
@@ -37,14 +39,13 @@ public class AST_DEC_VAR extends AST_DEC
 		/********************************/
 		/* AST NODE TYPE = AST DEC LIST */
 		/********************************/
-		if (initialValue != null) System.out.format("VAR-DEC(%s):%s := initialValue\n",name,type);
-		if (initialValue == null) System.out.format("VAR-DEC(%s):%s                \n",name,type);
+		// if (initialValue != null) System.out.format("VAR-DEC(%s):%s := initialValue\n",name,type);
+		// if (initialValue == null) System.out.format("VAR-DEC(%s):%s                \n",name,type);
 		/**************************************/
 		/* RECURSIVELY PRINT initialValue ... */
 		/**************************************/
 		if (initialValue != null)
 		{
-			System.out.format("about to print initialValue \n");
 			initialValue.PrintMe();
 		}
 
@@ -100,8 +101,23 @@ public class AST_DEC_VAR extends AST_DEC
 			}
 			if (initValueType.getClass() != t.getClass())
 			{
-				System.out.format(">> ERROR [%d] initialValue that assigned to the var is not the same type of the var\n",this.lineNumber,name);
-				throw new AST_EXCEPTION(this);
+				// Allow nil into class and array
+				boolean isArrayOrClass = t.isClass() || t.isArray();
+				boolean isAssigningNil = initValueType == TYPE_NIL.getInstance();
+				if (!isAssigningNil || !isArrayOrClass) {
+					if (t.isArray()) {
+							// we need to check  the initValueType is the type of the array
+							TYPE_ARRAY ta = (TYPE_ARRAY)t;
+							if (!ta.isAssignableFrom(initValueType)) {
+								System.out.format(">> ERROR [%d] Array initialValue(%s), t(%s)\n",this.lineNumber,initValueType, ta.type);
+								System.out.format(">> ERROR [%d] Array initialValue that assigned to the var(%s) is not the same type of the var\n",this.lineNumber,name);
+							}
+					} else {
+						System.out.format(">> ERROR [%d] initialValue(%s), t(%s)\n",this.lineNumber,initValueType, t);
+						System.out.format(">> ERROR [%d] initialValue that assigned to the var(%s) is not the same type of the var\n",this.lineNumber,name);
+						throw new AST_EXCEPTION(this);
+					}
+				}
 			}
 		}
 		/***************************************************/
@@ -112,6 +128,7 @@ public class AST_DEC_VAR extends AST_DEC
 		/*********************************************************/
 		/* [4] Return value is irrelevant for class declarations */
 		/*********************************************************/
+		// return null;
 		return t;
 	}
 

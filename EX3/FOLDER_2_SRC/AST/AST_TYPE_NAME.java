@@ -38,7 +38,7 @@ public class AST_TYPE_NAME extends AST_Node
 		/**************************************/
 		/* AST NODE TYPE = AST TYPE NAME NODE */
 		/**************************************/
-		System.out.format("NAME(%s):TYPE(%s)\n",name,type);
+		// System.out.format("NAME(%s):TYPE(%s)\n",name,type);
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/

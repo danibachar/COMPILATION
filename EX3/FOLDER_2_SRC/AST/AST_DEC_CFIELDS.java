@@ -26,7 +26,7 @@ public class AST_DEC_CFIELDS extends AST_DEC
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== cFieldsDes \n");
+		// System.out.format("====================== cFieldsDes \n");
 		this.lineNumber = lineNumber;
 		this.head = head;
 		this.tail = tail;
@@ -37,7 +37,7 @@ public class AST_DEC_CFIELDS extends AST_DEC
 	/************************************************************/
 	public void PrintMe()
 	{
-		System.out.format("AST_DEC_CFIELDS\n");
+		// System.out.format("AST_DEC_CFIELDS\n");
 		/***************************************/
 		/* RECURSIVELY PRINT params + body ... */
 		/***************************************/
@@ -58,39 +58,43 @@ public class AST_DEC_CFIELDS extends AST_DEC
 		if (tail != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,tail.SerialNumber);
 	}
 
-	public TYPE_CLASS_VAR_DEC_LIST SemantMe() throws Exception
-	{
-		if (head == null) {
-				System.out.format("SEMANTME - AST_DEC_CFIELDS with null as head - critical issue\n");
-		} else {
-				System.out.format("SEMANTME - AST_DEC_CFIELDS\n");
-		}
-
-		if (tail == null)
-		{
-			try {
-				TYPE_CLASS_VAR_DEC cv = new TYPE_CLASS_VAR_DEC(head.SemantMe(), head.name);
-				return new TYPE_CLASS_VAR_DEC_LIST(cv,null);
-				// return new TYPE_LIST(head.SemantMe(),null);
-			} catch (Exception e) {
-				System.out.print(e);
-				e.printStackTrace();
-				throw e;
-			}
-
-		}
-		else
-		{
-			try {
-				TYPE_CLASS_VAR_DEC cv = new TYPE_CLASS_VAR_DEC(head.SemantMe(), head.name);
-				return new TYPE_CLASS_VAR_DEC_LIST(cv,tail.SemantMe());
-				// return new TYPE_LIST(head.SemantMe(),tail.SemantMe());
-			} catch (Exception e) {
-				System.out.print(e);
-				e.printStackTrace();
-				throw e;
-			}
-
-		}
-	}
+	// public TYPE_CLASS_VAR_DEC_LIST SemantMe() throws Exception
+	// {
+	// 	System.out.format("!!!!!!!! SHOULD NOT BE CALLED HANDLED IN CLASS!!!!!!!!!!!!!\n");
+	//
+	// 	if (head == null) {
+	// 			System.out.format("SEMANTME - AST_DEC_CFIELDS with null as head - critical issue\n");
+	// 	} else {
+	// 			System.out.format("SEMANTME - AST_DEC_CFIELDS\n");
+	// 	}
+	//
+	// 	if (tail == null)
+	// 	{
+	// 		try {
+	// 			TYPE_CLASS_VAR_DEC cv = new TYPE_CLASS_VAR_DEC(head.SemantMe(), head.name);
+	// 			System.out.format("AST_DEC_CFIELDS( head) head name = %s, type = %s\n", cv.name, cv.t);
+	// 			return new TYPE_CLASS_VAR_DEC_LIST(cv,null);
+	// 			// return new TYPE_LIST(head.SemantMe(),null);
+	// 		} catch (Exception e) {
+	// 			System.out.print(e);
+	// 			e.printStackTrace();
+	// 			throw e;
+	// 		}
+	//
+	// 	}
+	// 	else
+	// 	{
+	// 		try {
+	// 			TYPE_CLASS_VAR_DEC cv = new TYPE_CLASS_VAR_DEC(head.SemantMe(), head.name);
+	// 			System.out.format("AST_DEC_CFIELDS (head+tail) head name = %s, type = %s\n", cv.name, cv.t);
+	// 			return new TYPE_CLASS_VAR_DEC_LIST(cv,tail.SemantMe());
+	// 			// return new TYPE_LIST(head.SemantMe(),tail.SemantMe());
+	// 		} catch (Exception e) {
+	// 			System.out.print(e);
+	// 			e.printStackTrace();
+	// 			throw e;
+	// 		}
+	//
+	// 	}
+	// }
 }

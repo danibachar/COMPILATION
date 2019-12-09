@@ -9,6 +9,7 @@ public class AST_EXP_NIL extends AST_EXP
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
+	public boolean isConstExp() { return true;}
 	public AST_EXP_NIL(Integer lineNumber)
 	{
 		/******************************/
@@ -16,7 +17,7 @@ public class AST_EXP_NIL extends AST_EXP
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
-		System.out.format("====================== exp -> NIL\n");
+		// System.out.format("====================== exp -> NIL\n");
 		this.lineNumber = lineNumber;
 	}
 
@@ -28,7 +29,7 @@ public class AST_EXP_NIL extends AST_EXP
 		/*******************************/
 		/* AST NODE TYPE = AST STRING EXP */
 		/*******************************/
-		System.out.format("AST_EXP_NIL\n");
+		// System.out.format("AST_EXP_NIL\n");
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/

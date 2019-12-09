@@ -28,7 +28,7 @@ public class AST_STMT_DEC_VAR extends AST_STMT
 	public void PrintMe()
 	{
 
-		System.out.print("AST_STMT_DEC_VAR\n");
+		// System.out.print("AST_STMT_DEC_VAR\n");
 		if (var != null) var.PrintMe();
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */

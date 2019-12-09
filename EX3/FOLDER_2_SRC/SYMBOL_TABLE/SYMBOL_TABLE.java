@@ -20,15 +20,16 @@ import TYPES.*;
 public class SYMBOL_TABLE
 {
 	private int hashArraySize = 13;
-
+	public int scopeCount = 0;
 	/**********************************************/
 	/* The actual symbol table data structure ... */
 	/**********************************************/
 	private SYMBOL_TABLE_ENTRY[] table = new SYMBOL_TABLE_ENTRY[hashArraySize];
 	private SYMBOL_TABLE_ENTRY top;
 	private int top_index = 0;
-	// private List<TYPE_CLASS> registeredClasses = new List<TYPE_CLASS>();
-	// private List<TYPE_ARRAY> registeredArrays = new List<TYPE_ARRAY>();
+
+	public TYPE_CLASS current_class;
+	public TYPE_FUNCTION current_function;
 
 	/**************************************************************/
 	/* A very primitive hash function for exposition purposes ... */
@@ -46,6 +47,11 @@ public class SYMBOL_TABLE
 		return 12;
 	}
 
+	private String currScopeName()
+	{
+		return String.format("SCOPE-BOUNDARY#%d", scopeCount);
+	}
+
 	/****************************************************************************/
 	/* Enter a variable, function, class type or array type to the symbol table */
 	/****************************************************************************/
@@ -54,7 +60,27 @@ public class SYMBOL_TABLE
 		/*************************************************/
 		/* [1] Compute the hash value for this new entry */
 		/*************************************************/
-		System.out.format("entering `%s` to table symbole with type = `%s`\n",name, t.name);
+		if (t.isFunc()) {
+			TYPE_FUNCTION f = (TYPE_FUNCTION)t;
+			// System.out.format("######### - Entering FUNC name - %s to table symbole with returnType = %s\n",name, f.returnType);
+		} else if (t.isClass()) {
+			TYPE_CLASS c = (TYPE_CLASS)t;
+			// System.out.format("######### - Entering CLASS name - %s to table symbole\n",name);
+			if (c.data_members != null){
+				// System.out.format("######### - Data Members \n");
+				// c.data_members.PrintMyType();
+			}
+			if (c.methods != null){
+				// System.out.format("######### - Methods \n");
+				// c.methods.PrintMyType();
+			}
+		} else if (t.isArray()) {
+			TYPE_ARRAY a = (TYPE_ARRAY)t;
+			// System.out.format("######### - Entering ARRAY name - %s to table symbole with type = %s\n",name, a.type.name);
+		} else {
+			// System.out.format("######### - Entering Primitive - %s to table symbole with type = `%s`\n",name, t.name);
+		}
+
 		int hashValue = hash(name);
 
 		/******************************************************************************/
@@ -66,7 +92,7 @@ public class SYMBOL_TABLE
 		/**************************************************************************/
 		/* [3] Prepare a new symbol table entry with name, type, next and prevtop */
 		/**************************************************************************/
-		SYMBOL_TABLE_ENTRY e = new SYMBOL_TABLE_ENTRY(name,t,hashValue,next,top,top_index++);
+		SYMBOL_TABLE_ENTRY e = new SYMBOL_TABLE_ENTRY(name,t,hashValue,next,top,top_index++, scopeCount);
 
 		/**********************************************/
 		/* [4] Update the top of the symbol table ... */
@@ -104,8 +130,8 @@ public class SYMBOL_TABLE
 
 	public TYPE findInCurrentScope(String name)
 	{
-		SYMBOL_TABLE_ENTRY e = top.next;
-		// Searching until we reach current scope BOUNDARY
+		// System.out.format("######### - Search in Scope = %d\n", scopeCount);
+		SYMBOL_TABLE_ENTRY e = top;
 		while (e != null && e.name != "SCOPE-BOUNDARY")
 		{
 			// System.out.format("findInCurrentScope `%s`\n checking - `%s`\n",name ,e.name);
@@ -114,7 +140,26 @@ public class SYMBOL_TABLE
 			}
 			e = e.next;
 		}
+		// System.out.format("findInCurrentScope Didn't find\n");
 		return null;
+	}
+
+	public TYPE findField(String name, boolean searchOutsideOfScope) {
+		// System.out.format("findField `%s`\n",name );
+		// Search in current function first
+		if (current_function != null) {
+			// System.out.format("findField in curr function scope first `%s`\n",current_function.name );
+				TYPE t = findInCurrentScope(name);
+				if (t != null) { return t; }
+		}
+		// Search in current class recursively up the inheritance tree second
+		if (!searchOutsideOfScope && current_class != null) {
+				TYPE t = current_class.queryDataMembersReqursivly(name);
+				if (t != null) { return t; }
+		}
+
+		// Last just look for enything, please!!!
+		return find(name);
 	}
 
 	/***************************************************************************/
@@ -128,13 +173,11 @@ public class SYMBOL_TABLE
 		/* a special TYPE_FOR_SCOPE_BOUNDARIES was developed for them. This     */
 		/* class only contain their type name which is the bottom sign: _|_     */
 		/************************************************************************/
-		System.out.print("######### - BEGIN - SCOPE-BOUNDARY\n");
+		// String currScope = currScopeName();
+		// System.out.format("######### - BEGIN - %s\n", "SCOPE-BOUNDARY");
 
-		enter(
-			"SCOPE-BOUNDARY",
-			new TYPE_FOR_SCOPE_BOUNDARIES("NONE")
-		);
-
+		enter( "SCOPE-BOUNDARY",new TYPE_FOR_SCOPE_BOUNDARIES("NONE") );
+		scopeCount+=1;
 		/*********************************************/
 		/* Print the symbol table after every change */
 		/*********************************************/
@@ -150,10 +193,11 @@ public class SYMBOL_TABLE
 		/**************************************************************************/
 		/* Pop elements from the symbol table stack until a SCOPE-BOUNDARY is hit */
 		/**************************************************************************/
-		System.out.print("######### - ENDING - Start Poping - SCOPE-BOUNDARY\n");
+		// String currScope = currScopeName();
+		// System.out.format("######### - ENDING - Start Poping - %s\n", "SCOPE-BOUNDARY");
 		while (top.name != "SCOPE-BOUNDARY")
 		{
-			System.out.format("poping elemets in scope `%s`\n",top.name);
+			// System.out.format("poping elemets %s in scope-%s\n",top.name, scopeCount);
 			table[top.index] = top.next;
 			top_index = top_index-1;
 			top = top.prevtop;
@@ -164,7 +208,8 @@ public class SYMBOL_TABLE
 		table[top.index] = top.next;
 		top_index = top_index-1;
 		top = top.prevtop;
-		System.out.print("######### - ENDED - SCOPE-BOUNDARY\n");
+		// System.out.format("######### - ENDED - %s\n", "SCOPE-BOUNDARY");
+		scopeCount-=1;
 		/*********************************************/
 		/* Print the symbol table after every change */
 		/*********************************************/
@@ -220,10 +265,11 @@ public class SYMBOL_TABLE
 					/* [4b] Print entry(i,it) node */
 					/*******************************/
 					fileWriter.format("node_%d_%d ",i,j);
-					fileWriter.format("[label=\"<f0>%s|<f1>%s|<f2>prevtop=%d|<f3>next\"];\n",
+					fileWriter.format("[label=\"<f0>%s|<f1>%s|<f2>prevtop=%d|<f3>next|<f4>scope=%d\"];\n",
 						it.name,
 						it.type.name,
-						it.prevtop_index);
+						it.prevtop_index,
+						it.scope_number);
 
 					if (it.next != null)
 					{
@@ -300,6 +346,15 @@ public class SYMBOL_TABLE
 					TYPE_VOID.getInstance(),
 					"PrintString",
 					new TYPE_LIST(TYPE_STRING.getInstance(),null)
+				)
+			);
+
+			instance.enter(
+				"PrintTrace",
+				new TYPE_FUNCTION(
+					TYPE_VOID.getInstance(),
+					"PrintTrace",
+					new TYPE_LIST(TYPE_VOID.getInstance(),null)
 				)
 			);
 		}

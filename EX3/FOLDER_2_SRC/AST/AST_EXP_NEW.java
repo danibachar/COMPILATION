@@ -9,6 +9,8 @@ public class AST_EXP_NEW extends AST_EXP
 	public String type;
   public AST_EXP exp;
 
+	public boolean isNewArray() { return exp != null;}
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
@@ -22,7 +24,7 @@ public class AST_EXP_NEW extends AST_EXP
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== newExp -> ID( %s )\n", type);
+		// System.out.format("====================== newExp -> ID( %s )\n", type);
 
 		this.lineNumber = lineNumber;
 		this.type = type;
@@ -34,7 +36,7 @@ public class AST_EXP_NEW extends AST_EXP
 	/************************************************/
   public void PrintMe()
   {
-		System.out.format("AST_EXP_NEW type - %s\n" ,type);
+		// System.out.format("AST_EXP_NEW type - %s\n" ,type);
     /**************************************/
     /* RECURSIVELY PRINT initialValue ... */
     /**************************************/
@@ -59,7 +61,7 @@ public class AST_EXP_NEW extends AST_EXP
 		TYPE t;
 		System.out.format("SEMANTME - AST_EXP_NEW type - %s\n" ,type);
 		/************************************************/
-		/* Check That Class Type Was previously declared*/
+		/* Check That Type Was previously declared*/
 		/************************************************/
 		t = SYMBOL_TABLE.getInstance().find(type);
 		if (t == null)
@@ -67,14 +69,34 @@ public class AST_EXP_NEW extends AST_EXP
 			System.out.format(">> ERROR [%d] Class type(%s) was not declared\n",this.lineNumber,type);
 			throw new AST_EXCEPTION(this);
 		}
-		/************************************************/
-		/* Check That the Type is actually a class type */
-		/************************************************/
-		if (!t.isClass())
+		if (t == TYPE_VOID.getInstance())
 		{
-			System.out.format(">> ERROR [%d] trying to create new entity that is not a class type(%)\n",this.lineNumber,type);
+			System.out.format(">> ERROR [%d] Cannot ask to create new void, daaa!\n",this.lineNumber,type);
 			throw new AST_EXCEPTION(this);
 		}
+		/***********************************************************/
+		/* Check That the Type is actually a class type or an array*/
+		/***********************************************************/
+		if (!t.isClass() && exp == null)
+		{
+			System.out.format(">> ERROR [%d] trying to create new entity that is not a class/array type(%s)\n",this.lineNumber,type);
+			throw new AST_EXCEPTION(this);
+		}
+
+		// Validate inheritance assignment
+
+
+		// Validating array
+		if (exp != null) {
+			TYPE expType = exp.SemantMe();
+			// TYPE nt = SYMBOL_TABLE.getInstance().find(expType.name);
+			if ( expType != TYPE_INT.getInstance()) {
+				System.out.format(">> ERROR [%d] trying to init array[%s] with not declared type = %s\n",this.lineNumber,type, expType);
+				throw new AST_EXCEPTION(this);
+			}
+			// return new TYPE_ARRAY(,int)
+		}
+		// Validate Expression
 
 		return t;
 	}

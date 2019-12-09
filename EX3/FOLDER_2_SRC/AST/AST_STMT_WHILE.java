@@ -26,7 +26,7 @@ public class AST_STMT_WHILE extends AST_STMT
 
 	public void PrintMe()
 	{
-		System.out.print("AST_STMT_WHILE\n");
+		// System.out.print("AST_STMT_WHILE\n");
 
 		if (cond != null) cond.PrintMe();
 		if (body != null) body.PrintMe();

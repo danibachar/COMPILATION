@@ -14,7 +14,7 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 	/******************/
 	public AST_EXP_VAR_SUBSCRIPT(AST_EXP_VAR var,AST_EXP subscript, Integer lineNumber)
 	{
-		System.out.print("====================== var -> var [ exp ]\n");
+		// System.out.print("====================== var -> var [ exp ]\n");
 		this.lineNumber	= lineNumber;
 		this.var = var;
 		this.subscript = subscript;
@@ -28,7 +28,7 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 		/*************************************/
 		/* AST NODE TYPE = AST SUBSCRIPT VAR */
 		/*************************************/
-		System.out.print("AST_EXP_VAR_SUBSCRIPT\n");
+		// System.out.print("AST_EXP_VAR_SUBSCRIPT\n");
 		/****************************************/
 		/* RECURSIVELY PRINT VAR + SUBSRIPT ... */
 		/****************************************/
@@ -51,33 +51,47 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 
 	public TYPE SemantMe() throws Exception
 	{
-		TYPE varType;
-		TYPE subscriptType;
-		
-		System.out.print("SEMANTME - AST_EXP_VAR_SUBSCRIPT\n");
+		TYPE varType = null;
+		TYPE subscriptType = null;
 
-		// Validate that the var is kind of array AST_EXP_VAR
-		if (var != null)
-		{
-			 varType = var.SemantMe();
-			 if (!varType.isArray())
-	 		{
-	 			System.out.format(">> ERROR [%d] Trying access var subscript of non array type\n",this.lineNumber);
-	 			throw new AST_EXCEPTION(this);
-	 		}
-		}
+		System.out.print("SEMANTME - AST_EXP_VAR_SUBSCRIPT\n");
 
 		// Validate that the subscript is kind of int AST_EXP
 		if (subscript != null)
 		{
 				subscriptType = subscript.SemantMe();
-				if (subscriptType == null|| (subscriptType == TYPE_INT.getInstance()) )
+				if (subscriptType == null || (subscriptType != TYPE_INT.getInstance()) )
 				{
-					System.out.format(">> ERROR [%d] Trying access var subscript with non-integral index\n",this.lineNumber);
+					System.out.format(">> ERROR [%d] Trying access var subscript with non-integral index = %s\n",this.lineNumber, subscriptType);
 					throw new AST_EXCEPTION(this);
 				}
 		}
 
-		return null;
+		// Validate that the var is kind of array AST_EXP_VAR
+		if (var != null)
+		{
+			varType = var.SemantMe();
+			if (varType == null) {
+				System.out.format(">> ERROR [%d] Trying access var subscript of non array type(%s)\n",this.lineNumber, varType);
+				throw new AST_EXCEPTION(this);
+			}
+			if (varType.isArray()) {
+				TYPE_ARRAY arr = (TYPE_ARRAY)varType;
+				return arr.type;
+			}
+			// Check for class var
+			if (varType.isClassVar()) {
+				TYPE_CLASS_VAR_DEC varTypeClass = (TYPE_CLASS_VAR_DEC)varType;
+				if (varTypeClass.t.isArray()) {
+					TYPE_ARRAY arr = (TYPE_ARRAY)varTypeClass.t;
+					return arr.type;
+				}
+			}
+			System.out.format(">> ERROR [%d] Trying access var subscript of non array type(%s)\n",this.lineNumber, varType);
+			throw new AST_EXCEPTION(this);
+		}
+
+		return varType;
+		// return null;
 	}
 }
