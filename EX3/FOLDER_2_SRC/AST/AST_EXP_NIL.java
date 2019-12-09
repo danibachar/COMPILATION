@@ -41,7 +41,7 @@ public class AST_EXP_NIL extends AST_EXP
 
 	public TYPE SemantMe() throws Exception
 	{
-		System.out.format("SEMANTME -AST_EXP_NIL\n");
+		// System.out.format("SEMANTME -AST_EXP_NIL\n");
 		return TYPE_NIL.getInstance();
 	}
 

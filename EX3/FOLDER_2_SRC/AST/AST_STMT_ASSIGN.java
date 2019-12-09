@@ -62,7 +62,7 @@ public class AST_STMT_ASSIGN extends AST_STMT
 	}
 	public TYPE SemantMe() throws Exception
 	{
-		System.out.print("SEMANTME - AST_STMT_ASSIGN\n");
+		// System.out.print("SEMANTME - AST_STMT_ASSIGN\n");
 		TYPE t1 = null;
 		TYPE t2 = null;
 

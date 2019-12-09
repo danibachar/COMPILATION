@@ -303,19 +303,19 @@ public class Parser extends java_cup.runtime.lr_parser {
 	Symbol s;
 	s = lexer.next_token();
 	//System.out.print(s.sym);
-	System.out.print("[");
-	System.out.print(lexer.getLine());
-	System.out.print(":");
-	System.out.print(lexer.getCharPos());
-	System.out.print("] ");
-	System.out.print(TokenNames.terminalNames[s.sym]);
+//	System.out.print("[");
+	//System.out.print(lexer.getLine());
+	//System.out.print(":");
+	//System.out.print(lexer.getCharPos());
+	//System.out.print("] ");
+	//System.out.print(TokenNames.terminalNames[s.sym]);
 	if (s.value != null)
 	{
-		System.out.print("( ");
-		System.out.print(s.value);
-		System.out.print(" )");
+		//System.out.print("( ");
+		//System.out.print(s.value);
+		//System.out.print(" )");
 	}
-	System.out.print("\n");
+	//System.out.print("\n");
 	return s;
 
     }

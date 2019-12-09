@@ -54,7 +54,7 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 		TYPE varType = null;
 		TYPE subscriptType = null;
 
-		System.out.print("SEMANTME - AST_EXP_VAR_SUBSCRIPT\n");
+		// System.out.print("SEMANTME - AST_EXP_VAR_SUBSCRIPT\n");
 
 		// Validate that the subscript is kind of int AST_EXP
 		if (subscript != null)

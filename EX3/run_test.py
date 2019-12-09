@@ -11,6 +11,7 @@ EXPECTED_PATH = "FOLDER_6_EXPECTED_OUTPUT"
 
 def ensure_path(path):
     directory = "/".join(path.split("/")[0:-1])
+    print(directory)
     if not os.path.exists(directory):
         os.makedirs(directory)
 
@@ -19,7 +20,8 @@ class TestSequense(unittest.TestCase):
 
 def test_generator(input_file, output_file, compare_file):
     def test(self):
-        # make sure dir exists
+        print("input = {} \noutput = {} \ncompare = {}\n\n\n\n".format(input_file, output_file, compare_file))
+
         ensure_path(input_file)
         ensure_path(output_file)
 
@@ -53,7 +55,7 @@ def _constract_compare_file_name(base_input_file_dir, file_name):
         return _full_name(os.path.join(EXPECTED_PATH, os.path.basename(os.path.splitext(file_name)[0]) + "_Expected_Output.txt"))
 
 if __name__ == '__main__':
-    onlyfiles = []
+    # run make
     for root,d_names,f_names in os.walk(INPUT_PATH):
         for f in f_names:
             if f.endswith(".txt"):
@@ -64,12 +66,7 @@ if __name__ == '__main__':
                 full_commpare_file_name = _constract_compare_file_name(root, input_file)
 
                 test_name = 'test_%s' % os.path.splitext(input_file)[0]
-
-                ensure_path(full_input_file_name)
-                ensure_path(full_output_file_name)
-                ensure_path(full_commpare_file_name)
-                continue
-                print("RUNNING TEST({}): \ninput = {} \noutput = {} \ncompare = {}\n\n\n\n".format(test_name, full_input_file_name, full_output_file_name, full_commpare_file_name))
+                print("RUNNING TEST({}):".format(test_name))
                 # continue
                 test = test_generator(full_input_file_name, full_output_file_name, full_commpare_file_name)
                 setattr(TestSequense, test_name, test)

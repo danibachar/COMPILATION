@@ -71,7 +71,7 @@ public class AST_DEC_FUNC extends AST_DEC
 		TYPE t;
 		TYPE returnType = null;
 		TYPE_LIST type_list = null;
-		System.out.format("SEMANTME - AST_DEC_FUNC(%s):%s\n",name,returnTypeName);
+		// System.out.format("SEMANTME - AST_DEC_FUNC(%s):%s\n",name,returnTypeName);
 
 		/*******************/
 		/* [0] return type */

@@ -51,7 +51,7 @@ public class AST_STMT_RETURN extends AST_STMT
 		/*************************************/
 		/* AST NODE TYPE = AST SUBSCRIPT VAR */
 		/*************************************/
-		System.out.print("SEMANTME - AST_STMT_RETURN\n");
+		// System.out.print("SEMANTME - AST_STMT_RETURN\n");
 
 		TYPE_FUNCTION func = SYMBOL_TABLE.getInstance().current_function;
 		if (func == null) {
@@ -59,11 +59,17 @@ public class AST_STMT_RETURN extends AST_STMT
 			throw new AST_EXCEPTION(this);
 		}
 
+
+
 		/****************************/
 		/* [0] Semant the Condition */
 		/****************************/
 		TYPE exp_type = null;
 		if (exp != null) exp_type = exp.SemantMe();
+
+		if (func.returnType == null && exp == null) {
+			return null;
+		}
 
 		// If no exp_type func.returnType must be void!
 		if (exp_type != null && func.returnType == TYPE_VOID.getInstance()) {
@@ -71,7 +77,7 @@ public class AST_STMT_RETURN extends AST_STMT
 			throw new AST_EXCEPTION(this);
 		}
 
-		if (exp_type == null && func.returnType != TYPE_VOID.getInstance()) {
+		if (exp_type == null) {
 			System.out.format(">> ERROR [%d] trying return void from non-void return type(%s) function)\n",this.lineNumber, func.returnType);
 			throw new AST_EXCEPTION(this);
 		}

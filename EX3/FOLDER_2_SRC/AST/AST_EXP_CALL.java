@@ -62,7 +62,7 @@ public class AST_EXP_CALL extends AST_EXP
 
 	public TYPE SemantMe() throws Exception
 	{
-		System.out.format("SEMANTME - AST_EXP_CALL(%s)WITH:(%s):%s\n",funcName,var, var!=null ? var.name:null);
+		// System.out.format("SEMANTME - AST_EXP_CALL(%s)WITH:(%s):%s\n",funcName,var, var!=null ? var.name:null);
 
 		// Validate params recursively
 		TYPE_LIST paramsTypes = null;
@@ -195,6 +195,10 @@ public class AST_EXP_CALL extends AST_EXP
 
 			TYPE expected = expected_input_params.get(i);
 			TYPE send = sent_input_params.get(i);
+			if (expected.isClassVar()) {
+				TYPE_CLASS_VAR_DEC tmp = (TYPE_CLASS_VAR_DEC)expected;
+				expected = tmp.t;
+			}
 			if (expected.isClass()) {
 				TYPE_CLASS c = (TYPE_CLASS)expected;
 				if (!c.isAssignableFrom(send)) {

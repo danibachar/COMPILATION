@@ -43,7 +43,7 @@ public class AST_EXP_INT extends AST_EXP
 
 	public TYPE SemantMe() throws Exception
 	{
-		System.out.format("SEMANTME - AST_EXP_INT( %d )\n",value);
+		// System.out.format("SEMANTME - AST_EXP_INT( %d )\n",value);
 		return TYPE_INT.getInstance();
 	}
 }

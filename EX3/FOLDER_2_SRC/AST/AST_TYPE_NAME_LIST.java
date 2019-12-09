@@ -52,7 +52,7 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 
 	public TYPE_LIST SemantMe() throws Exception
 	{
-		System.out.print("SEMANTME - AST_TYPE_NAME_LIST\n");
+		// System.out.print("SEMANTME - AST_TYPE_NAME_LIST\n");
 		if (tail == null)
 		{
 			try {

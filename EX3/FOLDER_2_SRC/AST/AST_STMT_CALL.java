@@ -45,7 +45,7 @@ public class AST_STMT_CALL extends AST_STMT
 
 	public TYPE SemantMe() throws Exception
 	{
-		System.out.print("SEMANTME - AST_STMT_CALL\n");
+		// System.out.print("SEMANTME - AST_STMT_CALL\n");
 		return callExp.SemantMe();
 	}
 }

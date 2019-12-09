@@ -67,8 +67,8 @@ public class AST_DEC_VAR extends AST_DEC
 	{
 		TYPE t;
 
-		if (initialValue != null) System.out.format("SEMANTME - VAR-DEC(%s):%s := initialValue\n",name,type);
-		if (initialValue == null) System.out.format("SEMANTME - VAR-DEC(%s):%s                \n",name,type);
+		// if (initialValue != null) System.out.format("SEMANTME - VAR-DEC(%s):%s := initialValue\n",name,type);
+		// if (initialValue == null) System.out.format("SEMANTME - VAR-DEC(%s):%s                \n",name,type);
 		/****************************/
 		/* [1] Check If Type exists */
 		/****************************/

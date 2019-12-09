@@ -59,7 +59,7 @@ public class AST_EXP_NEW extends AST_EXP
 	public TYPE SemantMe() throws Exception
 	{
 		TYPE t;
-		System.out.format("SEMANTME - AST_EXP_NEW type - %s\n" ,type);
+		// System.out.format("SEMANTME - AST_EXP_NEW type - %s\n" ,type);
 		/************************************************/
 		/* Check That Type Was previously declared*/
 		/************************************************/

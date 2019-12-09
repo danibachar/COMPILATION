@@ -47,7 +47,7 @@ public class AST_DEC_ARRAY extends AST_DEC
 	public TYPE SemantMe() throws Exception
 	{
 		TYPE t;
-		System.out.format("SEMANTME - AST_DEC_ARRAY name = %s, type = %s\n",name, type);
+		// System.out.format("SEMANTME - AST_DEC_ARRAY name = %s, type = %s\n",name, type);
 		/********************************************/
 		/*Make sure we are at the most outer scope	*/
 		/********************************************/

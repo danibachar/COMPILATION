@@ -19,6 +19,11 @@ public class TYPE_ARRAY extends TYPE {
 
     public boolean isAssignableFrom(TYPE t)
     {
-        return equals(t) || t == type || t == TYPE_NIL.getInstance();
+      if (t.isClassVar()) {
+  			TYPE_CLASS_VAR_DEC tv = (TYPE_CLASS_VAR_DEC)t;
+  			TYPE_CLASS tc = (TYPE_CLASS)tv.t;
+        return equals(t) || tc == type || t == TYPE_NIL.getInstance();
+  		}
+      return equals(t) || t == type || t == TYPE_NIL.getInstance();
     }
 }

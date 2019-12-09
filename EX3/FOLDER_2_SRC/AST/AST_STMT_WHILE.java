@@ -48,7 +48,7 @@ public class AST_STMT_WHILE extends AST_STMT
 	public TYPE SemantMe() throws Exception
 	{
 
-		System.out.print("SEMANTME - AST_STMT_WHILE\n");
+		// System.out.print("SEMANTME - AST_STMT_WHILE\n");
 		/****************************/
 		/* [0] Semant the Condition */
 		/****************************/

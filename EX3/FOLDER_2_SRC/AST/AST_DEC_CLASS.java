@@ -61,7 +61,7 @@ public class AST_DEC_CLASS extends AST_DEC
 
 	public TYPE SemantMe() throws Exception
 	{
-		System.out.format("SEMANTME - AST_DEC_CLASS name = %s, parent = %s\n",name, parent);
+		// System.out.format("SEMANTME - AST_DEC_CLASS name = %s, parent = %s\n",name, parent);
 		/********************************************/
 		/*Make sure we are at the most outer scope	*/
 		/********************************************/

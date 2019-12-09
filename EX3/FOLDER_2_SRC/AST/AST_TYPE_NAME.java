@@ -52,7 +52,7 @@ public class AST_TYPE_NAME extends AST_Node
 	/*****************/
 	public TYPE SemantMe() throws Exception
 	{
-		System.out.format("SEMANTME - NAME(%s):TYPE(%s)\n",name,type);
+		// System.out.format("SEMANTME - NAME(%s):TYPE(%s)\n",name,type);
 		TYPE t = SYMBOL_TABLE.getInstance().find(type);
 		if (t == null) {
 			/**************************/

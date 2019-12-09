@@ -42,7 +42,7 @@ public class AST_EXP_STRING extends AST_EXP
 	}
 	public TYPE SemantMe() throws Exception
 	{
-		System.out.format("SEMANTME - AST_EXP_STRING( %s )\n",value);
+		// System.out.format("SEMANTME - AST_EXP_STRING( %s )\n",value);
 		return TYPE_STRING.getInstance();
 	}
 }

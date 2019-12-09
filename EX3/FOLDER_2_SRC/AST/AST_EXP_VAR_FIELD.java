@@ -55,7 +55,7 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 	{
 		TYPE t = null;
 		TYPE_CLASS tc = null;
-		System.out.format("SEMANTME - AST_EXP_VAR_FIELD\n(___.%s)\n",fieldName);
+		// System.out.format("SEMANTME - AST_EXP_VAR_FIELD\n(___.%s)\n",fieldName);
 		/******************************/
 		/* [1] Recursively semant var */
 		/******************************/

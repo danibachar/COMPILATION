@@ -56,7 +56,13 @@ public class TYPE_CLASS extends TYPE
 		if (t == null) return false;
 		if (t == TYPE_NIL.getInstance()) return true;
 		else if (!t.isClass()) return false;
-		TYPE_CLASS checkedClass = (TYPE_CLASS) t;
+		TYPE_CLASS checkedClass = null;
+		if (t.isClassVar()) {
+			TYPE_CLASS_VAR_DEC tv = (TYPE_CLASS_VAR_DEC)t;
+			checkedClass = (TYPE_CLASS)tv.t;
+		} else {
+			checkedClass = (TYPE_CLASS) t;
+		}
 		while (checkedClass != null) {
 				if (checkedClass.equals(this))
 						return true;

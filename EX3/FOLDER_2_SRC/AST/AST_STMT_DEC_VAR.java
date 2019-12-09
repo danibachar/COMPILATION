@@ -45,7 +45,7 @@ public class AST_STMT_DEC_VAR extends AST_STMT
 
 	public TYPE SemantMe() throws Exception
 	{
-		System.out.print("SEMANTME - AST_STMT_DEC_VAR\n");
+		// System.out.print("SEMANTME - AST_STMT_DEC_VAR\n");
 		return var.SemantMe();
 	}
 }
