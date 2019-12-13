@@ -67,12 +67,14 @@ public class AST_STMT_ASSIGN extends AST_STMT
 		TYPE t2 = null;
 
 		if (var != null) {
+			// System.out.format("SEMANTME - AST_STMT_ASSIGN before var\nlinenumber = %d\n", this.lineNumber);
 			t1 = var.SemantMe();
-			// System.out.format("SEMANTME - AST_STMT_ASSIGN var name = %s\n", t1.name);
+			// System.out.format("SEMANTME - AST_STMT_ASSIGN var name = %s\nlinenumber = %d\n", t1.name,this.lineNumber);
 		}
 		if (exp != null) {
+			// System.out.format("SEMANTME - AST_STMT_ASSIGN before exp\nlinenumber = %d\n", this.lineNumber);
 			t2 = exp.SemantMe();
-			// System.out.format("SEMANTME - AST_STMT_ASSIGN exp name = %s\n", t2.name);
+			// System.out.format("SEMANTME - AST_STMT_ASSIGN exp name = %s\nlinenumber = %d\n", t2.name,this.lineNumber);
 		}
 
 
@@ -81,11 +83,11 @@ public class AST_STMT_ASSIGN extends AST_STMT
 
 		// allow class and array to get nil
 		if (t1.isClass() && t2 == TYPE_NIL.getInstance()) {
-			// System.out.format("SEMANTME - AST_STMT_ASSIGN allow class to be nil\n");
+			// System.out.format("SEMANTME - AST_STMT_ASSIGN allow class to be nil\nlinenumber = %d\n",this.lineNumber);
 			return null;
 		}
 		if (t1.isArray() && t2 == TYPE_NIL.getInstance()) {
-			// System.out.format("SEMANTME - AST_STMT_ASSIGN allow array to be nil\n");
+			// System.out.format("SEMANTME - AST_STMT_ASSIGN allow array to be nil\nlinenumber = %d\n",this.lineNumber);
 			return null;
 		}
 		//Allow assignment for inheritance - oneway!
@@ -94,41 +96,53 @@ public class AST_STMT_ASSIGN extends AST_STMT
 			TYPE_CLASS t1_cast = (TYPE_CLASS)t1;
 			TYPE_CLASS t2_cast = (TYPE_CLASS)t2;
 			if (t1_cast.isAssignableFrom(t2_cast)) {
-				// System.out.format("SEMANTME - AST_STMT_ASSIGN allow class inheritance\n");
+				// System.out.format("SEMANTME - AST_STMT_ASSIGN allow class inheritance\nlinenumber = %d\n",this.lineNumber);
 				return null;
 			}
 		}
 
 		if (t1.isArray()) {
 			TYPE_ARRAY t1_array = (TYPE_ARRAY)t1;
+
 			if (t1_array.isAssignableFrom(t2)) {
-				// System.out.format("SEMANTME - AST_STMT_ASSIGN allow array\n");
+				// System.out.format("SEMANTME - AST_STMT_ASSIGN allow array(%s) to be assigned with %s\nlinenumber = %d\n",t1_array,t2,this.lineNumber);
 				return null;
 			}
 		}
 
 		// Validate same type
 		if (t1 != t2) {
-			// System.out.format("SEMANTME - AST_STMT_ASSIGN t1(%s), t2(%s)\n", t1, t2);
+			// System.out.format("SEMANTME - AST_STMT_ASSIGN t1(%s), t2(%s)\nlinenumber = %d\n", t1, t2,this.lineNumber);
 			// Check if we are using class var as it might have a different
-			if (t1.isClassVar()) {
-					TYPE_CLASS_VAR_DEC t1_var = (TYPE_CLASS_VAR_DEC)t1;
-					if (t1_var.t.getClass() == t2.getClass() ) {
-						return null;
-					}
-			}
+			// TYPE_CLASS_VAR_DEC t1_var = null;
+			// TYPE_CLASS_VAR_DEC t2_var = null;
+			// if (t1.isClassVar()) {
+			// 		t1_var = (TYPE_CLASS_VAR_DEC)t1;
+			// }
+			// if (t2.isClassVar()) {
+			// 		t2_var = (TYPE_CLASS_VAR_DEC)t2;
+			// }
+			// if (t1_var.t.isClass()) {
+			//
+			// }
+			//
+			// TYPE_CLASS t1_var_class = (TYPE_CLASS)t1_var.t;
+			// if (t1_var_class.isAssignableFrom(t2)) {
+			// 	System.out.format("SEMANTME - AST_STMT_ASSIGN allow class 2\n", t1, t2);
+			// 	return null;
+			// }
+			//
+			//
+			// TYPE_CLASS t2_var_class = (TYPE_CLASS)t2_var.t;
+			// if ( t1.isAssignableFrom(t2_var_class) ) {
+			// 	return null;
+			// }
 
-			if (t2.isClassVar()) {
-					TYPE_CLASS_VAR_DEC t2_var = (TYPE_CLASS_VAR_DEC)t2;
-					if ( t2_var.t.getClass() == t1.getClass() ) {
-						return null;
-					}
-			}
 
-			System.out.format(">> ERROR [%d] type mismatch for var := exp\n",this.lineNumber);
+			System.out.format(">> ERROR [%d] type mismatch for var(%s) := exp(%s)\n",this.lineNumber,t1,t2);
 			throw new AST_EXCEPTION(this);
 		}
-		// System.out.format("###### - AST_STMT_ASSIGN t1(%s), t2(%s)\n", t1, t2);
+		System.out.format("###### - AST_STMT_ASSIGN t1(%s), t2(%s)\nlinenumber = %d\n", t1, t2, this.lineNumber);
 		return null;
 	}
 }

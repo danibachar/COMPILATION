@@ -94,11 +94,6 @@ public class AST_EXP_NEW extends AST_EXP
 		// 	}
 		// }
 
-		// Validate inheritance assignment
-		if (t.isClass()) {
-
-		}
-
 		// Validating array
 		if (exp != null) {
 			TYPE expType = exp.SemantMe();

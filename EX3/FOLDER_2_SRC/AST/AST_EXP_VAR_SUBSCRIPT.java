@@ -77,6 +77,7 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 			}
 			if (varType.isArray()) {
 				TYPE_ARRAY arr = (TYPE_ARRAY)varType;
+				// System.out.format("@@@@@ 1 SEMANTME - AST_EXP_VAR_SUBSCRIPT TYPE =  %s, name = %s\n", arr.type, arr.name);
 				return arr.type;
 			}
 			// Check for class var
@@ -84,14 +85,17 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 				TYPE_CLASS_VAR_DEC varTypeClass = (TYPE_CLASS_VAR_DEC)varType;
 				if (varTypeClass.t.isArray()) {
 					TYPE_ARRAY arr = (TYPE_ARRAY)varTypeClass.t;
+					// System.out.format("@@@@@ 2 SEMANTME - AST_EXP_VAR_SUBSCRIPT TYPE = %s, name = %2\n", arr.type, arr.name);
 					return arr.type;
 				}
 			}
 			System.out.format(">> ERROR [%d] Trying access var subscript of non array type(%s)\n",this.lineNumber, varType);
 			throw new AST_EXCEPTION(this);
 		}
-
-		return varType;
+		System.out.format(">> ERROR [%d] missing var type(%s)\n",this.lineNumber, varType);
+		throw new AST_EXCEPTION(this);
+		// System.out.format("@@@@@ 3 SEMANTME - AST_EXP_VAR_SUBSCRIPT TYPE =  %s\n", varType);
+		// return varType;
 		// return null;
 	}
 }

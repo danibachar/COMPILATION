@@ -94,6 +94,7 @@ public class AST_DEC_VAR extends AST_DEC
 		if (initialValue != null)
 		{
 			TYPE initValueType = initialValue.SemantMe();
+			// System.out.format("SEMANTME - VAR-DEC initValueType(%s)\n",initValueType);
 			if (initValueType == null) {
 				System.out.format(">> ERROR [%d] initialValue that assigned to the var is not exists\n",this.lineNumber,name);
 				throw new AST_EXCEPTION(this);
@@ -118,11 +119,17 @@ public class AST_DEC_VAR extends AST_DEC
 				if (initValueType.isClassVar()) {
 					TYPE_CLASS_VAR_DEC testInitVlueType = (TYPE_CLASS_VAR_DEC)initValueType;
 					if (!tc.isAssignableFrom(testInitVlueType.t)) {
-						System.out.format(">> ERROR [%d] trying assign array(%s) with the value(%s) \n",this.lineNumber,t, testInitVlueType.t);
+						System.out.format(">> 1 ERROR [%d] trying assign array(%s) with the value(%s) \n",this.lineNumber,t, testInitVlueType.t);
 						throw new AST_EXCEPTION(this);
 					}
-				} else if (!tc.isAssignableFrom(initValueType)) {
-					System.out.format(">> ERROR [%d] trying assign array(%s) with the value(%s) \n",this.lineNumber,t, initValueType);
+				} else if (initialValue.isNewArray()) {
+					// Need to validate that the initValueType == tc.type
+					if (initValueType != tc.type) {
+						System.out.format(">> 2 ERROR [%d] trying assign array(%s) with the value(%s) \n",this.lineNumber,t, initValueType);
+						throw new AST_EXCEPTION(this);
+					}
+				} else if ( !tc.isAssignableFrom(initValueType)) {
+					System.out.format(">> 3 ERROR [%d] trying assign array(%s) with the value(%s) \n",this.lineNumber,t, initValueType);
 					throw new AST_EXCEPTION(this);
 				}
 			}
@@ -159,25 +166,6 @@ public class AST_DEC_VAR extends AST_DEC
 				}
 			}
 
-			if (initValueType.getClass() != t.getClass()) {
-				boolean isArrayOrClass = t.isClass() || t.isArray();
-				boolean isAssigningNil = initValueType == TYPE_NIL.getInstance();
-				if (!isAssigningNil || !isArrayOrClass) {
-					if (t.isArray()) {
-							// we need to check  the initValueType is the type of the array
-							TYPE_ARRAY ta = (TYPE_ARRAY)t;
-							if (!ta.isAssignableFrom(initValueType)) {
-								System.out.format(">> ERROR [%d] Array initialValue(%s), t(%s)\n",this.lineNumber,initValueType, ta.type);
-								System.out.format(">> ERROR [%d] Array initialValue that assigned to the var(%s) is not the same type of the var\n",this.lineNumber,name);
-								throw new AST_EXCEPTION(this);
-							}
-					} else {
-						System.out.format(">> ERROR [%d] initialValue(%s), t(%s)\n",this.lineNumber,initValueType, t);
-						System.out.format(">> ERROR [%d] initialValue that assigned to the var(%s) is not the same type of the var\n",this.lineNumber,name);
-						throw new AST_EXCEPTION(this);
-					}
-				}
-			}
 		}
 		/***************************************************/
 		/* [3] Enter the Function Type to the Symbol Table */
