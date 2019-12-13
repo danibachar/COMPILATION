@@ -303,7 +303,7 @@ public class Parser extends java_cup.runtime.lr_parser {
 	Symbol s;
 	s = lexer.next_token();
 	//System.out.print(s.sym);
-//	System.out.print("[");
+	//System.out.print("[");
 	//System.out.print(lexer.getLine());
 	//System.out.print(":");
 	//System.out.print(lexer.getCharPos());
@@ -333,16 +333,16 @@ public class Parser extends java_cup.runtime.lr_parser {
 
 	public void report_error(String message, Object info)
 	{
-		System.out.print(message);
-		System.out.print("\n");
-		System.out.print(info);
-		System.out.print("\n");
+		//System.out.print(message);
+		//System.out.print("\n");
+		//System.out.print(info);
+		//System.out.print("\n");
 		System.out.print("ERROR");
-		System.out.print("[");
+		System.out.print("(");
 		System.out.print(lexer.getLine());
-		System.out.print(":");
-		System.out.print(lexer.getCharPos());
-		System.out.print("]\n");
+		//System.out.print(":");
+		//System.out.print(lexer.getCharPos());
+		System.out.print(")\n");
 
 		file_writer.print("ERROR");
 		file_writer.print("(");

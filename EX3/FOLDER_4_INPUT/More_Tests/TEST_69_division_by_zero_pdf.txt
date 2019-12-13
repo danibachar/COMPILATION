@@ -1,4 +1,9 @@
 void main()
 {
-    int i:= 6; while (i+1) { int j := 8/i; i := i-1; }
+    int i:= 6;
+    while (i+1)
+    {
+      int j := 8/i;
+      i := i - 1; 
+    }
 }

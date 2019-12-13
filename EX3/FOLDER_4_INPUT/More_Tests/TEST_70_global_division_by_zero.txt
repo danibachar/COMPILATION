@@ -1,4 +1,4 @@
-int i:= 6/0;
+int i:= 6 / 0;
 void main()
 {
     int i;

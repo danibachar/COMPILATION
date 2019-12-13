@@ -11,50 +11,29 @@ EXPECTED_PATH = "FOLDER_6_EXPECTED_OUTPUT"
 
 def ensure_path(path):
     directory = "/".join(path.split("/")[0:-1])
-    # print(directory)
     if not os.path.exists(directory):
         os.makedirs(directory)
 
 class TestSequense(unittest.TestCase):
     pass
-    # def __init__(self, input_file, output_file, compare_file=None):
-    #     self.input_file = input_file
-    #     self.output_file = output_file
-    #     self.compare_file = compare_file
-    #
-    # def test(self):
-    #     print("\ninput = {} \noutput = {} \ncompare = {}\n\n\n\n".format(input_file, output_file, compare_file))
-    #
-    #     ensure_path(self.input_file)
-    #     ensure_path(self.output_file)
-    #
-    #     os.system("java -jar COMPILER {input} {output}".format(input=self.input_file, output=self.output_file))
-    #
-    #     ensure_path(self.compare_file)
-    #     if os.path.exists(self.compare_file):
-    #         filecmp.cmp(self.output_file, self.compare_file)
-    #
-    def setUp(self):
-        print("##### Begin Test #####")
-        print("##### {} #####".format(self))
-
-    def tearDown(self):
-        print("##### End Test #####")
-
 
 
 def test_generator(input_file, output_file, compare_file):
     def _run_command(command):
-    	process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-    	# for line in process.stdout:
-    	#     print(line)
-    	status = process.wait()
-    	if status != 0:
-    		print("Fail running {}, stderr {},stdout {}".format(command, process.stderr, process.stdout.readlines))
+        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if process.stdout != None:
+            for line in process.stdout:
+        	    print(line)
+        if process.stderr != None:
+            for line in process.stderr:
+        	    print(line)
+        status = process.wait()
+        if status != 0:
+            print("Fail running {}, stderr {},stdout {}".format(command, process.stderr, process.stdout))
 
     def test(self):
 
-        # print("\ninput = {} \noutput = {} \ncompare = {}\n".format(input_file, output_file, compare_file))
+        print("\ninput = {} \noutput = {} \ncompare = {}\n".format(input_file, output_file, compare_file))
 
         ensure_path(input_file)
         ensure_path(output_file)
@@ -62,9 +41,10 @@ def test_generator(input_file, output_file, compare_file):
         _run_command("java -jar COMPILER {input} {output}".format(input=input_file, output=output_file))
         # os.system("java -jar COMPILER {input} {output}".format(input=input_file, output=output_file))
 
-        # ensure_path(compare_file)
-        # if os.path.exists(compare_file):
-        #     filecmp.cmp(output_file, compare_file)
+        ensure_path(compare_file)
+        if os.path.exists(compare_file):
+            if not filecmp.cmp(output_file, compare_file):
+                print("\n####output file not as expected####\n")
 
     return test
 

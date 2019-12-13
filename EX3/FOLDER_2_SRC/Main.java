@@ -70,28 +70,28 @@ public class Main
 			// Semantic Exception handling, thrown from within th AST_Node
 			int lineNumber = e.node.lineNumber;
 			System.out.print("ERROR");
-			System.out.print("[");
+			System.out.print("(");
 			System.out.print(lineNumber);
-			System.out.print("]\n");
+			System.out.print(")\n");
 
 			file_writer.print("ERROR");
-			file_writer.print("[");
+			file_writer.print("(");
 			file_writer.print(lineNumber);
-			file_writer.print("]\n");
+			file_writer.print(")\n");
 			file_writer.close();
 		} catch (Exception e) {
 			// Lex Exception handling, thrown from Lexer
 			try {
 				int lineNumber = l.getLine();
 				System.out.print("ERROR");
-				System.out.print("[");
+				System.out.print("(");
 				System.out.print(lineNumber);
-				System.out.print("]\n");
+				System.out.print(")\n");
 
 				file_writer.print("ERROR");
-				file_writer.print("[");
+				file_writer.print("(");
 				file_writer.print(lineNumber);
-				file_writer.print("]\n");
+				file_writer.print(")\n");
 				file_writer.close();
 			}
 			catch (Exception ex) {}

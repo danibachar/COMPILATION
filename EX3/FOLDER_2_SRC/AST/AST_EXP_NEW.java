@@ -81,18 +81,18 @@ public class AST_EXP_NEW extends AST_EXP
 		/***********************************************************/
 		/* Check That the Type is actually a class type or an array*/
 		/***********************************************************/
-		if (!t.isClass() && !t.isArray()) {
-			if (t.isClassVar()) {
-				TYPE_CLASS_VAR_DEC tcv = (TYPE_CLASS_VAR_DEC)t;
-				if (!tcv.isClass() && !tcv.isArray()) {
-					System.out.format(">> ERROR [%d] trying to create new entity that is not a class/array type(%s)\n",this.lineNumber,type);
-					throw new AST_EXCEPTION(this);
-				}
-			} else {
-				System.out.format(">> ERROR [%d] trying to create new entity that is not a class/array type(%s)\n",this.lineNumber,type);
-				throw new AST_EXCEPTION(this);
-			}
-		}
+		// if (!t.isClass() && !t.isArray()) {
+		// 	if (t.isClassVar()) {
+		// 		TYPE_CLASS_VAR_DEC tcv = (TYPE_CLASS_VAR_DEC)t;
+		// 		if (!tcv.isClass() && !tcv.isArray()) {
+		// 			System.out.format(">> ERROR [%d] trying to create new entity that is not a class/array type(%s)\n",this.lineNumber,t);
+		// 			throw new AST_EXCEPTION(this);
+		// 		}
+		// 	} else {
+		// 		System.out.format(">> ERROR [%d] trying to create new entity that is not a class/array type(%s)\n",this.lineNumber,t);
+		// 		throw new AST_EXCEPTION(this);
+		// 	}
+		// }
 
 		// Validate inheritance assignment
 		if (t.isClass()) {
@@ -104,7 +104,7 @@ public class AST_EXP_NEW extends AST_EXP
 			TYPE expType = exp.SemantMe();
 			// TYPE nt = SYMBOL_TABLE.getInstance().find(expType.name);
 			if ( expType != TYPE_INT.getInstance()) {
-				System.out.format(">> ERROR [%d] trying to init array[%s] with not declared type = %s\n",this.lineNumber,type, expType);
+				System.out.format(">> ERROR [%d] trying to init array[%s] with not declared type = %s\n",this.lineNumber,t, expType);
 				throw new AST_EXCEPTION(this);
 			}
 			// return new TYPE_ARRAY(,int)
