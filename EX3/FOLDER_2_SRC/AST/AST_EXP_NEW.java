@@ -97,12 +97,13 @@ public class AST_EXP_NEW extends AST_EXP
 		// Validating array
 		if (exp != null) {
 			TYPE expType = exp.SemantMe();
-			// TYPE nt = SYMBOL_TABLE.getInstance().find(expType.name);
 			if ( expType != TYPE_INT.getInstance()) {
 				System.out.format(">> ERROR [%d] trying to init array[%s] with not declared type = %s\n",this.lineNumber,t, expType);
 				throw new AST_EXCEPTION(this);
 			}
-			// return new TYPE_ARRAY(,int)
+			// We can send name null, as we don't really care about it (:
+			System.out.format("We can send name null, as we don't really care about it (:\n");
+			// return new TYPE_ARRAY(null,TYPE_INT.getInstance());
 		}
 		// Validate Expression
 

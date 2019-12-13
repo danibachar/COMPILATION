@@ -111,37 +111,37 @@ public class AST_STMT_ASSIGN extends AST_STMT
 		}
 
 		// Validate same type
-		if (t1 != t2) {
-			// System.out.format("SEMANTME - AST_STMT_ASSIGN t1(%s), t2(%s)\nlinenumber = %d\n", t1, t2,this.lineNumber);
-			// Check if we are using class var as it might have a different
-			// TYPE_CLASS_VAR_DEC t1_var = null;
-			// TYPE_CLASS_VAR_DEC t2_var = null;
-			// if (t1.isClassVar()) {
-			// 		t1_var = (TYPE_CLASS_VAR_DEC)t1;
-			// }
-			// if (t2.isClassVar()) {
-			// 		t2_var = (TYPE_CLASS_VAR_DEC)t2;
-			// }
-			// if (t1_var.t.isClass()) {
-			//
-			// }
-			//
-			// TYPE_CLASS t1_var_class = (TYPE_CLASS)t1_var.t;
-			// if (t1_var_class.isAssignableFrom(t2)) {
-			// 	System.out.format("SEMANTME - AST_STMT_ASSIGN allow class 2\n", t1, t2);
-			// 	return null;
-			// }
-			//
-			//
-			// TYPE_CLASS t2_var_class = (TYPE_CLASS)t2_var.t;
-			// if ( t1.isAssignableFrom(t2_var_class) ) {
-			// 	return null;
-			// }
-
-
-			System.out.format(">> ERROR [%d] type mismatch for var(%s) := exp(%s)\n",this.lineNumber,t1,t2);
-			throw new AST_EXCEPTION(this);
-		}
+		// if (t1 != t2) {
+		// 	System.out.format("SEMANTME - AST_STMT_ASSIGN t1(%s), t2(%s)\nlinenumber = %d\n", t1, t2,this.lineNumber);
+		// 	// Check if we are using class var as it might have a different
+		// 	// TYPE_CLASS_VAR_DEC t1_var = null;
+		// 	// TYPE_CLASS_VAR_DEC t2_var = null;
+		// 	// if (t1.isClassVar()) {
+		// 	// 		t1_var = (TYPE_CLASS_VAR_DEC)t1;
+		// 	// }
+		// 	// if (t2.isClassVar()) {
+		// 	// 		t2_var = (TYPE_CLASS_VAR_DEC)t2;
+		// 	// }
+		// 	// if (t1_var.t.isClass()) {
+		// 	//
+		// 	// }
+		// 	//
+		// 	// TYPE_CLASS t1_var_class = (TYPE_CLASS)t1_var.t;
+		// 	// if (t1_var_class.isAssignableFrom(t2)) {
+		// 	// 	System.out.format("SEMANTME - AST_STMT_ASSIGN allow class 2\n", t1, t2);
+		// 	// 	return null;
+		// 	// }
+		// 	//
+		// 	//
+		// 	// TYPE_CLASS t2_var_class = (TYPE_CLASS)t2_var.t;
+		// 	// if ( t1.isAssignableFrom(t2_var_class) ) {
+		// 	// 	return null;
+		// 	// }
+		//
+		//
+		// 	// System.out.format(">> ERROR [%d] type mismatch for var(%s) := exp(%s)\n",this.lineNumber,t1,t2);
+		// 	// throw new AST_EXCEPTION(this);
+		// }
 		System.out.format("###### - AST_STMT_ASSIGN t1(%s), t2(%s)\nlinenumber = %d\n", t1, t2, this.lineNumber);
 		return null;
 	}
