@@ -102,7 +102,7 @@ public class AST_EXP_NEW extends AST_EXP
 				throw new AST_EXCEPTION(this);
 			}
 			// We can send name null, as we don't really care about it (:
-			System.out.format("We can send name null, as we don't really care about it (:\n");
+			// System.out.format("We can send name null, as we don't really care about it (:\n");
 			// return new TYPE_ARRAY(null,TYPE_INT.getInstance());
 		}
 		// Validate Expression

@@ -20,6 +20,7 @@ class TestSequense(unittest.TestCase):
 
 def test_generator(input_file, output_file, compare_file):
     def _run_command(command):
+        print("\n\nRunnig Command {}\n\n".format(command))
         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if process.stdout != None:
             for line in process.stdout:
@@ -33,7 +34,7 @@ def test_generator(input_file, output_file, compare_file):
 
     def test(self):
 
-        print("\ninput = {} \noutput = {} \ncompare = {}\n".format(input_file, output_file, compare_file))
+        # print("\ninput = {} \noutput = {} \ncompare = {}\n".format(input_file, output_file, compare_file))
 
         ensure_path(input_file)
         ensure_path(output_file)
@@ -44,7 +45,7 @@ def test_generator(input_file, output_file, compare_file):
         ensure_path(compare_file)
         if os.path.exists(compare_file):
             if not filecmp.cmp(output_file, compare_file):
-                print("\n####output file not as expected####\n")
+                print("\n\n####{} - output file not as expected####\n\n".format(output_file))
 
     return test
 
@@ -70,7 +71,7 @@ def _constract_compare_file_name(base_input_file_dir, file_name):
     else:
         return _full_name(os.path.join(EXPECTED_PATH, os.path.basename(os.path.splitext(file_name)[0]) + "_Expected_Output.txt"))
 
-print("Start")
+print("Start\n\n\n")
 for root,d_names,f_names in os.walk(INPUT_PATH):
     for f in f_names:
         if f.endswith(".txt"):
@@ -81,35 +82,7 @@ for root,d_names,f_names in os.walk(INPUT_PATH):
             full_commpare_file_name = _constract_compare_file_name(root, input_file)
 
             test_name = 'test_%s' % os.path.splitext(input_file)[0]
-            print("RUNNING TEST({}):\n".format(test_name))
+            # print("RUNNING TEST({}):\n".format(test_name))
             # continue
             test = test_generator(full_input_file_name, full_output_file_name, full_commpare_file_name)
             test(None)
-
-# if __name__ == '__main__':
-#     # run make
-#
-#     for root,d_names,f_names in os.walk(INPUT_PATH):
-#         for f in f_names:
-#             if f.endswith(".txt"):
-#                 input_file = os.path.join(root, f)
-#
-#                 full_input_file_name = _full_name(input_file)
-#                 full_output_file_name = _constract_output_file_name(root, input_file)
-#                 full_commpare_file_name = _constract_compare_file_name(root, input_file)
-#
-#                 test_name = 'test_%s' % os.path.splitext(input_file)[0]
-#                 print("RUNNING TEST({}):\n".format(test_name))
-#                 # continue
-#                 test = test_generator(full_input_file_name, full_output_file_name, full_commpare_file_name)
-#                 test(None)
-#                 # setattr(TestSequense, test_name, test)
-#                 # unittest.main()
-#
-#
-#                 # t = TestSequense(full_input_file_name, full_output_file_name, full_commpare_file_name )
-#                 # t = TestSequense()
-#                 # setattr(t, test_name, test)
-#                 # suite.addTest(t)
-#
-#     # unittest.main()

@@ -28,11 +28,11 @@ public class AST_DEC_CLASS extends AST_DEC
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		// if (parent != null) {
-		// 	System.out.format("====================== classDec -> CLASS ID( %s ) EXTENDS( %s )\n", name, parent);
-		// } else {
-		// 	System.out.format("====================== classDec -> CLASS ID( %s ) \n", name);
-		// }
+		if (parent != null) {
+			System.out.format("====================== classDec[%d] -> CLASS ID( %s ) EXTENDS( %s )\n",lineNumber , name, parent);
+		} else {
+			System.out.format("====================== classDec[%d] -> CLASS ID( %s ) \n", lineNumber, name);
+		}
 
 		this.lineNumber = lineNumber;
 		this.name = name;
@@ -126,7 +126,7 @@ public class AST_DEC_CLASS extends AST_DEC
 					var_decs.add(v);
 				} else {
 					System.out.format(">> ERROR [%d] Class %s has unknown data_member/method %s\n",this.lineNumber,it.head);
-					throw new AST_EXCEPTION(this);
+					throw new AST_EXCEPTION(it);
 				}
 		}
 		/*************************/
@@ -139,7 +139,7 @@ public class AST_DEC_CLASS extends AST_DEC
 			// Constant expression is one of the following - Nil, String, Int
 			if (v.initialValue != null && !v.initialValue.isConstExp()) {
 				System.out.format(">> ERROR [%d] Class %s Extends %s has data_member that is initialized with no constant value %s \n",this.lineNumber,name, parent,v.initialValue);
-				throw new AST_EXCEPTION(this);
+				throw new AST_EXCEPTION(v);
 			}
 			TYPE_CLASS_VAR_DEC fd = new TYPE_CLASS_VAR_DEC(v.SemantMe(),v.name);
 			t.data_members = new TYPE_CLASS_VAR_DEC_LIST(fd ,t.data_members);

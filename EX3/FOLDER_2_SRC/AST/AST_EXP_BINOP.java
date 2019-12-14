@@ -84,34 +84,48 @@ public class AST_EXP_BINOP extends AST_EXP
 		if (right != null) t2 = right.SemantMe();
 
 		// System.out.format("SEMANTME - AST_EXP_BINOP(%s) between t1=%s, t2=%s\n",opSymbol(), t1, t2);
+
 		// Allow any kind of operation between 2 ints
 		if ((t1 == TYPE_INT.getInstance()) && (t2 == TYPE_INT.getInstance())) {
 			return TYPE_INT.getInstance();
 		}
+
 		// Check if we are using class var as it might have a different
 		TYPE_CLASS_VAR_DEC t1_var = null;
 		TYPE_CLASS_VAR_DEC t2_var = null;
 		if (t1 != null && t1.isClassVar()) {
 				t1_var = (TYPE_CLASS_VAR_DEC)t1;
-				if ((t1_var.t != null && t1_var.t == TYPE_INT.getInstance()) && (t2 == TYPE_INT.getInstance())) {
-					return TYPE_INT.getInstance();
-				}
-				if (OP == 0) {
-					if ((t2_var.t != null && t2_var.t == TYPE_STRING.getInstance()) && (t1 == TYPE_STRING.getInstance())) {
-						return TYPE_INT.getInstance();
-					}
-				}
 		}
 		if (t2 != null && t2.isClassVar()) {
 				t2_var = (TYPE_CLASS_VAR_DEC)t2;
-				if ((t2_var.t == TYPE_INT.getInstance()) && (t1 == TYPE_INT.getInstance())) {
-					return TYPE_INT.getInstance();
-				}
-				if (OP == 0) {
-					if ((t2_var.t == TYPE_STRING.getInstance()) && (t1 == TYPE_STRING.getInstance())) {
-						return TYPE_INT.getInstance();
-					}
-				}
+		}
+
+		if (t1_var != null && t1_var.t != null) {
+			 if (t1_var.t == TYPE_INT.getInstance() && t2 == TYPE_INT.getInstance()) {
+				 return TYPE_INT.getInstance();
+			 }
+			 if (t1_var.t.isClass() || t1_var.t.isArray() && t2 == TYPE_NIL.getInstance()) {
+				 return TYPE_INT.getInstance();
+			 }
+			 if (OP == 0) {
+				 if (( t1_var.t == TYPE_STRING.getInstance()) && (t2 == TYPE_STRING.getInstance())) {
+	 				return TYPE_INT.getInstance();
+	 			}
+			 }
+		}
+
+		if (t2_var != null && t2_var.t != null) {
+			 if (t2_var.t == TYPE_INT.getInstance() && t1 == TYPE_INT.getInstance()) {
+				 return TYPE_INT.getInstance();
+			 }
+			 if (t2_var.t.isClass() || t2_var.t.isArray() && t1 == TYPE_NIL.getInstance()) {
+				 return TYPE_INT.getInstance();
+			 }
+			 if (OP == 0) {
+				 if ((t2_var.t == TYPE_STRING.getInstance()) && (t1 == TYPE_STRING.getInstance())) {
+	 				return TYPE_INT.getInstance();
+	 			}
+			 }
 		}
 
 		if (t1_var != null && t2_var != null) {
@@ -123,14 +137,21 @@ public class AST_EXP_BINOP extends AST_EXP
 					return TYPE_INT.getInstance();
 				}
 				// Check class? and array
-				if (t1_var.t.isArray() && t2_var.t.isArray()) {
-					if (t1_var.t.equals(t2_var.t)) {
-						return TYPE_INT.getInstance();
+				// if (t1_var.t.isArray() && t2_var.t.isArray()) {
+				// 	if (t1_var.t.equals(t2_var.t)) {
+				// 		return TYPE_INT.getInstance();
+				// 	}
+				// }
+				// Allow compare classes that extends each other
+				if (t1_var.isClass() && t2_var.isClass()) {
+					TYPE_CLASS castT1 = (TYPE_CLASS)t1;
+					TYPE_CLASS castT2 = (TYPE_CLASS)t2;
+					if (castT1.isAssignableFrom(castT2) || castT2.isAssignableFrom(castT1)) {
+							return TYPE_INT.getInstance();
 					}
 				}
 			}
 		}
-
 
 		// Equality Testing
 		if (OP == 0) {
@@ -158,6 +179,7 @@ public class AST_EXP_BINOP extends AST_EXP
 						return TYPE_INT.getInstance();
 				}
 			}
+
 		}
 
 		// Plus Operation Testing
@@ -167,6 +189,7 @@ public class AST_EXP_BINOP extends AST_EXP
 				return TYPE_STRING.getInstance();
 			}
 		}
+
 
 		System.out.format(">> ERROR [%d] AST_EXP_BINOP(%s) Fail!!! t1(%s) != t2(%s)\n",this.lineNumber, opSymbol(),t1,t2);
 		throw new AST_EXCEPTION(this);
