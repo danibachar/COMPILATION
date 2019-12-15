@@ -2,31 +2,14 @@ package TYPES;
 
 public class TYPE_CLASS_FUNC_DEC_LIST extends TYPE
 {
-	public TYPE_CLASS_FUNC_DEC head;
+	public TYPE_FUNCTION head;
 	public TYPE_CLASS_FUNC_DEC_LIST tail;
 
-	public TYPE_CLASS_FUNC_DEC_LIST(TYPE_CLASS_FUNC_DEC head,TYPE_CLASS_FUNC_DEC_LIST tail)
+	public TYPE_CLASS_FUNC_DEC_LIST(TYPE_FUNCTION head,TYPE_CLASS_FUNC_DEC_LIST tail)
 	{
 		this.head = head;
 		this.tail = tail;
 	}
-
-	// public TYPE_CLASS_FUNC_DEC getFuncDec(String name)
-	// {
-	// 	// System.out.format("getFuncDec TYPE_CLASS_FUNC_DEC_LIST searching for %s\n", name);
-	// 	if (head != null && head.name.equals(name)) {
-	// 		return head;
-	// 	}
-	// 	for (TYPE_CLASS_FUNC_DEC_LIST it=tail;it != null;it=it.tail) {
-	// 		if (it.head != null) {
-	// 				if (it.head.name.equals(name)) {
-	// 					return it.head;
-	// 				}
-	// 		}
-	// 	}
-	// 	System.out.format("getFuncDec TYPE_CLASS_FUNC_DEC_LIST didnt find\n");
-	// 	return null;
-	// }
 
 	public void PrintMyType() {
 		if (head == null && tail == null) {

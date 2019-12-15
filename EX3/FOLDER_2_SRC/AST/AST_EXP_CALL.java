@@ -100,9 +100,9 @@ public class AST_EXP_CALL extends AST_EXP
 
 
 				//TODO = Make sure that the class holds the fields!!!
-				TYPE_CLASS_FUNC_DEC funcDec = varClass.queryMethodsReqursivly(funcName);
+				TYPE_FUNCTION funcDec = varClass.queryMethodsReqursivly(funcName);
 				if (funcDec == null) {
-					System.out.format(">> ERROR [%d] trying to call non existing function %s in class %s\n",this.lineNumber,funcName, varClass.name);
+					System.out.format(">> (1) ERROR [%d] trying to call non existing function %s in class %s\n",this.lineNumber,funcName, varClass.name);
 					throw new AST_EXCEPTION(this.lineNumber);
 				}
 
@@ -127,8 +127,15 @@ public class AST_EXP_CALL extends AST_EXP
 			TYPE funcType = SYMBOL_TABLE.getInstance().find(funcName);
 			if (funcType == null)
 			{
-				System.out.format(">> ERROR [%d] non existing function %s\n",this.lineNumber,funcName);
-				throw new AST_EXCEPTION(this.lineNumber);
+				funcType = SYMBOL_TABLE.getInstance().findFunc(funcName,false);
+				if (funcType == null) {
+					System.out.format(">> (2) ERROR [%d] non existing function %s\n",this.lineNumber,funcName);
+					throw new AST_EXCEPTION(this.lineNumber);
+				}
+				// if (funcType.isClassFunc()) {
+				// 	TYPE_CLASS_FUNC_DEC funcTypeValidated = (TYPE_FUNCTION)funcType;
+				// 	funcType = TYPE_FUNCTION(funcType.returnType, funcType.name, funcType.params);
+				// }
 			}
 			// Validate that it is actually a funciton type, as we need to know its return type
 			if (!(funcType instanceof TYPE_FUNCTION))
@@ -205,12 +212,12 @@ public class AST_EXP_CALL extends AST_EXP
 			TYPE send = sent_input_params.get(i);
 
 			if (expected.isClassVar()) {
-				System.out.format("expected is class Var\n");
+				// System.out.format("expected is class Var\n");
 				TYPE_CLASS_VAR_DEC tmp = (TYPE_CLASS_VAR_DEC)expected;
 				expected = tmp.t;
 			}
 			if (send.isClassVar()) {
-				System.out.format("send is class Var\n");
+				// System.out.format("send is class Var\n");
 				TYPE_CLASS_VAR_DEC tmp = (TYPE_CLASS_VAR_DEC)send;
 				send = tmp.t;
 			}

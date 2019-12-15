@@ -144,6 +144,26 @@ public class SYMBOL_TABLE
 		return null;
 	}
 
+	public TYPE findFunc(String name, boolean searchOutsideOfScope) {
+		// System.out.format("findFunc `%s`\n",name );
+		// System.out.format("findFunc `%s`\n",current_class );
+		// Search in current function first
+		if (current_function != null) {
+				// System.out.format("findFunc in curr function scope first `%s`\n",current_function.name );
+				TYPE t = findInCurrentScope(name);
+				if (t != null) { return t; }
+		}
+		// Search in current class recursively up the inheritance tree second
+		if (!searchOutsideOfScope && current_class != null) {
+				// System.out.format("findFunc in class `%s`\n",current_function.name );
+				TYPE t = current_class.queryMethodsReqursivly(name);
+				if (t != null) { return t; }
+		}
+
+		// Last just look for enything, please!!!
+		return find(name);
+	}
+
 	public TYPE findField(String name, boolean searchOutsideOfScope) {
 		// System.out.format("findField `%s`\n",name );
 		// Search in current function first

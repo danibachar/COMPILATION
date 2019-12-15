@@ -178,7 +178,7 @@ public class AST_DEC_CLASS extends AST_DEC
 			// Handling params
 			TYPE_LIST p = null;
 			if (f.params != null) { p = f.params.SemantMe(); }
-			TYPE_CLASS_FUNC_DEC fd = new TYPE_CLASS_FUNC_DEC( null, f.name, p );
+			TYPE_FUNCTION fd = new TYPE_FUNCTION( null, f.name, p );
 			t.methods = new TYPE_CLASS_FUNC_DEC_LIST(fd ,t.methods);
 			fd.returnType = f.SemantMe();
 			// Validate against each father

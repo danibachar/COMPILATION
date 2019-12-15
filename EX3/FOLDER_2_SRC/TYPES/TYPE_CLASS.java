@@ -91,7 +91,7 @@ public class TYPE_CLASS extends TYPE
 		return null;
 	}
 
-	public TYPE_CLASS_FUNC_DEC queryMethodsReqursivly(String method_name) {
+	public TYPE_FUNCTION queryMethodsReqursivly(String method_name) {
 		// Search here
 		// System.out.format("Start Looking for supported method_name = %s in class =  %s\n",method_name, name);
 		for (TYPE_CLASS_FUNC_DEC_LIST it=this.methods;it != null;it=it.tail) {

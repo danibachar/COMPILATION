@@ -78,26 +78,26 @@ public class AST_HELPERS
         if (tValue.isClassVar()) {
           TYPE_CLASS_VAR_DEC testInitVlueType = (TYPE_CLASS_VAR_DEC)tValue;
           if (!tc.isAssignableFrom(testInitVlueType.t)) {
-            System.out.format(">> ERROR [%d] trying assign class(%s) with the value(%s) \n",exp.lineNumber,t, testInitVlueType.t);
+            System.out.format(">> (1) ERROR [%d] trying assign class(%s) with the value(%s) \n",exp.lineNumber,t, testInitVlueType.t);
             throw new AST_EXCEPTION(exp.lineNumber);
           }
         } else if (!tc.isAssignableFrom(tValue)) {
-          System.out.format(">> ERROR [%d] trying assign class(%s) with the value(%s) \n",exp.lineNumber,t, tValue);
+          System.out.format(">> (2) ERROR [%d] trying assign class(%s) with the value(%s) \n",exp.lineNumber,t, tValue);
           throw new AST_EXCEPTION(exp.lineNumber);
         }
 
       }
       // Allow Assignment for array - nil or same array?
       if (tcv.t.isArray()) {
-        TYPE_ARRAY tc = (TYPE_ARRAY)tValue;
+        TYPE_ARRAY tc = (TYPE_ARRAY)tcv.t;
         if (tValue.isClassVar()) {
           TYPE_CLASS_VAR_DEC testInitVlueType = (TYPE_CLASS_VAR_DEC)tValue;
           if (!tc.isAssignableFrom(testInitVlueType.t)) {
-            System.out.format(">> ERROR [%d] trying assign class(%s) with the value(%s) \n",exp.lineNumber,t, testInitVlueType.t);
+            System.out.format(">> (3) ERROR [%d] trying assign class(%s) with the value(%s) \n",exp.lineNumber,t, testInitVlueType.t);
             throw new AST_EXCEPTION(exp.lineNumber);
           }
         } else if (!tc.isAssignableFrom(tValue)) {
-          System.out.format(">> ERROR [%d] trying assign class(%s) with the value(%s) \n",exp.lineNumber,t, tValue);
+          System.out.format(">> (4) ERROR [%d] trying assign class(%s) with the value(%s) \n",exp.lineNumber,t, tValue);
           throw new AST_EXCEPTION(exp.lineNumber);
         }
       }
