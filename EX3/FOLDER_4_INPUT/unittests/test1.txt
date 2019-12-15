@@ -1,0 +1,5 @@
+class Son extends Father
+{
+	int bar;
+}
+class Father { int salary; }

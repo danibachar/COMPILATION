@@ -41,7 +41,12 @@ public class AST_DEC_VAR extends AST_DEC
 		/**************************************/
 		/* RECURSIVELY PRINT initialValue ... */
 		/**************************************/
-		if (initialValue != null) initialValue.PrintMe();
+		if (initialValue != null)
+		{
+			System.out.format("about to print \n");
+			initialValue.PrintMe();
+		}
+
 
 		/**********************************/
 		/* PRINT to AST GRAPHVIZ DOT file */

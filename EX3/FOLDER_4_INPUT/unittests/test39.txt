@@ -1,0 +1,15 @@
+class UseBeforeDef
+{
+    void foo(int j, string s) { PrintInt(i); }
+    int boo() { return 6; }
+    int temp() { return 100; }
+	int i;
+}
+
+class number extends UseBeforeDef {
+    void foo(int j, string s) {
+        i := temp();
+        PrintInt(i);
+    }
+    int k;
+}

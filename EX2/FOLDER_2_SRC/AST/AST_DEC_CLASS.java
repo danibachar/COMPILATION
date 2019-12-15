@@ -21,11 +21,11 @@ public class AST_DEC_CLASS extends AST_DEC
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		if (parent != null) {
-			System.out.format("====================== classDec -> CLASS ID( %s ) EXTENDS( %s )\n", name, parent);
-		} else {
-			System.out.format("====================== classDec -> CLASS ID( %s ) \n", name);
-		}
+		// if (parent != null) {
+		// 	System.out.format("====================== classDec -> CLASS ID( %s ) EXTENDS( %s )\n", name, parent);
+		// } else {
+		// 	System.out.format("====================== classDec -> CLASS ID( %s ) \n", name);
+		// }
 
 		this.name = name;
 		this.parent = parent;
