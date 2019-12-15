@@ -118,6 +118,11 @@ public class AST_EXP_BINOP extends AST_EXP
 	 				return TYPE_INT.getInstance();
 	 			}
 			 }
+			 if (OP == 3) {
+				 if (( t1_var.t == TYPE_STRING.getInstance()) && (t2 == TYPE_STRING.getInstance())) {
+	 				return TYPE_STRING.getInstance();
+	 			}
+			 }
 		}
 
 		if (t2_var != null && t2_var.t != null) {
@@ -130,6 +135,11 @@ public class AST_EXP_BINOP extends AST_EXP
 			 if (OP == 0) {
 				 if ((t2_var.t == TYPE_STRING.getInstance()) && (t1 == TYPE_STRING.getInstance())) {
 	 				return TYPE_INT.getInstance();
+	 			}
+			 }
+			 if (OP == 3) {
+				 if (( t2_var.t == TYPE_STRING.getInstance()) && (t1 == TYPE_STRING.getInstance())) {
+	 				return TYPE_STRING.getInstance();
 	 			}
 			 }
 		}
@@ -194,11 +204,13 @@ public class AST_EXP_BINOP extends AST_EXP
 			if ((t1 == TYPE_STRING.getInstance()) && (t2 == TYPE_STRING.getInstance())) {
 				return TYPE_STRING.getInstance();
 			}
+
+			// Allow
 		}
 
 
 		System.out.format(">> ERROR [%d] AST_EXP_BINOP(%s) Fail!!! t1(%s) != t2(%s)\n",this.lineNumber, opSymbol(),t1,t2);
-		throw new AST_EXCEPTION(this.rightLineNumber);
+		throw new AST_EXCEPTION(this.lineNumber);
 	}
 
 }
