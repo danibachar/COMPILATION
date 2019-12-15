@@ -17,7 +17,7 @@ public class AST_EXP_INT extends AST_EXP
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		System.out.format("====================== exp -> INT( %d )\n", value);
+		// System.out.format("====================== exp -> INT( %d )\n", value);
 
 		/*******************************/
 		/* COPY INPUT DATA NENBERS ... */

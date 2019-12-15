@@ -139,7 +139,7 @@ COMMENT = {COMMENT_MULTI} | {EndOfLineComment}
 ";"					{ return symbol(TokenNames.SEMICOLON);}
 ","					{ return symbol(TokenNames.COMMA);}
 {ID}				{ return symbol(TokenNames.ID, new String(yytext()));}
-{INTEGER} | {NEG_NUMBER}			{ return symbol(TokenNames.INT, new Integer(yytext()));}
+{INTEGER} 		{ return symbol(TokenNames.INT, new Integer(yytext()));}
 {STRING}     { return symbol(TokenNames.STRING, new String(yytext()));}
 {WhiteSpace}		{ /* just skip what was found, do nothing */ }
 {LineTerminator}	{ /* just skip what was found, do nothing */ }

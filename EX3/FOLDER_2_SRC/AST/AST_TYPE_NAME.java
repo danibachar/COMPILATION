@@ -59,7 +59,7 @@ public class AST_TYPE_NAME extends AST_Node
 			/* ERROR: undeclared type */
 			/**************************/
 			System.out.print(">> ERROR AST_TYPE_NAME undeclared type");
-			throw new AST_EXCEPTION(this);
+			throw new AST_EXCEPTION(this.lineNumber);
 		}
 		else
 		{

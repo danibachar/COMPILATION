@@ -10,13 +10,13 @@ public class AST_DEC_ARRAY extends AST_DEC
 	/********/
 	/* NAME */
 	/********/
-	// public String name;
 	public String type;
+	public Integer typeLineNumber;
 	public boolean isArrayDec() { return true;}
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_DEC_ARRAY(String name,String type, Integer lineNumber)
+	public AST_DEC_ARRAY(String name,Integer nameLineNumber,String type, Integer typeLineNumber)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -27,10 +27,11 @@ public class AST_DEC_ARRAY extends AST_DEC
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
 		// System.out.format("====================== arrayDec -> ARRAY( %s ) ID( %s ) \n", type, name);
-
-		this.lineNumber = lineNumber;
 		this.name = name;
+		this.nameLineNumber = nameLineNumber;
+
 		this.type = type;
+		this.typeLineNumber = typeLineNumber;
 	}
 
 	public void PrintMe()
@@ -52,8 +53,8 @@ public class AST_DEC_ARRAY extends AST_DEC
 		/*Make sure we are at the most outer scope	*/
 		/********************************************/
 		if (SYMBOL_TABLE.getInstance().scopeCount > 0) {
-			System.out.format(">> ERROR [%d] Array %s defined not in most outer scope\n",this.lineNumber,name);
-			throw new AST_EXCEPTION(this);
+			System.out.format(">> ERROR [%d] Array %s defined not in most outer scope\n",this.nameLineNumber,name);
+			throw new AST_EXCEPTION(this.nameLineNumber);
 		}
 		/****************************/
 		/* [1] Check If Type exists */
@@ -63,8 +64,8 @@ public class AST_DEC_ARRAY extends AST_DEC
 		t = SYMBOL_TABLE.getInstance().find(type);
 		if (t == null)
 		{
-			System.out.format(">> ERROR [%d] non existing type %s\n",this.lineNumber,type);
-			throw new AST_EXCEPTION(this);
+			System.out.format(">> ERROR [%d] non existing type %s\n",this.typeLineNumber,type);
+			throw new AST_EXCEPTION(this.typeLineNumber);
 		}
 
 		/**************************************/
@@ -72,8 +73,8 @@ public class AST_DEC_ARRAY extends AST_DEC
 		/**************************************/
 		if (SYMBOL_TABLE.getInstance().find(name) != null)
 		{
-			System.out.format(">> ERROR [%d] array %s already exists in scope\n",this.lineNumber,name);
-			throw new AST_EXCEPTION(this);
+			System.out.format(">> ERROR [%d] array %s already exists in scope\n",this.nameLineNumber,name);
+			throw new AST_EXCEPTION(this.nameLineNumber);
 		}
 
 		/**************************************/
@@ -81,8 +82,8 @@ public class AST_DEC_ARRAY extends AST_DEC
 		/**************************************/
 		if (t == TYPE_VOID.getInstance())
 		{
-			System.out.format(">> ERROR [%d] array %s cannot be of type void\n",this.lineNumber,name);
-			throw new AST_EXCEPTION(this);
+			System.out.format(">> ERROR [%d] array %s cannot be of type(%s) void\n",this.typeLineNumber,name,t);
+			throw new AST_EXCEPTION(this.typeLineNumber);
 		}
 
 		/***************************************************/

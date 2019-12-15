@@ -58,7 +58,7 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 			try {
 				return new TYPE_LIST(head.SemantMe(),null);
 			} catch (Exception e) {
-				throw new AST_EXCEPTION(this);
+				throw new AST_EXCEPTION(this.lineNumber);
 			}
 
 		}
@@ -67,7 +67,7 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 			try {
 				return new TYPE_LIST(head.SemantMe(),tail.SemantMe());
 			} catch (Exception e) {
-				throw new AST_EXCEPTION(this);
+				throw new AST_EXCEPTION(this.lineNumber);
 			}
 
 		}

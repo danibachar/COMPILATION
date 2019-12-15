@@ -78,20 +78,20 @@ public class AST_EXP_CALL extends AST_EXP
 				TYPE varType = var.SemantMe();
 				if (varType == null) {
 					System.out.format(">> ERROR [%d] calling function(%s) on var(%s):%s that is not a class\n",this.lineNumber,funcName, varType, var);
-					throw new AST_EXCEPTION(this);
+					throw new AST_EXCEPTION(this.lineNumber);
 				}
 
 				if (!varType.isClass()) {
 					// Check maybe it is a field holding a class
 					if (!varType.isClassVar()) {
 						System.out.format(">> ERROR [%d] calling function(%s) on var(%s):%s that is not a class\n",this.lineNumber,funcName, varType, var);
-						throw new AST_EXCEPTION(this);
+						throw new AST_EXCEPTION(this.lineNumber);
 					}
 
 					TYPE_CLASS_VAR_DEC var_type_class = (TYPE_CLASS_VAR_DEC)varType;
 					if (!var_type_class.t.isClass()) {
 						System.out.format(">> ERROR [%d] calling function(%s) on var(%s):%s that is not a class\n",this.lineNumber,funcName, varType, var);
-						throw new AST_EXCEPTION(this);
+						throw new AST_EXCEPTION(this.lineNumber);
 					}
 					varClass = (TYPE_CLASS)var_type_class.t;
 				} else {
@@ -103,7 +103,7 @@ public class AST_EXP_CALL extends AST_EXP
 				TYPE_CLASS_FUNC_DEC funcDec = varClass.queryMethodsReqursivly(funcName);
 				if (funcDec == null) {
 					System.out.format(">> ERROR [%d] trying to call non existing function %s in class %s\n",this.lineNumber,funcName, varClass.name);
-					throw new AST_EXCEPTION(this);
+					throw new AST_EXCEPTION(this.lineNumber);
 				}
 
 				// Validate Params
@@ -113,7 +113,7 @@ public class AST_EXP_CALL extends AST_EXP
 					if (paramsTypes == null || !areParamsValid(funcDec.params, paramsTypes))
 					{
 						System.out.format(">> ERROR [%d] params mismatch for class(%s) function call -  %s\n",this.lineNumber, varClass.name, funcName);
-						throw new AST_EXCEPTION(this);
+						throw new AST_EXCEPTION(this.lineNumber);
 					}
 
 				}
@@ -128,13 +128,13 @@ public class AST_EXP_CALL extends AST_EXP
 			if (funcType == null)
 			{
 				System.out.format(">> ERROR [%d] non existing function %s\n",this.lineNumber,funcName);
-				throw new AST_EXCEPTION(this);
+				throw new AST_EXCEPTION(this.lineNumber);
 			}
 			// Validate that it is actually a funciton type, as we need to know its return type
 			if (!(funcType instanceof TYPE_FUNCTION))
 			{
 				System.out.format(">> ERROR [%d] non Supported function type - critical!!! %s\n",this.lineNumber,funcName);
-				throw new AST_EXCEPTION(this);
+				throw new AST_EXCEPTION(this.lineNumber);
 			}
 
 			//Validate that the return type of the function exists
@@ -144,7 +144,7 @@ public class AST_EXP_CALL extends AST_EXP
 			if (returnedType == null)
 			{
 				System.out.format(">> ERROR [%d] function return type was not presented before calling the function - critical!!! %s\n",this.lineNumber,funcName);
-				throw new AST_EXCEPTION(this);
+				throw new AST_EXCEPTION(this.lineNumber);
 			}
 
 			// TODO - Validate Params!!!
@@ -152,12 +152,12 @@ public class AST_EXP_CALL extends AST_EXP
 			{
 				if (funcTypeValidated.params == null) {
 					System.out.format(">> ERROR [%d] params mismatch for global function call - %s ###\n",this.lineNumber,funcName);
-					throw new AST_EXCEPTION(this);
+					throw new AST_EXCEPTION(this.lineNumber);
 				}
 				// We should have params to check
 				if (paramsTypes == null || !areParamsValid(funcTypeValidated.params, paramsTypes)) {
 					System.out.format(">> ERROR [%d] params mismatch for global function call - %s 123\n",this.lineNumber,funcName);
-					throw new AST_EXCEPTION(this);
+					throw new AST_EXCEPTION(this.lineNumber);
 				}
 
 			}

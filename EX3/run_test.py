@@ -19,8 +19,9 @@ class TestSequense(unittest.TestCase):
 
 
 def test_generator(input_file, output_file, compare_file):
-    def _run_command(command):
-        print("\n\nRunnig Command {}\n\n".format(command))
+    def _run_command(command,log_command=False):
+        if log_command:
+            print("\n\nRunnig Command {}\n\n".format(command))
         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if process.stdout != None:
             for line in process.stdout:
@@ -39,13 +40,17 @@ def test_generator(input_file, output_file, compare_file):
         ensure_path(input_file)
         ensure_path(output_file)
 
-        _run_command("java -jar COMPILER {input} {output}".format(input=input_file, output=output_file))
+        _run_command("java -jar COMPILER {input} {output}".format(input=input_file, output=output_file),True)
         # os.system("java -jar COMPILER {input} {output}".format(input=input_file, output=output_file))
 
         ensure_path(compare_file)
         if os.path.exists(compare_file):
             if not filecmp.cmp(output_file, compare_file):
-                print("\n\n####{} - output file not as expected####\n\n".format(output_file))
+                # print("\n\n####{} - output file not as expected####\n\n".format(output_file))
+                print("\nexpected output\n".format(output_file))
+                _run_command("cat {output}".format(output=compare_file))
+                print("\nactual output\n".format(output_file))
+                _run_command("cat {output}".format(output=output_file))
 
     return test
 

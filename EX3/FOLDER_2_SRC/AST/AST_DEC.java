@@ -7,6 +7,7 @@ import AST_EXCEPTION.*;
 public abstract class AST_DEC extends AST_Node
 {
 	public String name;
+	public Integer nameLineNumber;
 
 	public TYPE SemantMe() throws Exception
 	{

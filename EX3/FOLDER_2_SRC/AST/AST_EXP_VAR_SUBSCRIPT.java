@@ -63,7 +63,7 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 				if (subscriptType == null || (subscriptType != TYPE_INT.getInstance()) )
 				{
 					System.out.format(">> ERROR [%d] Trying access var subscript with non-integral index = %s\n",this.lineNumber, subscriptType);
-					throw new AST_EXCEPTION(this);
+					throw new AST_EXCEPTION(this.lineNumber);
 				}
 		}
 
@@ -73,7 +73,7 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 			varType = var.SemantMe();
 			if (varType == null) {
 				System.out.format(">> ERROR [%d] Trying access var subscript of non array type(%s)\n",this.lineNumber, varType);
-				throw new AST_EXCEPTION(this);
+				throw new AST_EXCEPTION(this.lineNumber);
 			}
 			if (varType.isArray()) {
 				TYPE_ARRAY arr = (TYPE_ARRAY)varType;
@@ -90,10 +90,10 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 				}
 			}
 			System.out.format(">> ERROR [%d] Trying access var subscript of non array type(%s)\n",this.lineNumber, varType);
-			throw new AST_EXCEPTION(this);
+			throw new AST_EXCEPTION(this.lineNumber);
 		}
 		System.out.format(">> ERROR [%d] missing var type(%s)\n",this.lineNumber, varType);
-		throw new AST_EXCEPTION(this);
+		throw new AST_EXCEPTION(this.lineNumber);
 		// System.out.format("@@@@@ 3 SEMANTME - AST_EXP_VAR_SUBSCRIPT TYPE =  %s\n", varType);
 		// return varType;
 		// return null;

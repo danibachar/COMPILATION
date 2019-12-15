@@ -117,17 +117,17 @@ public class AST_STMT_ASSIGN extends AST_STMT
 				TYPE_CLASS_VAR_DEC testInitVlueType = (TYPE_CLASS_VAR_DEC)t2;
 				if (!tc.isAssignableFrom(testInitVlueType.t)) {
 					System.out.format(">> 1 ERROR [%d] trying assign array(%s) with the value(%s) \n",this.lineNumber,t1, testInitVlueType.t);
-					throw new AST_EXCEPTION(this);
+					throw new AST_EXCEPTION(this.lineNumber);
 				}
 			} else if (exp.isNewArray()) {
 				// Need to validate that the initValueType == tc.type
 				if (t2 != tc.type) {
 					System.out.format(">> 2 ERROR [%d] trying assign array(%s) with the value(%s) \n",this.lineNumber,t1, t2);
-					throw new AST_EXCEPTION(this);
+					throw new AST_EXCEPTION(this.lineNumber);
 				}
 			} else if (!tc.isAssignableFrom(t2)) {
 				System.out.format(">> 3 ERROR [%d] trying assign array(%s) with the value(%s) \n",this.lineNumber,t1, t2);
-				throw new AST_EXCEPTION(this);
+				throw new AST_EXCEPTION(this.lineNumber);
 			}
 			return null;
 			// System.out.format("SEMANTME - AST_STMT_ASSIGN allow array(%s) to be assigned with %s\nlinenumber = %d\n",t1_array,t2,this.lineNumber);
@@ -172,7 +172,7 @@ public class AST_STMT_ASSIGN extends AST_STMT
 		// 	// throw new AST_EXCEPTION(this);
 		// }
 		System.out.format(">> ERROR [%d] type mismatch for var(%s) := exp(%s)\n",this.lineNumber,t1,t2);
-		throw new AST_EXCEPTION(this);
+		throw new AST_EXCEPTION(this.lineNumber);
 		// System.out.format("###### - AST_STMT_ASSIGN t1(%s), t2(%s)\nlinenumber = %d\n", t1, t2, this.lineNumber);
 		// return null;
 	}

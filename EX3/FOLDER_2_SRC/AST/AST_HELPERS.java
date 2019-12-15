@@ -12,16 +12,16 @@ public class AST_HELPERS
   {
     if (t == null && exp == null) {
       System.out.format(">> ERROR [%d] initialValue that assigned to the var is not exists\n",exp.lineNumber);
-      throw new AST_EXCEPTION(exp);
+      throw new AST_EXCEPTION(exp.lineNumber);
     }
     if (exp == null) {
       System.out.format(">> ERROR [%d] initialValue that assigned to the var is not exists\n",exp.lineNumber);
-      throw new AST_EXCEPTION(exp);
+      throw new AST_EXCEPTION(exp.lineNumber);
     }
     TYPE tValue = exp.SemantMe();
     if (tValue == null) {
       System.out.format(">> ERROR [%d] initialValue that assigned to the var is not exists\n",exp.lineNumber);
-      throw new AST_EXCEPTION(exp);
+      throw new AST_EXCEPTION(exp.lineNumber);
     }
 
     // Test NIL
@@ -33,7 +33,7 @@ public class AST_HELPERS
         return;
       }
       System.out.format(">> ERROR [%d] trying to assign NIL into not Array or Class Var(%s)\n",exp.lineNumber, t);
-      throw new AST_EXCEPTION(exp);
+      throw new AST_EXCEPTION(exp.lineNumber);
     }
 
     if (t.isClass()) {
@@ -42,11 +42,11 @@ public class AST_HELPERS
         TYPE_CLASS_VAR_DEC testInitVlueType = (TYPE_CLASS_VAR_DEC)tValue;
         if (!tc.isAssignableFrom(testInitVlueType.t)) {
           System.out.format(">> ERROR [%d] 1-trying assign class(%s) with the value(%s) \n",exp.lineNumber,t, tValue);
-          throw new AST_EXCEPTION(exp);
+          throw new AST_EXCEPTION(exp.lineNumber);
         }
       } else if (!tc.isAssignableFrom(tValue)) {
         System.out.format(">> ERROR [%d] 2-trying assign class(%s) with the value(%s) \n",exp.lineNumber,t, tValue);
-        throw new AST_EXCEPTION(exp);
+        throw new AST_EXCEPTION(exp.lineNumber);
       }
     }
 
@@ -56,16 +56,16 @@ public class AST_HELPERS
         TYPE_CLASS_VAR_DEC testInitVlueType = (TYPE_CLASS_VAR_DEC)tValue;
         if (!tc.isAssignableFrom(testInitVlueType.t)) {
           System.out.format(">> 1 ERROR [%d] trying assign array(%s) with the value(%s) \n",exp.lineNumber,t, testInitVlueType.t);
-          throw new AST_EXCEPTION(exp);
+          throw new AST_EXCEPTION(exp.lineNumber);
         }
       } else if (exp.isNewArray()) {
         if (tValue != tc.type) {
           System.out.format(">> 2 ERROR [%d] trying assign array(%s) with the value(%s) \n",exp.lineNumber,t, tValue);
-          throw new AST_EXCEPTION(exp);
+          throw new AST_EXCEPTION(exp.lineNumber);
         }
       } else if (!tc.isAssignableFrom(tValue)) {
         System.out.format(">> 3 ERROR [%d] trying assign array(%s) with the value(%s) \n",exp.lineNumber,t, tValue);
-        throw new AST_EXCEPTION(exp);
+        throw new AST_EXCEPTION(exp.lineNumber);
       }
       return;
     }
@@ -79,12 +79,13 @@ public class AST_HELPERS
           TYPE_CLASS_VAR_DEC testInitVlueType = (TYPE_CLASS_VAR_DEC)tValue;
           if (!tc.isAssignableFrom(testInitVlueType.t)) {
             System.out.format(">> ERROR [%d] trying assign class(%s) with the value(%s) \n",exp.lineNumber,t, testInitVlueType.t);
-            throw new AST_EXCEPTION(exp);
+            throw new AST_EXCEPTION(exp.lineNumber);
           }
         } else if (!tc.isAssignableFrom(tValue)) {
           System.out.format(">> ERROR [%d] trying assign class(%s) with the value(%s) \n",exp.lineNumber,t, tValue);
-          throw new AST_EXCEPTION(exp);
+          throw new AST_EXCEPTION(exp.lineNumber);
         }
+
       }
       // Allow Assignment for array - nil or same array?
       if (tcv.t.isArray()) {
@@ -93,13 +94,19 @@ public class AST_HELPERS
           TYPE_CLASS_VAR_DEC testInitVlueType = (TYPE_CLASS_VAR_DEC)tValue;
           if (!tc.isAssignableFrom(testInitVlueType.t)) {
             System.out.format(">> ERROR [%d] trying assign class(%s) with the value(%s) \n",exp.lineNumber,t, testInitVlueType.t);
-            throw new AST_EXCEPTION(exp);
+            throw new AST_EXCEPTION(exp.lineNumber);
           }
         } else if (!tc.isAssignableFrom(tValue)) {
           System.out.format(">> ERROR [%d] trying assign class(%s) with the value(%s) \n",exp.lineNumber,t, tValue);
-          throw new AST_EXCEPTION(exp);
+          throw new AST_EXCEPTION(exp.lineNumber);
         }
       }
+      // ALLOW SIMPLE Assignment
+      if (tcv.t.getClass() == tValue.getClass()) {
+        return;
+      }
+      /// NOTE W are done with handling class var dic we are ok, fuck i need to rewrite this...
+      // return;
     }
 
 
@@ -115,7 +122,7 @@ public class AST_HELPERS
         return;
       }
       System.out.format(">> ERROR [%d] Assinging class(%s) to class(%s) is forbidden \n",exp.lineNumber,t1_cast,t2_cast);
-      throw new AST_EXCEPTION(exp);
+      throw new AST_EXCEPTION(exp.lineNumber);
     }
 
     if (t.isArray() && tValue.isArray()) {
@@ -125,11 +132,11 @@ public class AST_HELPERS
         return;
       }
       System.out.format(">> ERROR [%d] Assinging array(%s) to array(%s) is forbidden \n",exp.lineNumber,t1_cast,t2_cast);
-      throw new AST_EXCEPTION(exp);
+      throw new AST_EXCEPTION(exp.lineNumber);
     }
 
 
     System.out.format(">> ERROR [%d] type mismatch for var(%s) := exp(%s)\n",exp.lineNumber,t,tValue);
-    throw new AST_EXCEPTION(exp);
+    throw new AST_EXCEPTION(exp.lineNumber);
   }
 }

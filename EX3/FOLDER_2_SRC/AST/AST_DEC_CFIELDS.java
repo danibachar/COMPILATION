@@ -10,14 +10,20 @@ public class AST_DEC_CFIELDS extends AST_DEC
 	/* DATA MEMBERS */
 	/****************/
 	public AST_DEC head;
+	public Integer headLineNumber;
 	public AST_DEC_CFIELDS tail;
+	public Integer tailLineNumber;
 
 
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_DEC_CFIELDS(AST_DEC head, AST_DEC_CFIELDS tail, Integer lineNumber)
-	{
+	public AST_DEC_CFIELDS(
+		AST_DEC head,
+		Integer headLineNumber,
+		AST_DEC_CFIELDS tail,
+		Integer tailLineNumber
+	){
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
@@ -27,9 +33,10 @@ public class AST_DEC_CFIELDS extends AST_DEC
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
 		// System.out.format("====================== cFieldsDes \n");
-		this.lineNumber = lineNumber;
 		this.head = head;
+		this.headLineNumber = headLineNumber;
 		this.tail = tail;
+		this.tailLineNumber = tailLineNumber;
 	}
 
 	/************************************************************/

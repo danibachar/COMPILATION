@@ -7,25 +7,31 @@ import AST_EXCEPTION.*;
 public class AST_EXP_BINOP extends AST_EXP
 {
 	int OP;
+
 	public AST_EXP left;
+	public Integer leftLineNumber;
 	public AST_EXP right;
+	public Integer rightLineNumber;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_EXP_BINOP(AST_EXP left,AST_EXP right,int OP, Integer lineNumber)
+	public AST_EXP_BINOP(AST_EXP left, Integer leftLineNumber,AST_EXP right,Integer rightLineNumber, int OP)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
-		// System.out.print("====================== exp -> exp BINOP exp\n");
 
-		this.lineNumber = lineNumber;
+		this.lineNumber = rightLineNumber;
 		this.left = left;
+		this.leftLineNumber = leftLineNumber;
 		this.right = right;
+		this.rightLineNumber = rightLineNumber;
 		this.OP = OP;
+
+		// System.out.format("====================== exp -> exp BINOP(%s) exp\n", opSymbol());
 	}
 
 	public String opSymbol()
@@ -192,7 +198,7 @@ public class AST_EXP_BINOP extends AST_EXP
 
 
 		System.out.format(">> ERROR [%d] AST_EXP_BINOP(%s) Fail!!! t1(%s) != t2(%s)\n",this.lineNumber, opSymbol(),t1,t2);
-		throw new AST_EXCEPTION(this);
+		throw new AST_EXCEPTION(this.rightLineNumber);
 	}
 
 }

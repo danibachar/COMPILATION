@@ -10,15 +10,23 @@ public class AST_DEC_CLASS extends AST_DEC
 	/********/
 	/* NAME */
 	/********/
-	// public String name;
 	public String parent;
+	public Integer parentLineNumber;
 	public AST_DEC_CFIELDS body;
+	public Integer bodyLineNumber;
+
 
 	public boolean isClassDec() { return true;}
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_DEC_CLASS(String name,String parent,AST_DEC_CFIELDS body, Integer lineNumber)
+	public AST_DEC_CLASS(
+		String name,
+		Integer nameLineNumber,
+		String parent,
+		Integer parentLineNumber,
+		AST_DEC_CFIELDS body,
+		Integer bodyLineNumber)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -28,16 +36,18 @@ public class AST_DEC_CLASS extends AST_DEC
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		if (parent != null) {
-			System.out.format("====================== classDec[%d] -> CLASS ID( %s ) EXTENDS( %s )\n",lineNumber , name, parent);
-		} else {
-			System.out.format("====================== classDec[%d] -> CLASS ID( %s ) \n", lineNumber, name);
-		}
+		// if (parent != null) {
+		// 	System.out.format("====================== classDec[%d,%d,%d] -> CLASS ID( %s ) EXTENDS( %s )\n",nameLineNumber, parentLineNumber ,bodyLineNumber, name, parent);
+		// } else {
+		// 	System.out.format("====================== classDec[%d,%d,%d] -> CLASS ID( %s ) \n", nameLineNumber, parentLineNumber ,bodyLineNumber, name);
+		// }
 
-		this.lineNumber = lineNumber;
 		this.name = name;
+		this.nameLineNumber = nameLineNumber;
 		this.parent = parent;
+		this.parentLineNumber = parentLineNumber;
 		this.body = body;
+		this.bodyLineNumber = bodyLineNumber;
 	}
 
 	/*********************************************************/
@@ -69,14 +79,14 @@ public class AST_DEC_CLASS extends AST_DEC
 		/********************************************/
 		if (SYMBOL_TABLE.getInstance().scopeCount > 0) {
 			System.out.format(">> ERROR [%d] Class %s defined not in most outer scope\n",this.lineNumber,name);
-			throw new AST_EXCEPTION(this);
+			throw new AST_EXCEPTION(nameLineNumber);
 		}
 		/**************************************/
 		/* Check That Name does NOT exist */
 		/**************************************/
 		if (SYMBOL_TABLE.getInstance().find(name) != null) {
 			System.out.format(">> ERROR [%d] Class %s already exists\n",this.lineNumber,name);
-			throw new AST_EXCEPTION(this);
+			throw new AST_EXCEPTION(nameLineNumber);
 		}
 
 		/**************************************/
@@ -85,7 +95,7 @@ public class AST_DEC_CLASS extends AST_DEC
 		if (parent != null && SYMBOL_TABLE.getInstance().find(parent) == null)
 		{
 			System.out.format(">> ERROR [%d] Class %s Extends non existing Class %s\n",this.lineNumber,name, parent);
-			throw new AST_EXCEPTION(this);
+			throw new AST_EXCEPTION(parentLineNumber);
 		}
 
 		// Prepopulating the table for recursive definitions
@@ -126,7 +136,7 @@ public class AST_DEC_CLASS extends AST_DEC
 					var_decs.add(v);
 				} else {
 					System.out.format(">> ERROR [%d] Class %s has unknown data_member/method %s\n",this.lineNumber,it.head);
-					throw new AST_EXCEPTION(it);
+					throw new AST_EXCEPTION(it.head.nameLineNumber);
 				}
 		}
 		/*************************/
@@ -139,7 +149,7 @@ public class AST_DEC_CLASS extends AST_DEC
 			// Constant expression is one of the following - Nil, String, Int
 			if (v.initialValue != null && !v.initialValue.isConstExp()) {
 				System.out.format(">> ERROR [%d] Class %s Extends %s has data_member that is initialized with no constant value %s \n",this.lineNumber,name, parent,v.initialValue);
-				throw new AST_EXCEPTION(v);
+				throw new AST_EXCEPTION(v.initialValueLineNumber);
 			}
 			TYPE_CLASS_VAR_DEC fd = new TYPE_CLASS_VAR_DEC(v.SemantMe(),v.name);
 			t.data_members = new TYPE_CLASS_VAR_DEC_LIST(fd ,t.data_members);
@@ -152,7 +162,7 @@ public class AST_DEC_CLASS extends AST_DEC
 							// Inheritance does not allow shadowing vars
 							if (fd.name.equals(it2.head.name)) {
 								System.out.format(">> ERROR [%d] Class %s Extends %s and shadowing data memeber %s <-> %s\n",this.lineNumber,name, parent, fd.name, it2.head.name);
-								throw new AST_EXCEPTION(v);
+								throw new AST_EXCEPTION(v.nameLineNumber);
 							}
 						}
 				}
@@ -181,12 +191,16 @@ public class AST_DEC_CLASS extends AST_DEC
 								// Must return the same type
 								if (fd.returnType != it2.head.returnType) {
 									System.out.format(">> ERROR [%d] Class %s Extends %s and overloading method with other return type (%s):%s <-> (%s):%s\n",this.lineNumber,name, parent, fd.name, fd.returnType, it2.head.name, it2.head.returnType);
-									throw new AST_EXCEPTION(f);
+									throw new AST_EXCEPTION(f.returnTypeNameLineNumber);
 								}
 
 								// Must have the same kind params and count
 
+								// throw new AST_EXCEPTION(f.paramsLineNumber);
+
 								// Must have the same params order
+
+								// throw new AST_EXCEPTION(f.bodyLineNumber); - we dont care
 
 							}
 						}

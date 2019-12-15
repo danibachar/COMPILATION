@@ -3,9 +3,9 @@ package AST_EXCEPTION;
 import AST.*;
 
 public class AST_EXCEPTION extends Exception {
-    public AST_Node node;
+    public Integer errorLineNumber;
 
-    public AST_EXCEPTION(AST_Node node) {
-        this.node = node;
+    public AST_EXCEPTION(Integer errorLineNumber) {
+        this.errorLineNumber = errorLineNumber;
     }
 }

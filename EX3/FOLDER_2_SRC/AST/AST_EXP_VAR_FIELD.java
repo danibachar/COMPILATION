@@ -65,8 +65,20 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 		/* [2] Make sure type is a class */
 		/*********************************/
 		if (!t.isClass()) {
-			System.out.format(">> ERROR [%d] access %s field of a non-class variable\n",this.lineNumber,fieldName);
-			throw new AST_EXCEPTION(this);
+			// check for var - look for better folution
+			if (t.isClassVar()) {
+				TYPE_CLASS_VAR_DEC tmp = (TYPE_CLASS_VAR_DEC)t;
+				if (!tmp.t.isClass()) {
+					System.out.format(">> ERROR [%d] access %s field of a non-class variable type(%s)\n",this.lineNumber,fieldName,t);
+					throw new AST_EXCEPTION(this.lineNumber);
+				} else {
+						tc = (TYPE_CLASS)tmp.t;
+				}
+
+			} else {
+				System.out.format(">> ERROR [%d] access %s field of a non-class variable type(%s)\n",this.lineNumber,fieldName,t);
+				throw new AST_EXCEPTION(this.lineNumber);
+			}
 		} else {
 			tc = (TYPE_CLASS) t;
 		}
@@ -86,6 +98,6 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 		/* [4] fieldName does not exist in class var */
 		/*********************************************/
 		System.out.format(">> ERROR [%d] field %s does not exist in class\n",this.lineNumber,fieldName);
-		throw new AST_EXCEPTION(this);
+		throw new AST_EXCEPTION(this.lineNumber);
 	}
 }

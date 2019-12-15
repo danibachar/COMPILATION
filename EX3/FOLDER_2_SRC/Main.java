@@ -58,7 +58,7 @@ public class Main
 			/*************************/
 			/* [8] Close output file */
 			/*************************/
-			file_writer.print("OK");
+			file_writer.print("OK\n");
 			file_writer.close();
 
 			/*************************************/
@@ -68,7 +68,7 @@ public class Main
 
     } catch (AST_EXCEPTION e) {
 			// Semantic Exception handling, thrown from within th AST_Node
-			int lineNumber = e.node.lineNumber;
+			int lineNumber = e.errorLineNumber;
 			System.out.print("ERROR");
 			System.out.print("(");
 			System.out.print(lineNumber);

@@ -68,7 +68,7 @@ public class AST_EXP_NEW extends AST_EXP
 		if (t == null)
 		{
 			System.out.format(">> ERROR [%d] Class type(%s) was not declared\n",this.lineNumber,type);
-			throw new AST_EXCEPTION(this);
+			throw new AST_EXCEPTION(this.lineNumber);
 		}
 		/************************************************/
 		/*          Cannot assign void                  */
@@ -76,7 +76,7 @@ public class AST_EXP_NEW extends AST_EXP
 		if (t == TYPE_VOID.getInstance())
 		{
 			System.out.format(">> ERROR [%d] Cannot ask to create new void, daaa!\n",this.lineNumber,type);
-			throw new AST_EXCEPTION(this);
+			throw new AST_EXCEPTION(this.lineNumber);
 		}
 		/***********************************************************/
 		/* Check That the Type is actually a class type or an array*/
@@ -99,7 +99,7 @@ public class AST_EXP_NEW extends AST_EXP
 			TYPE expType = exp.SemantMe();
 			if ( expType != TYPE_INT.getInstance()) {
 				System.out.format(">> ERROR [%d] trying to init array[%s] with not declared type = %s\n",this.lineNumber,t, expType);
-				throw new AST_EXCEPTION(this);
+				throw new AST_EXCEPTION(this.lineNumber);
 			}
 			// We can send name null, as we don't really care about it (:
 			// System.out.format("We can send name null, as we don't really care about it (:\n");

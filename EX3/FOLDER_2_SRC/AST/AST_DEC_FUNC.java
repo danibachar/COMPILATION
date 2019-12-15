@@ -9,10 +9,13 @@ public class AST_DEC_FUNC extends AST_DEC
 	/****************/
 	/* DATA MEMBERS */
 	/****************/
+
 	public String returnTypeName;
-	// public String name;
+	public Integer returnTypeNameLineNumber;
 	public AST_TYPE_NAME_LIST params;
+	public Integer paramsLineNumber;
 	public AST_STMT_LIST body;
+	public Integer bodyLineNumber;
 
 	public boolean isFuncDec() { return true;}
 	/******************/
@@ -20,21 +23,28 @@ public class AST_DEC_FUNC extends AST_DEC
 	/******************/
 	public AST_DEC_FUNC(
 		String returnTypeName,
+		Integer returnTypeNameLineNumber,
 		String name,
+		Integer nameLineNumber,
 		AST_TYPE_NAME_LIST params,
+		Integer paramsLineNumber,
 		AST_STMT_LIST body,
-		Integer lineNumber
+		Integer bodyLineNumber
 	) {
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
-		this.lineNumber = lineNumber;
-		this.returnTypeName = returnTypeName;
 		this.name = name;
+		this.nameLineNumber = nameLineNumber;
+
+		this.returnTypeName = returnTypeName;
+		this.returnTypeNameLineNumber = returnTypeNameLineNumber;
 		this.params = params;
+		this.paramsLineNumber = paramsLineNumber;
 		this.body = body;
+		this.bodyLineNumber = bodyLineNumber;
 	}
 
 	/************************************************************/
@@ -80,7 +90,7 @@ public class AST_DEC_FUNC extends AST_DEC
 		if (returnType == null)
 		{
 			System.out.format(">> ERROR [%d] non existing return type %s\n",this.lineNumber,returnType);
-			throw new AST_EXCEPTION(this);
+			throw new AST_EXCEPTION(returnTypeNameLineNumber);
 		}
 
 		// MAKE Sure there is no same function with same name in the current scope?
@@ -88,7 +98,7 @@ public class AST_DEC_FUNC extends AST_DEC
 		if (temp != null)
 		{
 			System.out.format(">> ERROR [%d] method `%s` already exists in scope, found `%s`\n",this.lineNumber,name, temp.name);
-			throw new AST_EXCEPTION(this);
+			throw new AST_EXCEPTION(nameLineNumber);
 		}
 
 		/****************************/
@@ -105,7 +115,7 @@ public class AST_DEC_FUNC extends AST_DEC
 			t = SYMBOL_TABLE.getInstance().find(it.head.type);
 			if (t == null) {
 				System.out.format(">> ERROR [%d] non existing type %s\n",this.lineNumber, it.head.type);
-				throw new AST_EXCEPTION(this);
+				throw new AST_EXCEPTION(it.lineNumber);
 			} else {
 				// System.out.format("Semant Input Params(%s):%s\n",name,returnTypeName);
 				// System.out.format("Semant Input Params(%s):%s:%s\n",it.head.name,it.head.type,t);

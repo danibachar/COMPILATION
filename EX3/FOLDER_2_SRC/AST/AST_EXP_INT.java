@@ -12,13 +12,19 @@ public class AST_EXP_INT extends AST_EXP
 	/* CONSTRUCTOR(S) */
 	/******************/
 	public boolean isConstExp() { return true;}
-	public AST_EXP_INT(int value, Integer lineNumber)
+	public AST_EXP_INT(int value, Integer lineNumber) {
+			this(value, true, lineNumber);
+	}
+	public AST_EXP_INT(int value, boolean sign, Integer lineNumber)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
+		value = value * (sign ? 1 : -1);
+		if (value >= 32768 || value < -32768) {
 
+		}
 		// System.out.format("====================== exp -> INT( %d )\n", value);
 		this.lineNumber = lineNumber;
 		this.value = value;

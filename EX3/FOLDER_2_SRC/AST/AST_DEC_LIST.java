@@ -15,14 +15,13 @@ public class AST_DEC_LIST extends AST_Node
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_DEC_LIST(AST_DEC head,AST_DEC_LIST tail, Integer lineNumber)
+	public AST_DEC_LIST(AST_DEC head,AST_DEC_LIST tail)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
-		this.lineNumber = lineNumber;
 		this.head = head;
 		this.tail = tail;
 	}

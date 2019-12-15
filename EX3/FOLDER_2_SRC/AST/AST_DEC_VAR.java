@@ -11,24 +11,34 @@ public class AST_DEC_VAR extends AST_DEC
 	/* DATA MEMBERS */
 	/****************/
 	public String type;
-	// public String name;
+	public Integer typeLineNumber;
 	public AST_EXP initialValue;
+	public Integer initialValueLineNumber;
 
 	public boolean isVarDec() { return true;}
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_DEC_VAR(String type,String name,AST_EXP initialValue,Integer lineNumber)
+	public AST_DEC_VAR(
+		String type,
+		Integer typeLineNumber,
+		String name,
+		Integer nameLineNumber,
+		AST_EXP initialValue,
+		Integer initialValueLineNumber)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
-		this.lineNumber = lineNumber;
-		this.type = type;
 		this.name = name;
+		this.nameLineNumber = nameLineNumber;
+
+		this.type = type;
+		this.typeLineNumber = typeLineNumber;
 		this.initialValue = initialValue;
+		this.initialValueLineNumber = initialValueLineNumber;
 	}
 
 	/********************************************************/
@@ -77,7 +87,7 @@ public class AST_DEC_VAR extends AST_DEC
 		{
 			// if type is class we check if there was a previous TYPE_CLASS_VAR_DEC
 			System.out.format(">> ERROR [%d] non existing type %s\n",this.lineNumber,type);
-			throw new AST_EXCEPTION(this);
+			throw new AST_EXCEPTION(typeLineNumber);
 		}
 
 		/**************************************/
@@ -87,7 +97,7 @@ public class AST_DEC_VAR extends AST_DEC
 		if (temp != null)
 		{
 			System.out.format(">> ERROR [%d] variable `%s` already exists in scope, found `%s`\n",this.lineNumber,name, temp.name);
-			throw new AST_EXCEPTION(this);
+			throw new AST_EXCEPTION(nameLineNumber);
 		}
 
 		// validate that the initialValue is the same type as the var type, and that it exists!
