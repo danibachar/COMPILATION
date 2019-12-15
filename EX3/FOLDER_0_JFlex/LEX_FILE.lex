@@ -79,6 +79,7 @@ NEG_NUMBER = -{INTEGER}
 ID				= [A-Za-z]+[A-Za-z0-9]*
 //ID = [A-Za-z0-9]*
 STRING    = \"[a-zA-Z0-9/]+\"
+EMPTY_STRING    = \"+\"
 
 ILLEGAL_CHARS = [^0-9a-zA-Z(){}!?+/*.;\-\t\n\r\[\]\f\= <>,: ]+
 
@@ -140,7 +141,7 @@ COMMENT = {COMMENT_MULTI} | {EndOfLineComment}
 ","					{ return symbol(TokenNames.COMMA);}
 {ID}				{ return symbol(TokenNames.ID, new String(yytext()));}
 {INTEGER} 		{ return symbol(TokenNames.INT, new Integer(yytext()));}
-{STRING}     { return symbol(TokenNames.STRING, new String(yytext()));}
+{STRING} | {EMPTY_STRING}     { return symbol(TokenNames.STRING, new String(yytext()));}
 {WhiteSpace}		{ /* just skip what was found, do nothing */ }
 {LineTerminator}	{ /* just skip what was found, do nothing */ }
 <<EOF>>				{ return symbol(TokenNames.EOF);}
