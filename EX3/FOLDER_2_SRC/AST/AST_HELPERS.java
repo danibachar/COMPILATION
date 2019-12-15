@@ -78,11 +78,11 @@ public class AST_HELPERS
         if (tValue.isClassVar()) {
           TYPE_CLASS_VAR_DEC testInitVlueType = (TYPE_CLASS_VAR_DEC)tValue;
           if (!tc.isAssignableFrom(testInitVlueType.t)) {
-            System.out.format(">> (1) ERROR [%d] trying assign class(%s) with the value(%s) \n",exp.lineNumber,t, testInitVlueType.t);
+            System.out.format(">> (1) ERROR [%d] trying assign class(%s) with the value(%s) \n",exp.lineNumber,tc, testInitVlueType.t);
             throw new AST_EXCEPTION(exp.lineNumber);
           }
         } else if (!tc.isAssignableFrom(tValue)) {
-          System.out.format(">> (2) ERROR [%d] trying assign class(%s) with the value(%s) \n",exp.lineNumber,t, tValue);
+          System.out.format(">> (2) ERROR [%d] trying assign class(%s) with the value(%s) \n",exp.lineNumber,tc, tValue);
           throw new AST_EXCEPTION(exp.lineNumber);
         }
 
@@ -93,13 +93,29 @@ public class AST_HELPERS
         if (tValue.isClassVar()) {
           TYPE_CLASS_VAR_DEC testInitVlueType = (TYPE_CLASS_VAR_DEC)tValue;
           if (!tc.isAssignableFrom(testInitVlueType.t)) {
-            System.out.format(">> (3) ERROR [%d] trying assign class(%s) with the value(%s) \n",exp.lineNumber,t, testInitVlueType.t);
+            System.out.format(">> 1 ERROR [%d] trying assign array(%s) with the value(%s) \n",exp.lineNumber,t, testInitVlueType.t);
+            throw new AST_EXCEPTION(exp.lineNumber);
+          }
+        } else if (exp.isNewArray()) {
+          if (tValue != tc.type) {
+            System.out.format(">> 2 ERROR [%d] trying assign array(%s) with the value(%s) \n",exp.lineNumber,t, tValue);
             throw new AST_EXCEPTION(exp.lineNumber);
           }
         } else if (!tc.isAssignableFrom(tValue)) {
-          System.out.format(">> (4) ERROR [%d] trying assign class(%s) with the value(%s) \n",exp.lineNumber,t, tValue);
+          System.out.format(">> 3 ERROR [%d] trying assign array(%s) with the value(%s) \n",exp.lineNumber,t, tValue);
           throw new AST_EXCEPTION(exp.lineNumber);
         }
+        return;
+        // if (tValue.isClassVar()) {
+        //   TYPE_CLASS_VAR_DEC testInitVlueType = (TYPE_CLASS_VAR_DEC)tValue;
+        //   if (!tc.isAssignableFrom(testInitVlueType.t)) {
+        //     System.out.format(">> (3) ERROR [%d] trying assign array(%s) with the value(%s) \n",exp.lineNumber,tc.name, testInitVlueType.t);
+        //     throw new AST_EXCEPTION(exp.lineNumber);
+        //   }
+        // } else if (!tc.isAssignableFrom(tValue)) {
+        //   System.out.format(">> (4) ERROR [%d] trying assign array(%s) with the value(%s) \n",exp.lineNumber,tc.name, tValue);
+        //   throw new AST_EXCEPTION(exp.lineNumber);
+        // }
       }
       // ALLOW SIMPLE Assignment
       if (tcv.t.getClass() == tValue.getClass()) {
