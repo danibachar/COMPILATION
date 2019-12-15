@@ -110,7 +110,7 @@ public class AST_EXP_CALL extends AST_EXP
 				if (params != null)
 				{
 					// We should have params to check
-					if (paramsTypes == null || !areParamsValid(funcDec.params, paramsTypes))
+					if (paramsTypes == null || !areParamsValid(funcDec.params, paramsTypes,false))
 					{
 						System.out.format(">> ERROR [%d] params mismatch for class(%s) function call -  %s\n",this.lineNumber, varClass.name, funcName);
 						throw new AST_EXCEPTION(this.lineNumber);
@@ -155,7 +155,7 @@ public class AST_EXP_CALL extends AST_EXP
 					throw new AST_EXCEPTION(this.lineNumber);
 				}
 				// We should have params to check
-				if (paramsTypes == null || !areParamsValid(funcTypeValidated.params, paramsTypes)) {
+				if (paramsTypes == null || !areParamsValid(funcTypeValidated.params, paramsTypes,true)) {
 					System.out.format(">> ERROR [%d] params mismatch for global function call - %s 123\n",this.lineNumber,funcName);
 					throw new AST_EXCEPTION(this.lineNumber);
 				}
@@ -167,7 +167,7 @@ public class AST_EXP_CALL extends AST_EXP
 
 	}
 
-	private boolean areParamsValid(TYPE_LIST original, TYPE_LIST sent)
+	private boolean areParamsValid(TYPE_LIST original, TYPE_LIST sent, boolean reverse)
 	{
 
 		ArrayList<TYPE> expected_input_params = new ArrayList<TYPE>();
@@ -192,17 +192,25 @@ public class AST_EXP_CALL extends AST_EXP
 			return false;
 		}
 		// Reverse for collection be the same
-		Collections.reverse(expected_input_params);
+		if (reverse) {
+				Collections.reverse(expected_input_params);
+		}
 
+		// System.out.format("expected_input_params = %s\n",expected_input_params);
+		// System.out.format("sent_input_params = %s\n",sent_input_params);
+		// System.out.format("reverse ? %s\n",reverse);
 		for (int i = 0; i < expected_input_params.size(); i++) {
 
 			TYPE expected = expected_input_params.get(i);
 			TYPE send = sent_input_params.get(i);
+
 			if (expected.isClassVar()) {
+				System.out.format("expected is class Var\n");
 				TYPE_CLASS_VAR_DEC tmp = (TYPE_CLASS_VAR_DEC)expected;
 				expected = tmp.t;
 			}
 			if (send.isClassVar()) {
+				System.out.format("send is class Var\n");
 				TYPE_CLASS_VAR_DEC tmp = (TYPE_CLASS_VAR_DEC)send;
 				send = tmp.t;
 			}
@@ -220,7 +228,7 @@ public class AST_EXP_CALL extends AST_EXP
 					return false;
 				}
 			} else if (expected != send) {
-				System.out.format("Validating Params expected(%s) not what is sent(%s) mismatch \n", expected, send);
+				System.out.format("Validating Params expected(%s:%s) not what is sent(%s:%s) mismatch \n", expected,expected.name, send,send.name);
 				return false;
 			}
 		}
