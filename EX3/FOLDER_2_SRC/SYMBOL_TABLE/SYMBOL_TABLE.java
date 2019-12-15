@@ -138,7 +138,7 @@ public class SYMBOL_TABLE
 			if (name.equals(e.name)) {
 				return e.type;
 			}
-			e = e.next;
+			e = e.prevtop;
 		}
 		// System.out.format("findInCurrentScope Didn't find\n");
 		return null;
