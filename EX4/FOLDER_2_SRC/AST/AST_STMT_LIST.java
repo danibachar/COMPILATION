@@ -1,7 +1,12 @@
 package AST;
 
-import TYPES.*;
 import TEMP.*;
+import IR.*;
+import MIPS.*;
+
+import TYPES.*;
+import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
 
 public class AST_STMT_LIST extends AST_Node
 {
@@ -14,7 +19,7 @@ public class AST_STMT_LIST extends AST_Node
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_STMT_LIST(AST_STMT head,AST_STMT_LIST tail)
+	public AST_STMT_LIST(AST_STMT head,AST_STMT_LIST tail, Integer lineNumber)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
@@ -24,12 +29,10 @@ public class AST_STMT_LIST extends AST_Node
 		/***************************************/
 		/* PRINT CORRESPONDING DERIVATION RULE */
 		/***************************************/
-		if (tail != null) System.out.print("====================== stmts -> stmt stmts\n");
-		if (tail == null) System.out.print("====================== stmts -> stmt      \n");
+		// if (tail != null) System.out.print("====================== stmts -> stmt stmts\n");
+		// if (tail == null) System.out.print("====================== stmts -> stmt      \n");
 
-		/*******************************/
-		/* COPY INPUT DATA NENBERS ... */
-		/*******************************/
+		this.lineNumber = lineNumber;
 		this.head = head;
 		this.tail = tail;
 	}
@@ -42,8 +45,7 @@ public class AST_STMT_LIST extends AST_Node
 		/**************************************/
 		/* AST NODE TYPE = AST STATEMENT LIST */
 		/**************************************/
-		System.out.print("AST NODE STMT LIST\n");
-
+		// System.out.print("AST_STMT_LIST\n");
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */
 		/*************************************/
@@ -56,27 +58,30 @@ public class AST_STMT_LIST extends AST_Node
 		AST_GRAPHVIZ.getInstance().logNode(
 			SerialNumber,
 			"STMT\nLIST\n");
-		
+
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
 		if (head != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,head.SerialNumber);
 		if (tail != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,tail.SerialNumber);
 	}
-	
-	public TEMP IRme()
+
+	public TYPE SemantMe() throws Exception
 	{
-		if (head != null) head.IRme();
-		if (tail != null) tail.IRme();
-		
-		return null;
-	}
-	
-	public TYPE SemantMe()
-	{
+		// System.out.print("SEMANTME - AST_STMT_LIST\n");
+
 		if (head != null) head.SemantMe();
 		if (tail != null) tail.SemantMe();
-		
+
 		return null;
 	}
+
+		public TEMP IRme()
+		{
+			if (head != null) head.IRme();
+			if (tail != null) tail.IRme();
+
+			return null;
+		}
+
 }

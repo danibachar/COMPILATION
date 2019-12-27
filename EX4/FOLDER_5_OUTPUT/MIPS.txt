@@ -1,0 +1,127 @@
+.data
+string_access_violation: .asciiz "Access Violation"
+string_illegal_div_by_0: .asciiz "Illegal Division By Zero"
+string_invalid_ptr_dref: .asciiz "Invalid Pointer Dereference"
+.data
+	global_i: .word 721
+.data
+	global_j: .word 721
+.data
+	global_p: .word 721
+.data
+	global_start: .word 721
+.data
+	global_end: .word 721
+.data
+	global_isPrime: .word 721
+.text
+main:
+	li Temp_0,2
+	sw Temp_0,global_p
+	li Temp_1,2
+	sw Temp_1,global_start
+	li Temp_2,100
+	sw Temp_2,global_end
+	j Label_2_while.cond
+Label_2_while.cond:
+	lw Temp_4,global_p
+	lw Temp_6,global_end
+	li Temp_7,1
+	beq Temp_6,Temp_7,Label_16_AssignOne
+	bne Temp_6,Temp_7,Label_17_AssignZero
+Label_16_AssignOne:
+	li Temp_5,1
+	j Label_15_end
+Label_17_AssignZero:
+	li Temp_5,0
+	j Label_15_end
+Label_15_end:
+	beq Temp_3,$zero,Label_0_while.end
+	li Temp_8,2
+	sw Temp_8,global_i
+	li Temp_9,2
+	sw Temp_9,global_j
+	li Temp_10,1
+	sw Temp_10,global_isPrime
+	j Label_5_while.cond
+Label_5_while.cond:
+	lw Temp_12,global_i
+	lw Temp_13,global_p
+	beq Temp_11,$zero,Label_3_while.end
+	li Temp_14,2
+	sw Temp_14,global_j
+	j Label_8_while.cond
+Label_8_while.cond:
+	lw Temp_16,global_j
+	lw Temp_17,global_p
+	beq Temp_15,$zero,Label_6_while.end
+	j Label_9_if.cond
+Label_9_if.cond:
+	lw Temp_20,global_i
+	lw Temp_21,global_j
+	lw Temp_22,global_p
+	add Temp_18,Temp_19,Temp_22
+	beq Temp_18,$zero,Label_11_if.exit
+	li Temp_23,0
+	sw Temp_23,global_isPrime
+	j Label_11_if.exit
+Label_11_if.exit:
+	lw Temp_25,global_j
+	li Temp_26,1
+	beq Temp_25,Temp_26,Label_19_AssignOne
+	bne Temp_25,Temp_26,Label_20_AssignZero
+Label_19_AssignOne:
+	li Temp_24,1
+	j Label_18_end
+Label_20_AssignZero:
+	li Temp_24,0
+	j Label_18_end
+Label_18_end:
+	sw Temp_24,global_j
+	j Label_8_while.cond
+Label_6_while.end:
+	lw Temp_28,global_i
+	li Temp_29,1
+	beq Temp_28,Temp_29,Label_22_AssignOne
+	bne Temp_28,Temp_29,Label_23_AssignZero
+Label_22_AssignOne:
+	li Temp_27,1
+	j Label_21_end
+Label_23_AssignZero:
+	li Temp_27,0
+	j Label_21_end
+Label_21_end:
+	sw Temp_27,global_i
+	j Label_5_while.cond
+Label_3_while.end:
+	j Label_12_if.cond
+Label_12_if.cond:
+	lw Temp_31,global_isPrime
+	li Temp_32,1
+	add Temp_30,Temp_31,Temp_32
+	beq Temp_30,$zero,Label_14_if.exit
+	lw Temp_33,global_p
+	move $a0,Temp_33
+	li $v0,1
+	syscall
+	li $a0,32
+	li $v0,11
+	syscall
+	j Label_14_if.exit
+Label_14_if.exit:
+	lw Temp_35,global_p
+	li Temp_36,1
+	beq Temp_35,Temp_36,Label_25_AssignOne
+	bne Temp_35,Temp_36,Label_26_AssignZero
+Label_25_AssignOne:
+	li Temp_34,1
+	j Label_24_end
+Label_26_AssignZero:
+	li Temp_34,0
+	j Label_24_end
+Label_24_end:
+	sw Temp_34,global_p
+	j Label_2_while.cond
+Label_0_while.end:
+	li $v0,10
+	syscall

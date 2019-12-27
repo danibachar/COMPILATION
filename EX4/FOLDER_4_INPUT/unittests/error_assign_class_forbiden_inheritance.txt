@@ -1,0 +1,15 @@
+class Father
+{
+  int i;
+}
+
+
+class Son extends Father
+{
+  int k := 9;
+}
+
+void main()
+{
+  Son s := new Father;
+}

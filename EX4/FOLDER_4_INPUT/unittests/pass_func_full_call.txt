@@ -1,0 +1,43 @@
+
+class Grandfather{
+ int i;
+}
+
+class Son extends Grandfather
+{
+  int k;
+
+  int foo2(int x1, int x2, Son s1, Grandfather s2)
+  {
+    x1 := x2;
+    return 999;
+  }
+}
+
+int foo(int x1, int x2, string s1, int x3, string s2)
+{
+  x1 := x2-x3;
+  return x1;
+}
+
+int foo1(int x1, int x2, Son s1, Grandfather s2)
+{
+  x1 := x2;
+  return 999;
+}
+
+
+void main()
+{
+  int i;
+  i := foo();
+
+  Son s := new Son;
+  Grandfather g := new Grandfather;
+
+  int v := foo(1,2,"asdf",4,"asfd");
+
+  int v2 := foo1(1,2,s,g);
+  int v3 := s.foo2(1,3,s,g);
+
+}

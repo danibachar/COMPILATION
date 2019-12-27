@@ -1,10 +1,12 @@
 package AST;
 
-import TYPES.*;
-import SYMBOL_TABLE.*;
 import TEMP.*;
 import IR.*;
 import MIPS.*;
+
+import TYPES.*;
+import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
 
 public class AST_STMT_IF extends AST_STMT
 {
@@ -14,13 +16,14 @@ public class AST_STMT_IF extends AST_STMT
 	/*******************/
 	/*  CONSTRUCTOR(S) */
 	/*******************/
-	public AST_STMT_IF(AST_EXP cond,AST_STMT_LIST body)
+	public AST_STMT_IF(AST_EXP cond,AST_STMT_LIST body, Integer lineNumber)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
+		this.lineNumber = lineNumber;
 		this.cond = cond;
 		this.body = body;
 	}
@@ -33,8 +36,7 @@ public class AST_STMT_IF extends AST_STMT
 		/*************************************/
 		/* AST NODE TYPE = AST SUBSCRIPT VAR */
 		/*************************************/
-		System.out.print("AST NODE STMT IF\n");
-
+		// System.out.print("AST_STMT_IF\n");
 		/**************************************/
 		/* RECURSIVELY PRINT left + right ... */
 		/**************************************/
@@ -47,7 +49,7 @@ public class AST_STMT_IF extends AST_STMT
 		AST_GRAPHVIZ.getInstance().logNode(
 			SerialNumber,
 			"IF (left)\nTHEN right");
-		
+
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
@@ -55,16 +57,18 @@ public class AST_STMT_IF extends AST_STMT
 		if (body != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,body.SerialNumber);
 	}
 
-	public TYPE SemantMe()
+	public TYPE SemantMe() throws Exception
 	{
+		// System.out.print("SEMANTME - AST_STMT_IF\n");
 		/****************************/
 		/* [0] Semant the Condition */
 		/****************************/
 		if (cond.SemantMe() != TYPE_INT.getInstance())
 		{
-			System.out.format(">> ERROR [%d:%d] condition inside IF is not integral\n",2,2);
+			System.out.format(">> ERROR [%d] condition inside IF is not integral\n",this.lineNumber);
+			throw new AST_EXCEPTION(this.lineNumber);
 		}
-		
+
 		/*************************/
 		/* [1] Begin Class Scope */
 		/*************************/
@@ -73,8 +77,7 @@ public class AST_STMT_IF extends AST_STMT
 		/***************************/
 		/* [2] Semant Data Members */
 		/***************************/
-		body.SemantMe();
-
+		if (body != null) body.SemantMe();
 		/*****************/
 		/* [3] End Scope */
 		/*****************/
@@ -83,8 +86,8 @@ public class AST_STMT_IF extends AST_STMT
 		/*********************************************************/
 		/* [4] Return value is irrelevant for class declarations */
 		/*********************************************************/
-		return null;		
-	}	
+		return null;
+	}
 
 	public TEMP IRme()
 	{
@@ -94,7 +97,7 @@ public class AST_STMT_IF extends AST_STMT
 		String label_if_cond = IRcommand.getFreshLabel("if.cond");
 		String label_if_body = IRcommand.getFreshLabel("if.body");
 		String label_if_exit = IRcommand.getFreshLabel("if.exit");
-	
+
 		/*********************************/
 		/* [2] entry label for the while */
 		/*********************************/
@@ -129,7 +132,7 @@ public class AST_STMT_IF extends AST_STMT
 		/***************************/
 		IR.getInstance().Add_IRcommand(
 			new IRcommand_Jump_Label(
-				label_if_exit));		
+				label_if_exit));
 
 		/**********************/
 		/* [7] Loop end label */
@@ -142,4 +145,5 @@ public class AST_STMT_IF extends AST_STMT
 		/*******************/
 		return null;
 	}
+
 }

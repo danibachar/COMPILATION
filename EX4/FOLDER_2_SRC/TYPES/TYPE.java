@@ -16,4 +16,19 @@ public abstract class TYPE
 	/* isArray() */
 	/*************/
 	public boolean isArray(){ return false;}
+
+	/*************/
+	/* isFunc() */
+	/*************/
+	public boolean isFunc(){ return false;}
+
+	/*****************/
+	/* isClassFunc() */
+	/*****************/
+	public boolean isClassFunc(){ return false;}
+
+	/****************/
+	/* isClassVar() */
+	/****************/
+	public boolean isClassVar(){ return false;}
 }

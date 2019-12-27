@@ -1,34 +1,32 @@
 package AST;
 
-import IR.*;
 import TEMP.*;
+import IR.*;
 import MIPS.*;
+
 import TYPES.*;
 import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
 
 public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 {
 	/************************/
 	/* simple variable name */
 	/************************/
-	public String name;
-	
-	/************************************************/
-	/* PRIMITIVE AD-HOC COUNTER FOR LOCAL VARIABLES */
-	/************************************************/
-	public static int localVariablesCounter = 0;
+	// public String name;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_EXP_VAR_SIMPLE(String name)
+	public AST_EXP_VAR_SIMPLE(String name, Integer lineNumber)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
-		System.out.format("====================== var -> ID( %s )\n",name);
+		// System.out.format("====================== var -> ID( %s )\n",name);
+		this.lineNumber = lineNumber;
 		this.name = name;
 	}
 
@@ -40,8 +38,7 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 		/**********************************/
 		/* AST NODE TYPE = AST SIMPLE VAR */
 		/**********************************/
-		System.out.format("AST NODE SIMPLE VAR( %s )\n",name);
-
+		// System.out.format("AST_EXP_VAR_SIMPLE( %s )\n",name);
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
@@ -49,14 +46,17 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 			SerialNumber,
 			String.format("SIMPLE\nVAR\n(%s)",name));
 	}
+	public TYPE SemantMe() throws Exception
+	{
+		// System.out.format("SEMANTME - AST_EXP_VAR_SIMPLE( %s )\n",name);
+		return SYMBOL_TABLE.getInstance().findField(name,false);
+	}
+
 	public TEMP IRme()
 	{
 		TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
 		IR.getInstance().Add_IRcommand(new IRcommand_Load(t,name));
 		return t;
 	}
-	public TYPE SemantMe()
-	{
-		return SYMBOL_TABLE.getInstance().find(name);
-	}
+
 }

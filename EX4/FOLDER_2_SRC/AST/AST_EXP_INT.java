@@ -3,22 +3,33 @@ package AST;
 import TYPES.*;
 import TEMP.*;
 import IR.*;
+import MIPS.*;
+import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
 
 public class AST_EXP_INT extends AST_EXP
 {
 	public int value;
-	
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_EXP_INT(int value)
+	public boolean isConstExp() { return true;}
+	public AST_EXP_INT(int value, Integer lineNumber) {
+			this(value, true, lineNumber);
+	}
+	public AST_EXP_INT(int value, boolean sign, Integer lineNumber)
 	{
 		/******************************/
 		/* SET A UNIQUE SERIAL NUMBER */
 		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
+		value = value * (sign ? 1 : -1);
+		if (value >= 32768 || value < -32768) {
 
-		System.out.format("====================== exp -> INT( %d )\n", value);
+		}
+		// System.out.format("====================== exp -> INT( %d )\n", value);
+		this.lineNumber = lineNumber;
 		this.value = value;
 	}
 
@@ -30,8 +41,7 @@ public class AST_EXP_INT extends AST_EXP
 		/*******************************/
 		/* AST NODE TYPE = AST INT EXP */
 		/*******************************/
-		System.out.format("AST NODE INT( %d )\n",value);
-
+		// System.out.format("AST_EXP_INT( %d )\n",value);
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
@@ -39,14 +49,18 @@ public class AST_EXP_INT extends AST_EXP
 			SerialNumber,
 			String.format("INT(%d)",value));
 	}
+
+	public TYPE SemantMe() throws Exception
+	{
+		// System.out.format("SEMANTME - AST_EXP_INT( %d )\n",value);
+		return TYPE_INT.getInstance();
+	}
+
 	public TEMP IRme()
 	{
 		TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
 		IR.getInstance().Add_IRcommand(new IRcommandConstInt(t,value));
 		return t;
 	}
-	public TYPE SemantMe()
-	{
-		return TYPE_INT.getInstance();
-	}
+
 }

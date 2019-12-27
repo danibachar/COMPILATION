@@ -119,7 +119,7 @@ entry:
   ;                                                   ;
   ; [3] Write allocation size in entry 0 of the array ;
   ;     Here we add the size of the array             ;
-  :     to the first index                            ;
+  ;     to the first index                            ;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ; Explanation - getelementptr inbounds is the way for LLVM to create
   %Temp_40 = getelementptr inbounds i32, i32* %Temp_30, i32 0 ;; Temp_40 = Temp_30 + 0;

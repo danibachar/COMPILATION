@@ -1,6 +1,12 @@
 package AST;
 
+import TEMP.*;
+import IR.*;
+import MIPS.*;
+
 import TYPES.*;
+import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
 
 public class AST_TYPE_NAME_LIST extends AST_Node
 {
@@ -9,17 +15,15 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 	/****************/
 	public AST_TYPE_NAME head;
 	public AST_TYPE_NAME_LIST tail;
-	
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_TYPE_NAME_LIST(AST_TYPE_NAME head,AST_TYPE_NAME_LIST tail)
+	public AST_TYPE_NAME_LIST(AST_TYPE_NAME head,AST_TYPE_NAME_LIST tail,Integer lineNumber)
 	{
-		/******************************/
-		/* SET A UNIQUE SERIAL NUMBER */
-		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
+		this.lineNumber = lineNumber;
 		this.head = head;
 		this.tail = tail;
 	}
@@ -29,11 +33,7 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 	/******************************************************/
 	public void PrintMe()
 	{
-		/**************************************/
-		/* AST NODE TYPE = AST TYPE NAME LIST */
-		/**************************************/
-		System.out.print("AST TYPE NAME LIST\n");
-
+		// System.out.print("AST_TYPE_NAME_LIST\n");
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */
 		/*************************************/
@@ -46,7 +46,7 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 		AST_GRAPHVIZ.getInstance().logNode(
 			SerialNumber,
 			"TYPE-NAME\nLIST\n");
-		
+
 		/****************************************/
 		/* PRINT Edges to AST GRAPHVIZ DOT file */
 		/****************************************/
@@ -54,19 +54,26 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 		if (tail != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,tail.SerialNumber);
 	}
 
-	public TYPE_LIST SemantMe()
+	public TYPE_LIST SemantMe() throws Exception
 	{
+		// System.out.print("SEMANTME - AST_TYPE_NAME_LIST\n");
 		if (tail == null)
 		{
-			return new TYPE_LIST(
-				head.SemantMe(),
-				null);
+			try {
+				return new TYPE_LIST(head.SemantMe(),null);
+			} catch (Exception e) {
+				throw new AST_EXCEPTION(this.lineNumber);
+			}
+
 		}
 		else
 		{
-			return new TYPE_LIST(
-				head.SemantMe(),
-				tail.SemantMe());
+			try {
+				return new TYPE_LIST(head.SemantMe(),tail.SemantMe());
+			} catch (Exception e) {
+				throw new AST_EXCEPTION(this.lineNumber);
+			}
+
 		}
 	}
 }

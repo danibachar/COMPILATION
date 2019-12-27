@@ -6,8 +6,13 @@ package AST;
 /*******************/
 /* PROJECT IMPORTS */
 /*******************/
+import TEMP.*;
+import IR.*;
+import MIPS.*;
+
 import TYPES.*;
 import SYMBOL_TABLE.*;
+import AST_EXCEPTION.*;
 
 public class AST_TYPE_NAME extends AST_Node
 {
@@ -16,17 +21,15 @@ public class AST_TYPE_NAME extends AST_Node
 	/****************/
 	public String type;
 	public String name;
-	
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_TYPE_NAME(String type,String name)
+	public AST_TYPE_NAME(String type,String name,Integer lineNumber)
 	{
-		/******************************/
-		/* SET A UNIQUE SERIAL NUMBER */
-		/******************************/
 		SerialNumber = AST_Node_Serial_Number.getFresh();
-	
+
+		this.lineNumber = lineNumber;
 		this.type = type;
 		this.name = name;
 	}
@@ -39,8 +42,7 @@ public class AST_TYPE_NAME extends AST_Node
 		/**************************************/
 		/* AST NODE TYPE = AST TYPE NAME NODE */
 		/**************************************/
-		System.out.format("NAME(%s):TYPE(%s)\n",name,type);
-
+		// System.out.format("NAME(%s):TYPE(%s)\n",name,type);
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
@@ -52,16 +54,16 @@ public class AST_TYPE_NAME extends AST_Node
 	/*****************/
 	/* SEMANT ME ... */
 	/*****************/
-	public TYPE SemantMe()
+	public TYPE SemantMe() throws Exception
 	{
+		// System.out.format("SEMANTME - NAME(%s):TYPE(%s)\n",name,type);
 		TYPE t = SYMBOL_TABLE.getInstance().find(type);
-		if (t == null)
-		{
+		if (t == null) {
 			/**************************/
 			/* ERROR: undeclared type */
 			/**************************/
-			System.exit(0);
-			return null;
+			System.out.print(">> ERROR AST_TYPE_NAME undeclared type");
+			throw new AST_EXCEPTION(this.lineNumber);
 		}
 		else
 		{
@@ -75,5 +77,5 @@ public class AST_TYPE_NAME extends AST_Node
 		/* return (existing) type t */
 		/****************************/
 		return t;
-	}	
+	}
 }
