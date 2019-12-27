@@ -86,6 +86,7 @@ public class AST_STMT_WHILE extends AST_STMT
 
 	public TEMP IRme()
 	{
+		System.out.print("IRme - AST_STMT_WHILE\n");
 		/*******************************/
 		/* [1] Allocate 2 fresh labels */
 		/*******************************/

@@ -55,6 +55,7 @@ public class AST_STMT_CALL extends AST_STMT
 
 	public TEMP IRme()
 	{
+		System.out.print("IRme - AST_STMT_CALL\n");
 		if (callExp != null) callExp.IRme();
 
 		return null;

@@ -10,7 +10,7 @@ public abstract class AST_Node
 	/* a graphviz dot format of the AST ...    */
 	/*******************************************/
 	public int SerialNumber;
-	
+
 	public int lineNumber;
 
 	/***********************************************/
@@ -26,6 +26,7 @@ public abstract class AST_Node
 	/*****************************************/
 	public TEMP IRme()
 	{
+		System.out.print("IRme - AST NODE UNKNOWN\n");
 		return null;
 	}
 }

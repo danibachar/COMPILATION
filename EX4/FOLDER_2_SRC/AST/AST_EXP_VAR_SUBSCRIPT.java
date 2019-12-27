@@ -98,8 +98,5 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 		}
 		System.out.format(">> ERROR [%d] missing var type(%s)\n",this.lineNumber, varType);
 		throw new AST_EXCEPTION(this.lineNumber);
-		// System.out.format("@@@@@ 3 SEMANTME - AST_EXP_VAR_SUBSCRIPT TYPE =  %s\n", varType);
-		// return varType;
-		// return null;
 	}
 }

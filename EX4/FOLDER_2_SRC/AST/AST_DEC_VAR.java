@@ -127,6 +127,8 @@ public class AST_DEC_VAR extends AST_DEC
 
 	public TEMP IRme()
 	{
+		if (initialValue != null) System.out.format("IRme - VAR-DEC(%s):%s := initialValue\n",name,type);
+		if (initialValue == null) System.out.format("IRme - VAR-DEC(%s):%s                \n",name,type);
 		IR.getInstance().Add_IRcommand(new IRcommand_Allocate(name));
 
 		if (initialValue != null) {

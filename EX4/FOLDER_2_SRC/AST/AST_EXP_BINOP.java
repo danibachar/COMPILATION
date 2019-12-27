@@ -155,12 +155,6 @@ public class AST_EXP_BINOP extends AST_EXP
 				if ((t2_var.t == TYPE_STRING.getInstance()) && (t1_var.t == TYPE_STRING.getInstance())) {
 					return TYPE_INT.getInstance();
 				}
-				// Check class? and array
-				// if (t1_var.t.isArray() && t2_var.t.isArray()) {
-				// 	if (t1_var.t.equals(t2_var.t)) {
-				// 		return TYPE_INT.getInstance();
-				// 	}
-				// }
 				// Allow compare classes that extends each other
 				if (t1_var.isClass() && t2_var.isClass()) {
 					TYPE_CLASS castT1 = (TYPE_CLASS)t1;
@@ -225,19 +219,20 @@ public class AST_EXP_BINOP extends AST_EXP
 		if (left  != null) t1 = left.IRme();
 		if (right != null) t2 = right.IRme();
 
-		if (OP == 0) {
+		System.out.format("IRme - AST_EXP_BINOP(%s) between t1=%s, t2=%s\n",opSymbol(), t1.getSerialNumber(), t2.getSerialNumber());
+		if (OP == 3) {
 			IR.getInstance()
 				.Add_IRcommand(new IRcommand_Binop_Add_Integers(dst,t1,t2));
 		}
-		if (OP == 2){
+		if (OP == 5){
 			IR.getInstance()
 				.Add_IRcommand(new IRcommand_Binop_Mul_Integers(dst,t1,t2));
 		}
-		if (OP == 3) {
+		if (OP == 0) {
 			IR.getInstance()
 				.Add_IRcommand(new IRcommand_Binop_EQ_Integers(dst,t1,t2));
 		}
-		if (OP == 4) {
+		if (OP == 1) {
 			IR.getInstance()
 				.Add_IRcommand(new IRcommand_Binop_LT_Integers(dst,t1,t2));
 		}

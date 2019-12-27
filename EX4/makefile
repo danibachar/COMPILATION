@@ -39,7 +39,7 @@ JFlex_FILE     = ${JFlex_DIR}/LEX_FILE.lex
 ######################
 # DEFINITIONS :: CUP #
 ######################
-CUP_PROGRAM                    = java -jar ${EXTERNAL_JARS_DIR}/java-cup-11b.jar 
+CUP_PROGRAM                    = java -jar ${EXTERNAL_JARS_DIR}/java-cup-11b.jar
 CUP_FILE                       = ${CUP_DIR}/CUP_FILE.cup
 CUP_GENERATED_PARSER_NAME      = Parser
 CUP_GENERATED_SYMBOLS_FILENAME = TokenNames
@@ -50,7 +50,7 @@ CUP_GENERATED_SYMBOLS_FILENAME = TokenNames
 CUP_FLAGS =                                \
 -nowarn                                    \
 -parser  ${CUP_GENERATED_PARSER_NAME}      \
--symbols ${CUP_GENERATED_SYMBOLS_FILENAME} 
+-symbols ${CUP_GENERATED_SYMBOLS_FILENAME}
 
 #########################
 # DEFINITIONS :: PARSER #
@@ -119,7 +119,7 @@ compile:
 	@echo "*                                                         *"
 	@echo "***********************************************************"
 	jar cfm COMPILER ${MANIFEST_FILE} -C ${BIN_DIR} .
-	
+
 everything:
 	clear
 	@echo "******************************"
@@ -244,3 +244,8 @@ everything:
 	dot -Tjpeg -o${OUTPUT_DIR}/CFG.jpeg .main.dot
 	eog ${OUTPUT_DIR}/CFG.jpeg &
 
+run:
+	java -jar COMPILER ${INPUT_DIR}/$(INPUT_FILE) ${OUTPUT_DIR}/SemanticStatus.txt
+	llvm-as ${OUTPUT_DIR}/LLVM_bitcode.ll
+	clang -Wno-override-module ${OUTPUT_DIR}/LLVM_bitcode.bc -o ${BASEDIR}/program
+	${BASEDIR}/program

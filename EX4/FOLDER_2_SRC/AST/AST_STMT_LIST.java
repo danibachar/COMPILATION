@@ -76,12 +76,13 @@ public class AST_STMT_LIST extends AST_Node
 		return null;
 	}
 
-		public TEMP IRme()
-		{
-			if (head != null) head.IRme();
-			if (tail != null) tail.IRme();
+	public TEMP IRme()
+	{
+		System.out.print("IRme - AST_STMT_LIST\n");
+		if (head != null) head.IRme();
+		if (tail != null) tail.IRme();
 
-			return null;
-		}
+		return null;
+	}
 
 }

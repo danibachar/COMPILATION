@@ -69,6 +69,7 @@ public class AST_DEC_LIST extends AST_Node
 
 	public TEMP IRme()
 	{
+		System.out.format("IRme - DEC_LIST\n");
 		if (head != null) head.IRme();
 		if (tail != null) tail.IRme();
 

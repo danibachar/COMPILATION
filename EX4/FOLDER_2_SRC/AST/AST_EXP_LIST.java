@@ -82,6 +82,7 @@ public class AST_EXP_LIST extends AST_Node
 	public TEMP IRme()
 	{
 		// What about tail?
+		System.out.print("IRme - AST_EXP_LIST\n");
 		return head.IRme();
 	}
 

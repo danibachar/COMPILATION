@@ -85,18 +85,6 @@ public class AST_EXP_NEW extends AST_EXP
 		/***********************************************************/
 		/* Check That the Type is actually a class type or an array*/
 		/***********************************************************/
-		// if (!t.isClass() && !t.isArray()) {
-		// 	if (t.isClassVar()) {
-		// 		TYPE_CLASS_VAR_DEC tcv = (TYPE_CLASS_VAR_DEC)t;
-		// 		if (!tcv.isClass() && !tcv.isArray()) {
-		// 			System.out.format(">> ERROR [%d] trying to create new entity that is not a class/array type(%s)\n",this.lineNumber,t);
-		// 			throw new AST_EXCEPTION(this);
-		// 		}
-		// 	} else {
-		// 		System.out.format(">> ERROR [%d] trying to create new entity that is not a class/array type(%s)\n",this.lineNumber,t);
-		// 		throw new AST_EXCEPTION(this);
-		// 	}
-		// }
 
 		// Validating array
 		if (exp != null) {

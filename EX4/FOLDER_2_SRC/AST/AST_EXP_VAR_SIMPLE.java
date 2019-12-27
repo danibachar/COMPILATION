@@ -54,6 +54,7 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 
 	public TEMP IRme()
 	{
+		System.out.format("IRme - AST_EXP_VAR_SIMPLE( %s )\n",name);
 		TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
 		IR.getInstance().Add_IRcommand(new IRcommand_Load(t,name));
 		return t;

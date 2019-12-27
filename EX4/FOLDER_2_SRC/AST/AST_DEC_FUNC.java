@@ -92,7 +92,7 @@ public class AST_DEC_FUNC extends AST_DEC
 		returnType = SYMBOL_TABLE.getInstance().find(returnTypeName);
 		if (returnType == null)
 		{
-			System.out.format(">> ERROR [%d] non existing return type %s\n",this.lineNumber,returnType);
+			System.out.format(">> ERROR [%d] non existing return type %s\n",this.lineNumber,returnTypeName);
 			throw new AST_EXCEPTION(returnTypeNameLineNumber);
 		}
 
@@ -168,6 +168,7 @@ public class AST_DEC_FUNC extends AST_DEC
 
 	public TEMP IRme()
 	{
+		System.out.format("IRme - AST_DEC_FUNC(%s):%s\n",name, returnTypeName);
 		IR.getInstance().Add_IRcommand(new IRcommand_Label("main"));
 		if (body != null) body.IRme();
 		return null;

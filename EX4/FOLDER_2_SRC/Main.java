@@ -87,7 +87,7 @@ public class Main
 			/***********************************/
 			/* [12] Finalize LLVM bitcode file */
 			/***********************************/
-
+			assert(false);
 			LLVM.getInstance().finalizeFile();
 
 			/***************************/
@@ -98,6 +98,7 @@ public class Main
 			/**************************/
 			/* [14] Close output file */
 			/**************************/
+			file_writer.print("OK\n");
 			file_writer.close();
     } catch (AST_EXCEPTION e) {
 			// Semantic Exception handling, thrown from within th AST_Node

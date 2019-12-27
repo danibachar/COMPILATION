@@ -91,6 +91,7 @@ public class AST_STMT_IF extends AST_STMT
 
 	public TEMP IRme()
 	{
+		System.out.print("IRme - AST_STMT_IF\n");
 		/*******************************/
 		/* [1] Allocate 2 fresh labels */
 		/*******************************/

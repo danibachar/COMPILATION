@@ -1,0 +1,4 @@
+class Father
+{
+    int foo(){if(5){return 8;}}
+}
