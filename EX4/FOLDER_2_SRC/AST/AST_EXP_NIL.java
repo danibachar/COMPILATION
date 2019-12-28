@@ -45,8 +45,16 @@ public class AST_EXP_NIL extends AST_EXP
 
 	public TYPE SemantMe() throws Exception
 	{
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// System.out.format("SEMANTME -AST_EXP_NIL\n");
 		return TYPE_NIL.getInstance();
+	}
+
+	public TEMP IRme() throws Exception
+	{
+		
+		System.out.format("IRme AST_EXP_NIL\nScope=%d\n",myScope);
+		return null;
 	}
 
 }

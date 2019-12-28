@@ -1,7 +1,8 @@
 
 void main()
 {
-  int i1 = 10;
-  int i2 = 10;
-  PrintInt(i1-i2);
+  int i1 := 10;
+  int i2 := 10;
+
+  PrintInt(i1 - i2);
 }

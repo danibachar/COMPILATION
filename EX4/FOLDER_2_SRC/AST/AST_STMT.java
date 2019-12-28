@@ -15,11 +15,18 @@ public abstract class AST_STMT extends AST_Node
 	/*********************************************************/
 	public void PrintMe()
 	{
-		System.out.print("UNKNOWN AST STATEMENT NODE");
+		System.out.print("UNKNOWN AST STATEMENT NODE\n");
 	}
+
 	public TYPE SemantMe() throws Exception
 	{
-		System.out.print("SEMANTME - UNKNOWN AST STATEMENT NODE");
+		System.out.print("SEMANTME - UNKNOWN AST STATEMENT NODE\n");
+		return null;
+	}
+
+	public TEMP IRMe() throws Exception
+	{
+		System.out.format("IRMe - UNKNOWN AST STATEMENT NODE\nScope=%d\n",myScope);
 		return null;
 	}
 }

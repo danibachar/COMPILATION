@@ -56,6 +56,7 @@ public class AST_TYPE_NAME extends AST_Node
 	/*****************/
 	public TYPE SemantMe() throws Exception
 	{
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// System.out.format("SEMANTME - NAME(%s):TYPE(%s)\n",name,type);
 		TYPE t = SYMBOL_TABLE.getInstance().find(type);
 		if (t == null) {
@@ -77,5 +78,11 @@ public class AST_TYPE_NAME extends AST_Node
 		/* return (existing) type t */
 		/****************************/
 		return t;
+	}
+
+	public TEMP IRMe() throws Exception
+	{
+		System.out.format("IRMe - UNKNOWN AST AST_TYPE_NAME NODE\nScope=%d\n",myScope);
+		return null;
 	}
 }

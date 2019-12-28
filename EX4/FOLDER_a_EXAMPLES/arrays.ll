@@ -53,7 +53,7 @@ entry:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;                                 ;
-; i8* wrappers for actual stringa ;
+; i8* wrappers for actual strings ;
 ;                                 ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 @STR.ACCESS.VIOLATION.VAR = global i8* null, align 8
@@ -124,7 +124,7 @@ entry:
   ; Explanation - getelementptr inbounds is the way for LLVM to create
   %Temp_40 = getelementptr inbounds i32, i32* %Temp_30, i32 0 ;; Temp_40 = Temp_30 + 0;
   ; Assign the size of the array (without the increasage into place 0)
-  store i32 %Temp_14, i32* %Temp_40, align 4                  ;; Temp_14[0] = Temp_30
+  store i32 %Temp_14, i32* %Temp_40, align 4                  ;; Temp_14[0] = Temp_40
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;                                     ;

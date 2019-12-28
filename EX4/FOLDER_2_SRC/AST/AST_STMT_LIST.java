@@ -69,16 +69,17 @@ public class AST_STMT_LIST extends AST_Node
 	public TYPE SemantMe() throws Exception
 	{
 		// System.out.print("SEMANTME - AST_STMT_LIST\n");
-
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		if (head != null) head.SemantMe();
 		if (tail != null) tail.SemantMe();
 
 		return null;
 	}
 
-	public TEMP IRme()
+	public TEMP IRme() throws Exception
 	{
-		System.out.print("IRme - AST_STMT_LIST\n");
+		
+		System.out.format("IRme - AST_STMT_LIST\nScope=%d\n",myScope);
 		if (head != null) head.IRme();
 		if (tail != null) tail.IRme();
 

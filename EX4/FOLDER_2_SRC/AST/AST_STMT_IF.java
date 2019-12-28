@@ -59,6 +59,7 @@ public class AST_STMT_IF extends AST_STMT
 
 	public TYPE SemantMe() throws Exception
 	{
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// System.out.print("SEMANTME - AST_STMT_IF\n");
 		/****************************/
 		/* [0] Semant the Condition */
@@ -89,9 +90,10 @@ public class AST_STMT_IF extends AST_STMT
 		return null;
 	}
 
-	public TEMP IRme()
+	public TEMP IRme() throws Exception
 	{
-		System.out.print("IRme - AST_STMT_IF\n");
+		
+		System.out.format("IRme - AST_STMT_IF\nScope=%d\n",myScope);
 		/*******************************/
 		/* [1] Allocate 2 fresh labels */
 		/*******************************/

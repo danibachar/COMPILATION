@@ -52,6 +52,7 @@ public class AST_STMT_WHILE extends AST_STMT
 	public TYPE SemantMe() throws Exception
 	{
 
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// System.out.print("SEMANTME - AST_STMT_WHILE\n");
 		/****************************/
 		/* [0] Semant the Condition */
@@ -84,9 +85,9 @@ public class AST_STMT_WHILE extends AST_STMT
 		return null;
 	}
 
-	public TEMP IRme()
+	public TEMP IRme() throws Exception
 	{
-		System.out.print("IRme - AST_STMT_WHILE\n");
+		System.out.format("IRme - AST_STMT_WHILE\nScope=%d\n",myScope);
 		/*******************************/
 		/* [1] Allocate 2 fresh labels */
 		/*******************************/

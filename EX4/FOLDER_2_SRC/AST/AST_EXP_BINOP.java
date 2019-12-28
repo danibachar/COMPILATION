@@ -89,6 +89,8 @@ public class AST_EXP_BINOP extends AST_EXP
 		TYPE t1 = null;
 		TYPE t2 = null;
 
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
+
 		if (left  != null) t1 = left.SemantMe();
 		if (right != null) t2 = right.SemantMe();
 
@@ -210,7 +212,7 @@ public class AST_EXP_BINOP extends AST_EXP
 		throw new AST_EXCEPTION(this.lineNumber);
 	}
 
-	public TEMP IRme()
+	public TEMP IRme() throws Exception
 	{
 		TEMP t1 = null;
 		TEMP t2 = null;
@@ -218,16 +220,8 @@ public class AST_EXP_BINOP extends AST_EXP
 
 		if (left  != null) t1 = left.IRme();
 		if (right != null) t2 = right.IRme();
-
-		System.out.format("IRme - AST_EXP_BINOP(%s) between t1=%s, t2=%s\n",opSymbol(), t1.getSerialNumber(), t2.getSerialNumber());
-		if (OP == 3) {
-			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Binop_Add_Integers(dst,t1,t2));
-		}
-		if (OP == 5){
-			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Binop_Mul_Integers(dst,t1,t2));
-		}
+		
+		System.out.format("IRme - AST_EXP_BINOP(%s) between t1=%s, t2=%s\nScope=%d\n",opSymbol(), t1.getSerialNumber(), t2.getSerialNumber(),myScope);
 		if (OP == 0) {
 			IR.getInstance()
 				.Add_IRcommand(new IRcommand_Binop_EQ_Integers(dst,t1,t2));
@@ -236,6 +230,25 @@ public class AST_EXP_BINOP extends AST_EXP
 			IR.getInstance()
 				.Add_IRcommand(new IRcommand_Binop_LT_Integers(dst,t1,t2));
 		}
+		if (OP == 2){
+			System.out.format("IRme - LG COMPARE impl is missing");
+		}
+		if (OP == 3) {
+			IR.getInstance()
+				.Add_IRcommand(new IRcommand_Binop_Add_Integers(dst,t1,t2));
+		}
+		if (OP == 4){
+			IR.getInstance()
+				.Add_IRcommand(new IRcommand_Binop_Sub_Integers(dst,t1,t2));
+		}
+		if (OP == 5){
+			IR.getInstance()
+				.Add_IRcommand(new IRcommand_Binop_Mul_Integers(dst,t1,t2));
+		}
+		if (OP == 6){
+			System.out.format("IRme - DEVIDE impl is missing");
+		}
+
 		return dst;
 
 	}

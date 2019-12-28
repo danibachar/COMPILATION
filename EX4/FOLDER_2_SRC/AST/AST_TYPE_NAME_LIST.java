@@ -33,6 +33,7 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 	/******************************************************/
 	public void PrintMe()
 	{
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// System.out.print("AST_TYPE_NAME_LIST\n");
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */
@@ -75,5 +76,11 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 			}
 
 		}
+	}
+
+	public TEMP IRMe() throws Exception
+	{
+		System.out.format("IRMe - UNKNOWN AST AST_TYPE_NAME_LIST NODE\nScope=%d\n",myScope);
+		return null;
 	}
 }

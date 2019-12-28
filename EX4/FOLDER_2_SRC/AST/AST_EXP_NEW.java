@@ -64,7 +64,7 @@ public class AST_EXP_NEW extends AST_EXP
 	{
 		TYPE t;
 		// System.out.format("SEMANTME - AST_EXP_NEW type - %s\n" ,type);
-
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		/************************************************/
 		/* Check That Type Was previously declared*/
 		/************************************************/
@@ -100,5 +100,12 @@ public class AST_EXP_NEW extends AST_EXP
 		// Validate Expression
 
 		return t;
+	}
+
+	public TEMP IRme() throws Exception
+	{
+
+		System.out.format("IRme - AST_EXP_NEW type - %s\nScope=%d\n" ,type,myScope);
+		return null;
 	}
 }

@@ -76,6 +76,7 @@ public class AST_DEC_CLASS extends AST_DEC
 
 	public TYPE SemantMe() throws Exception
 	{
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// System.out.format("SEMANTME - AST_DEC_CLASS name = %s, parent = %s\n",name, parent);
 		/********************************************/
 		/*Make sure we are at the most outer scope	*/
@@ -111,7 +112,6 @@ public class AST_DEC_CLASS extends AST_DEC
 		/* [1] Begin Class Scope */
 		/*************************/
 		SYMBOL_TABLE.getInstance().beginScope();
-
 
 		/********************************************/
 		/* Temp insertion for recursive reasons.		*/
@@ -227,6 +227,15 @@ public class AST_DEC_CLASS extends AST_DEC
 		/* [5] Return value is irrelevant for class declarations */
 		/*********************************************************/
 		SYMBOL_TABLE.getInstance().current_class = null;
+		return null;
+	}
+
+	public TEMP IRme() throws Exception
+	{
+		
+		System.out.format("IRme - AST_DEC_CLASS name = %s, parent = %s\nScope=%d\n",name, parent,myScope);
+		// IR.getInstance().Add_IRcommand(new IRcommand_Label("main"));
+		// if (body != null) body.IRme();
 		return null;
 	}
 

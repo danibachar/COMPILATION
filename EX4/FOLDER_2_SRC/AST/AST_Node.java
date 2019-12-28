@@ -13,6 +13,8 @@ public abstract class AST_Node
 
 	public int lineNumber;
 
+	public int myScope;
+
 	/***********************************************/
 	/* The default message for an unknown AST node */
 	/***********************************************/
@@ -24,7 +26,7 @@ public abstract class AST_Node
 	/*****************************************/
 	/* The default IR action for an AST node */
 	/*****************************************/
-	public TEMP IRme()
+	public TEMP IRme()  throws Exception
 	{
 		System.out.print("IRme - AST NODE UNKNOWN\n");
 		return null;

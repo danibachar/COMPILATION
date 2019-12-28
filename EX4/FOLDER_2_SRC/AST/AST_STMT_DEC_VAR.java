@@ -49,14 +49,16 @@ public class AST_STMT_DEC_VAR extends AST_STMT
 
 	public TYPE SemantMe() throws Exception
 	{
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// System.out.print("SEMANTME - AST_STMT_DEC_VAR\n");
 		return var.SemantMe();
 	}
-	// 
-	// public TEMP IRme()
-	// {
-	// 	System.out.print("IRme - AST_STMT_DEC_VAR\n");
-	// 	return var.IRme();
-	// }
+
+	public TEMP IRme() throws Exception
+	{
+
+		System.out.format("IRme - AST_STMT_DEC_VAR\nScope=%d\n",myScope);
+		return var.IRme();
+	}
 
 }

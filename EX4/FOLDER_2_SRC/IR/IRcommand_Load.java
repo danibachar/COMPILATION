@@ -18,11 +18,12 @@ public class IRcommand_Load extends IRcommand
 {
 	TEMP dst;
 	String var_name;
-	
-	public IRcommand_Load(TEMP dst,String var_name)
+
+	public IRcommand_Load(TEMP dst, String var_name, int scope)
 	{
 		this.dst      = dst;
 		this.var_name = var_name;
+		this.scope 		= scope;
 	}
 
 	/*******************/
@@ -30,7 +31,7 @@ public class IRcommand_Load extends IRcommand
 	/*******************/
 	public void LLVM_bitcode_me()
 	{
-		LLVM.getInstance().load(dst,var_name);
+		LLVM.getInstance().load(dst, var_name, scope);
 	}
 
 	/***************/

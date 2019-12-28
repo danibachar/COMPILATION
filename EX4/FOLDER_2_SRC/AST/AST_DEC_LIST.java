@@ -57,6 +57,7 @@ public class AST_DEC_LIST extends AST_Node
 
 	public TYPE SemantMe() throws Exception
 	{
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// System.out.format("SEMANTME - DEC_LIST\n");
 		/*************************************/
 		/* RECURSIVELY PRINT HEAD + TAIL ... */
@@ -67,9 +68,9 @@ public class AST_DEC_LIST extends AST_Node
 		return null;
 	}
 
-	public TEMP IRme()
+	public TEMP IRme() throws Exception
 	{
-		System.out.format("IRme - DEC_LIST\n");
+		System.out.format("IRme - DEC_LIST\nScope=%d\n", myScope);
 		if (head != null) head.IRme();
 		if (tail != null) tail.IRme();
 

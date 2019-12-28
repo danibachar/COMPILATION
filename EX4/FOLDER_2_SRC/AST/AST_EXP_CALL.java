@@ -67,7 +67,7 @@ public class AST_EXP_CALL extends AST_EXP
 	public TYPE SemantMe() throws Exception
 	{
 		// System.out.format("SEMANTME - AST_EXP_CALL(%s)WITH:(%s):%s\n",funcName,var, var!=null ? var.name:null);
-
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// Validate params recursively
 		TYPE_LIST paramsTypes = null;
 		if (params != null) {
@@ -247,13 +247,14 @@ public class AST_EXP_CALL extends AST_EXP
 		return true;
 	}
 
-	public TEMP IRme()
+	public TEMP IRme() throws Exception
 	{
 		TEMP t=null;
-		System.out.format("IRme - AST_EXP_CALL(%s)WITH:(%s):%s\n",funcName,var, var!=null ? var.name:null);
 		if (params != null) { t = params.head.IRme(); }
-
-		IR.getInstance().Add_IRcommand(new IRcommand_PrintInt(t));
+		
+		System.out.format("IRme - AST_EXP_CALL(%s)\nON:(%s)\nWITH:(%s)\nScope=%d\n",funcName, var!=null ? var.name:null, t!=null ? t.getSerialNumber():null,myScope);
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_PrintInt(t));
 
 		return null;
 	}

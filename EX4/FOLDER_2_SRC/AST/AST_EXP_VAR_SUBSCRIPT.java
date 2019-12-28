@@ -57,7 +57,7 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 	{
 		TYPE varType = null;
 		TYPE subscriptType = null;
-
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// System.out.print("SEMANTME - AST_EXP_VAR_SUBSCRIPT\n");
 
 		// Validate that the subscript is kind of int AST_EXP
@@ -98,5 +98,11 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 		}
 		System.out.format(">> ERROR [%d] missing var type(%s)\n",this.lineNumber, varType);
 		throw new AST_EXCEPTION(this.lineNumber);
+	}
+
+	public TEMP IRme() throws Exception
+	{
+		System.out.format("IRme - AST_EXP_VAR_SUBSCRIPT\nScope=%d\n",myScope);
+		return null;
 	}
 }

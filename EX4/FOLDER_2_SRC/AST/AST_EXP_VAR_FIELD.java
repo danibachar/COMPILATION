@@ -59,6 +59,7 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 	{
 		TYPE t = null;
 		TYPE_CLASS tc = null;
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// System.out.format("SEMANTME - AST_EXP_VAR_FIELD\n(___.%s)\n",fieldName);
 		/******************************/
 		/* [1] Recursively semant var */
@@ -103,5 +104,11 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 		/*********************************************/
 		System.out.format(">> ERROR [%d] field %s does not exist in class\n",this.lineNumber,fieldName);
 		throw new AST_EXCEPTION(this.lineNumber);
+	}
+
+	public TEMP IRme() throws Exception
+	{
+		System.out.format("IRme AST_EXP_VAR_FIELD\n(___.%s)\nScope=%d\n",fieldName,myScope);
+		return null;
 	}
 }

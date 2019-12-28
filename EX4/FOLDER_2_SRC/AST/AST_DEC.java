@@ -14,7 +14,7 @@ public abstract class AST_DEC extends AST_Node
 
 	public TYPE SemantMe() throws Exception
 	{
-		System.out.format("SEMANTME - AST_DEC Empty\n");
+		System.out.format("SEMANTME - AST_DEC Empty\nScope=%d\n",myScope);
 		return null;
 	}
 

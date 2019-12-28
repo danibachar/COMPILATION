@@ -60,6 +60,7 @@ public class AST_EXP_LIST extends AST_Node
 	}
 	public TYPE_LIST SemantMe() throws Exception
 	{
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// System.out.print("SEMANTME - AST_EXP_LIST\n");
 		if (tail == null) {
 			try {
@@ -79,10 +80,11 @@ public class AST_EXP_LIST extends AST_Node
 			}
 		}
 	}
-	public TEMP IRme()
+	public TEMP IRme() throws Exception
 	{
 		// What about tail?
-		System.out.print("IRme - AST_EXP_LIST\n");
+		
+		System.out.format("IRme - AST_EXP_LIST\nnScope=%d\n",myScope);
 		return head.IRme();
 	}
 

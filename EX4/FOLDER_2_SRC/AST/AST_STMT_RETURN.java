@@ -52,6 +52,7 @@ public class AST_STMT_RETURN extends AST_STMT
 
 	public TYPE SemantMe() throws Exception
 	{
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		/*************************************/
 		/* AST NODE TYPE = AST SUBSCRIPT VAR */
 		/*************************************/
@@ -108,6 +109,13 @@ public class AST_STMT_RETURN extends AST_STMT
 		/*********************************************************/
 		/* [4] Return value is irrelevant for class declarations */
 		/*********************************************************/
+		return null;
+	}
+
+	public TEMP IRMe() throws Exception
+	{
+
+		System.out.format("IRMe - UNKNOWN AST AST_STMT_RETURN NODE\nScope=%d\n",myScope);
 		return null;
 	}
 }

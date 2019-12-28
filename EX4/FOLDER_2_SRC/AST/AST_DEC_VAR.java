@@ -85,12 +85,14 @@ public class AST_DEC_VAR extends AST_DEC
 	public TYPE SemantMe() throws Exception
 	{
 		TYPE t;
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 
 		// if (initialValue != null) System.out.format("SEMANTME - VAR-DEC(%s):%s := initialValue\n",name,type);
 		// if (initialValue == null) System.out.format("SEMANTME - VAR-DEC(%s):%s                \n",name,type);
 		/****************************/
 		/* [1] Check If Type exists */
 		/****************************/
+
 		t = SYMBOL_TABLE.getInstance().find(type);
 		if (t == null)
 		{
@@ -125,15 +127,51 @@ public class AST_DEC_VAR extends AST_DEC
 		return t;
 	}
 
-	public TEMP IRme()
+	public TEMP IRme() throws Exception
 	{
-		if (initialValue != null) System.out.format("IRme - VAR-DEC(%s):%s := initialValue\n",name,type);
-		if (initialValue == null) System.out.format("IRme - VAR-DEC(%s):%s                \n",name,type);
-		IR.getInstance().Add_IRcommand(new IRcommand_Allocate(name));
+		
+		if (initialValue != null) System.out.format("IRme - VAR-DEC(%s):%s := initialValue\nScope=%d\n",name,type,myScope);
+		if (initialValue == null) System.out.format("IRme - VAR-DEC(%s):%s                \nScope=%d\n",name,type,myScope);
 
-		if (initialValue != null) {
-			IR.getInstance().Add_IRcommand(new IRcommand_Store(name,initialValue.IRme()));
+
+		/*
+		 Here we need to pay attention to the scope:
+		 If we are in a global scope:
+			- allocate global var
+			- if initValue ?
+				- we need to create private func
+				- we need to apply store from within it
+		Else we are in some scope -
+			- allocate local var - use scope from symbole tyble
+			- if initValue ?
+				- we need to sttore
+		*/
+		TYPE t = SYMBOL_TABLE.getInstance().find(type);
+
+		if (t.isClassVar()) {
+			TYPE_CLASS_VAR_DEC tc = (TYPE_CLASS_VAR_DEC)t;
+			t = tc.t;
 		}
+
+		String type = "i32";
+		String type_val = "0";
+		int align = 4;
+		if (t.isClass() || t.isArray()) {
+			type = "i32*";
+			type_val = "null";
+			align = 8;
+		}
+		if (t == TYPE_STRING.getInstance()) {
+			type = "i8*";
+			type_val = "null";
+			align = 8;
+		}
+
+		IR.getInstance().Add_IRcommand(new IRcommand_Allocate(name, type, type_val, align, myScope));
+		if (initialValue != null) {
+			IR.getInstance().Add_IRcommand(new IRcommand_Store(name, initialValue.IRme(), myScope));
+		}
+
 		return null;
 	}
 

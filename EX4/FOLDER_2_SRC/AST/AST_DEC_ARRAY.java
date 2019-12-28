@@ -59,6 +59,8 @@ public class AST_DEC_ARRAY extends AST_DEC
 			System.out.format(">> ERROR [%d] Array %s defined not in most outer scope\n",this.nameLineNumber,name);
 			throw new AST_EXCEPTION(this.nameLineNumber);
 		}
+
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		/****************************/
 		/* [1] Check If Type exists */
 		/****************************/
@@ -98,6 +100,15 @@ public class AST_DEC_ARRAY extends AST_DEC
 		/*********************************************************/
 		/* [4] Return value is irrelevant for class declarations */
 		/*********************************************************/
+		return null;
+	}
+
+	public TEMP IRme() throws Exception
+	{
+		
+		System.out.format("IRme - AST_DEC_ARRAY name = %s, type = %s\nScope=%d\n",name, type,myScope);
+		// IR.getInstance().Add_IRcommand(new IRcommand_Label("main"));
+		// if (body != null) body.IRme();
 		return null;
 	}
 

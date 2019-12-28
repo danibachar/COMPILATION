@@ -6,7 +6,7 @@ package IR;
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
-
+import java.util.ArrayList;
 /*******************/
 /* PROJECT IMPORTS */
 /*******************/
@@ -15,7 +15,7 @@ public class IR
 {
 	private IRcommand head=null;
 	private IRcommandList tail=null;
-
+	private ArrayList<String> globalFunctions = new ArrayList<String>();
 	/******************/
 	/* Add IR command */
 	/******************/
@@ -48,7 +48,7 @@ public class IR
 		if (head != null) head.LLVM_bitcode_me();
 		if (tail != null) tail.LLVM_bitcode_me();
 	}
-	
+
 	/***************/
 	/* MIPS me !!! */
 	/***************/

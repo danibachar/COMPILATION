@@ -85,7 +85,7 @@ public class AST_DEC_FUNC extends AST_DEC
 		TYPE returnType = null;
 		TYPE_LIST type_list = null;
 		// System.out.format("SEMANTME - AST_DEC_FUNC(%s):%s\n",name,returnTypeName);
-
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		/*******************/
 		/* [0] return type */
 		/*******************/
@@ -166,9 +166,10 @@ public class AST_DEC_FUNC extends AST_DEC
 		return returnType;
 	}
 
-	public TEMP IRme()
+	public TEMP IRme() throws Exception
 	{
-		System.out.format("IRme - AST_DEC_FUNC(%s):%s\n",name, returnTypeName);
+		
+		System.out.format("IRme - AST_DEC_FUNC(%s):%s\nScope=%d\n",name, returnTypeName, myScope);
 		IR.getInstance().Add_IRcommand(new IRcommand_Label("main"));
 		if (body != null) body.IRme();
 		return null;

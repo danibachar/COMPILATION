@@ -70,6 +70,8 @@ public class AST_STMT_ASSIGN extends AST_STMT
 		TYPE t1 = null;
 		TYPE t2 = null;
 
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
+
 		if (var != null) {
 			// System.out.format("SEMANTME - AST_STMT_ASSIGN before var\nlinenumber = %d\n", this.lineNumber);
 			t1 = var.SemantMe();
@@ -146,11 +148,12 @@ public class AST_STMT_ASSIGN extends AST_STMT
 		throw new AST_EXCEPTION(this.lineNumber);
 	}
 
-	public TEMP IRme()
+	public TEMP IRme()  throws Exception
 	{
-		System.out.print("IRme - AST_STMT_ASSIGN\n");
+		System.out.format("IRme - AST_STMT_ASSIGN\nScope=%d\n",myScope);
 		TEMP src = exp.IRme();
-		IR.getInstance().Add_IRcommand(new IRcommand_Store(((AST_EXP_VAR_SIMPLE) var).name,src));
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Store(((AST_EXP_VAR_SIMPLE) var).name, src, myScope));
 
 		return null;
 	}

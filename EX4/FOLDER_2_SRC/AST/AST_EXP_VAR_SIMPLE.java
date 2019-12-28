@@ -48,15 +48,18 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 	}
 	public TYPE SemantMe() throws Exception
 	{
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// System.out.format("SEMANTME - AST_EXP_VAR_SIMPLE( %s )\n",name);
 		return SYMBOL_TABLE.getInstance().findField(name,false);
 	}
 
-	public TEMP IRme()
+	public TEMP IRme() throws Exception
 	{
-		System.out.format("IRme - AST_EXP_VAR_SIMPLE( %s )\n",name);
+		
+		System.out.format("IRme - GLOBAL - AST_EXP_VAR_SIMPLE ( %s )\nScope=%d\n",name,myScope);
 		TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
-		IR.getInstance().Add_IRcommand(new IRcommand_Load(t,name));
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Load(t, name, myScope));
 		return t;
 	}
 

@@ -18,9 +18,10 @@ public abstract class AST_EXP extends AST_Node
 		return null;
 	}
 
-	public TEMP IRme()
+	public TEMP IRme() throws Exception
 	{
-		System.out.print("IRme - AST_EXP - unknown expression\n");
+		
+		System.out.format("IRme - AST_EXP - unknown expression\nScope=%d\n",myScope);
 		return null;
 	}
 }

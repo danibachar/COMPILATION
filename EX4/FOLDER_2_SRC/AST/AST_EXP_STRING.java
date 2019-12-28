@@ -46,7 +46,16 @@ public class AST_EXP_STRING extends AST_EXP
 	}
 	public TYPE SemantMe() throws Exception
 	{
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// System.out.format("SEMANTME - AST_EXP_STRING( %s )\n",value);
 		return TYPE_STRING.getInstance();
+	}
+
+	public TEMP IRme() throws Exception
+	{
+		//TODO - Specail handling strings, separate needs to handle globaly
+		
+		System.out.format("IRme AST_EXP_STRING\n(%s)\nScope=%d",value,myScope);
+		return null;
 	}
 }

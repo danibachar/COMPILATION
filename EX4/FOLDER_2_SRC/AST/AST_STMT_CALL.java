@@ -49,13 +49,15 @@ public class AST_STMT_CALL extends AST_STMT
 
 	public TYPE SemantMe() throws Exception
 	{
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// System.out.print("SEMANTME - AST_STMT_CALL\n");
 		return callExp.SemantMe();
 	}
 
-	public TEMP IRme()
+	public TEMP IRme() throws Exception
 	{
-		System.out.print("IRme - AST_STMT_CALL\n");
+
+		System.out.format("IRme - AST_STMT_CALL\nScope=%d\n",myScope);
 		if (callExp != null) callExp.IRme();
 
 		return null;
