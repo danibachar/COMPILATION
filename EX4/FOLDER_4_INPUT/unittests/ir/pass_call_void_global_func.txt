@@ -1,0 +1,10 @@
+void foo(int x, int y) {
+  PrintInt(x+y);
+}
+
+void main()
+{
+  int i1 := 4;
+  int i2 := 5;
+  foo(i1, i2);
+}

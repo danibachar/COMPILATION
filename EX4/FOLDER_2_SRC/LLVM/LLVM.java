@@ -25,7 +25,7 @@ public class LLVM
 	/***********************/
 	/* The file writer ... */
 	/***********************/
-	private PrintWriter fileWriter;
+	public PrintWriter fileWriter;
 
 	private Map<Integer, Map<String, TEMP>> varScopeMap = new HashMap<Integer,Map<String, TEMP>>();
 
@@ -71,6 +71,25 @@ public class LLVM
 		fileWriter.close();
 	}
 
+	// MARK: - Function
+	// public void print_func(String funcName, String returnType, ArrayList<Pair<String, TEMP>> params) {
+	// 	// todo params string
+	// 	String p_string = "";
+	// 	fileWriter.format("define %s @%s($s) #0 {\n", returnType, funcName, p_string);
+	// 	fileWriter.format(";                 ;\n");
+	// 	fileWriter.format("; GLOBAL VARIABLE ;\n");
+	// 	fileWriter.format(";                 ;\n");
+	// 	fileWriter.format(";;;;;;;;;;;;;;;;;;;\n");
+	// }
+
+	public void call_void_func(
+		String funcName,
+		String params_string,
+		int scope
+	) {
+		//EXAMPLE: - call void @foo(i32 %3, i32 %4)
+		fileWriter.format("  call void @%s(%s) \n", funcName, params_string);
+	}
 	// MARK: -
 	public void print_int(TEMP t)
 	{
@@ -177,6 +196,18 @@ public class LLVM
 			i1,
 			i2);
 	}
+	public void div(TEMP dst,TEMP oprnd1,TEMP oprnd2)
+	{
+		int i1 =oprnd1.getSerialNumber();
+		int i2 =oprnd2.getSerialNumber();
+		int dstidx=dst.getSerialNumber();
+
+		fileWriter.format(
+			"  %%Temp_%d = sdiv i32 %%Temp_%d, %%Temp_%d\n",
+			dstidx,
+			i1,
+			i2);
+	}
 	public void icmp_lt(TEMP dst,TEMP oprnd1,TEMP oprnd2)
 	{
 		int i1 =oprnd1.getSerialNumber();
@@ -268,7 +299,7 @@ public class LLVM
 	}
 	public void beqz(TEMP oprnd1,String label1,String label2)
 	{
-		int i1 =oprnd1.getSerialNumber();
+		int i1 = oprnd1.getSerialNumber();
 
 		fileWriter.format("  %%equal_zero_%d = icmp eq i1 %%Temp_%d, 0\n",x,i1);
 		fileWriter.format("  br i1 %%equal_zero_%d, label %%%s, label %%%s\n",x,label1,label2);
@@ -298,112 +329,116 @@ public class LLVM
 			/****************************/
 			/* Initialize a file writer */
 			/****************************/
-			try
-			{
-				String dirname="./FOLDER_5_OUTPUT/";
-				String filename="LLVM_bitcode.ll";
-				assert(false);
-				instance.fileWriter = new PrintWriter(dirname+filename);
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
-			instance.fileWriter.format(";                         ;\n");
-			instance.fileWriter.format("; GLOBAL VARIABLE :: zero ;\n");
-			instance.fileWriter.format(";                         ;\n");
-			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
-			instance.fileWriter.format("@my_zero = global i32 0, align 4\n\n");
-
-			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
-			instance.fileWriter.format(";                         ;\n");
-			instance.fileWriter.format("; EXTERNAL LIBRARY FUNCS ;\n");
-			instance.fileWriter.format(";                         ;\n");
-			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
-			instance.fileWriter.format("declare i32* @malloc(i32)\n");
-			instance.fileWriter.format("declare i32 @strcmp(i8*, i8*)\n");
-			// instance.fileWriter.format("declare i32 @printf(i8*, ...)\n");
-			instance.fileWriter.format("declare void @exit(i32)\n");
-
-			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
-			instance.fileWriter.format(";                         ;\n");
-			instance.fileWriter.format("; printf parameters       ;\n");
-			instance.fileWriter.format(";                         ;\n");
-			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
-			instance.fileWriter.format("@INT_FORMAT = constant [4 x i8] c\"%%d\\0A\\00\", align 1\n");
-			instance.fileWriter.format("@STR_FORMAT = constant [4 x i8] c\"%%s\\0A\\00\", align 1\n");
-
-			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
-			instance.fileWriter.format(";                                 ;\n");
-			instance.fileWriter.format("; LIBRARY FUNCTION :: PrintString ;\n");
-			instance.fileWriter.format(";                                 ;\n");
-			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
-			instance.fileWriter.format("define void @PrintString(i8* %%s) {\n");
-			instance.fileWriter.format("entry:\n");
-			instance.fileWriter.format("  %%s.addr = alloca i8*, align 4\n");
-			instance.fileWriter.format("  store i8* %%s, i8** %%s.addr, align 4\n");
-			instance.fileWriter.format("  %%0 = load i8*, i8** %%s.addr, align 4\n");
-			instance.fileWriter.format("  %%call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @STR_FORMAT, i32 0, i32 0), i8* %%0)\n");
-			instance.fileWriter.format("  ret void\n");
-			instance.fileWriter.format("}\n");
-			instance.fileWriter.format("\n");
-
-			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
-			instance.fileWriter.format(";                              ;\n");
-			instance.fileWriter.format("; LIBRARY FUNCTION :: PrintInt ;\n");
-			instance.fileWriter.format(";                              ;\n");
-			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
-			instance.fileWriter.format("define dso_local void @PrintInt(i32 %%i) {\n");
-			instance.fileWriter.format("entry:\n");
-			instance.fileWriter.format("  %%i.addr = alloca i32, align 4\n");
-			instance.fileWriter.format("  store i32 %%i, i32* %%i.addr, align 4\n");
-			instance.fileWriter.format("  %%0 = load i32, i32* %%i.addr, align 4\n");
-			instance.fileWriter.format("  %%call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str, i32 0, i32 0), i32 %%0)\n");
-			instance.fileWriter.format("  ret void\n");
-			instance.fileWriter.format("}\n");
-			instance.fileWriter.format("\n");
-			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
-			instance.fileWriter.format(";                            ;\n");
-			instance.fileWriter.format("; STDANDRD LIBRARY :: printf ;\n");
-			instance.fileWriter.format(";                            ;\n");
-			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
-			//instance.fileWriter.format("@.str = private unnamed_addr constant [4 x i8] c\"%d \00\", align 1\n");
-			instance.fileWriter.format("@.str = private unnamed_addr constant [4 x i8] c\"%%d \\00\", align 1\n");
-			instance.fileWriter.format("declare dso_local i32 @printf(i8*, ...)\n\n");
-
-			// ;;;;;;;;;;;;;;;;;;
-			// ;                ;
-			// ; ACTUAL STRINGS ;
-			// ;                ;
-			// ;;;;;;;;;;;;;;;;;;
-			// @STR.ACCESS.VIOLATION = constant [17 x i8] c"access violation\00", align 1
-			//
-			// ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-			// ;                                 ;
-			// ; i8* wrappers for actual strings ;
-			// ;                                 ;
-			// ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-			// @STR.ACCESS.VIOLATION.VAR = global i8* null, align 8
-
-			// define void @access_violation () {
-			// entry:
-			//   %Temp_91 = load i8*, i8** @STR.ACCESS.VIOLATION.VAR, align 8
-			//   call void @PrintString(i8* %Temp_91)
-			//   call void @exit(i32 0)
-			//   ret void
+			// try
+			// {
+			// 	String dirname="./FOLDER_5_OUTPUT/";
+			// 	String filename="LLVM_bitcode.ll";
+			// 	assert(false);
+			// 	instance.fileWriter = new PrintWriter(dirname+filename);
 			// }
-			//
-			// ;;;;;;;;;;;;;;;;
-			// ;              ;
-			// ; init strings ;
-			// ;              ;
-			// ;;;;;;;;;;;;;;;;
-			// define i32 @init_strings() {
-			//   store i8* getelementptr inbounds ([17 x i8], [17 x i8]* @STR.ACCESS.VIOLATION, i32 0, i32 0), i8** @STR.ACCESS.VIOLATION.VAR, align 8
-			//   ret i32 0
+			// catch (Exception e)
+			// {
+			// 	e.printStackTrace();
 			// }
+
 		}
 		return instance;
+	}
+
+	public void bootStrapProgram() {
+		instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
+		instance.fileWriter.format(";                         ;\n");
+		instance.fileWriter.format("; GLOBAL VARIABLE :: zero ;\n");
+		instance.fileWriter.format(";                         ;\n");
+		instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
+		instance.fileWriter.format("@my_zero = global i32 0, align 4\n\n");
+
+		instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
+		instance.fileWriter.format(";                         ;\n");
+		instance.fileWriter.format("; EXTERNAL LIBRARY FUNCS ;\n");
+		instance.fileWriter.format(";                         ;\n");
+		instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
+		instance.fileWriter.format("declare i32* @malloc(i32)\n");
+		instance.fileWriter.format("declare i32 @strcmp(i8*, i8*)\n");
+		// instance.fileWriter.format("declare i32 @printf(i8*, ...)\n");
+		instance.fileWriter.format("declare void @exit(i32)\n");
+
+		instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
+		instance.fileWriter.format(";                         ;\n");
+		instance.fileWriter.format("; printf parameters       ;\n");
+		instance.fileWriter.format(";                         ;\n");
+		instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
+		instance.fileWriter.format("@INT_FORMAT = constant [4 x i8] c\"%%d\\0A\\00\", align 1\n");
+		instance.fileWriter.format("@STR_FORMAT = constant [4 x i8] c\"%%s\\0A\\00\", align 1\n");
+
+		instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
+		instance.fileWriter.format(";                                 ;\n");
+		instance.fileWriter.format("; LIBRARY FUNCTION :: PrintString ;\n");
+		instance.fileWriter.format(";                                 ;\n");
+		instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
+		instance.fileWriter.format("define void @PrintString(i8* %%s) {\n");
+		instance.fileWriter.format("entry:\n");
+		instance.fileWriter.format("  %%s.addr = alloca i8*, align 4\n");
+		instance.fileWriter.format("  store i8* %%s, i8** %%s.addr, align 4\n");
+		instance.fileWriter.format("  %%0 = load i8*, i8** %%s.addr, align 4\n");
+		instance.fileWriter.format("  %%call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @STR_FORMAT, i32 0, i32 0), i8* %%0)\n");
+		instance.fileWriter.format("  ret void\n");
+		instance.fileWriter.format("}\n");
+		instance.fileWriter.format("\n");
+
+		instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
+		instance.fileWriter.format(";                              ;\n");
+		instance.fileWriter.format("; LIBRARY FUNCTION :: PrintInt ;\n");
+		instance.fileWriter.format(";                              ;\n");
+		instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
+		instance.fileWriter.format("define dso_local void @PrintInt(i32 %%i) {\n");
+		instance.fileWriter.format("entry:\n");
+		instance.fileWriter.format("  %%i.addr = alloca i32, align 4\n");
+		instance.fileWriter.format("  store i32 %%i, i32* %%i.addr, align 4\n");
+		instance.fileWriter.format("  %%0 = load i32, i32* %%i.addr, align 4\n");
+		instance.fileWriter.format("  %%call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str, i32 0, i32 0), i32 %%0)\n");
+		instance.fileWriter.format("  ret void\n");
+		instance.fileWriter.format("}\n");
+		instance.fileWriter.format("\n");
+		instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
+		instance.fileWriter.format(";                            ;\n");
+		instance.fileWriter.format("; STDANDRD LIBRARY :: printf ;\n");
+		instance.fileWriter.format(";                            ;\n");
+		instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
+		//instance.fileWriter.format("@.str = private unnamed_addr constant [4 x i8] c\"%d \00\", align 1\n");
+		instance.fileWriter.format("@.str = private unnamed_addr constant [4 x i8] c\"%%d \\00\", align 1\n");
+		instance.fileWriter.format("declare dso_local i32 @printf(i8*, ...)\n\n");
+
+		// ;;;;;;;;;;;;;;;;;;
+		// ;                ;
+		// ; ACTUAL STRINGS ;
+		// ;                ;
+		// ;;;;;;;;;;;;;;;;;;
+		// @STR.ACCESS.VIOLATION = constant [17 x i8] c"access violation\00", align 1
+		//
+		// ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+		// ;                                 ;
+		// ; i8* wrappers for actual strings ;
+		// ;                                 ;
+		// ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+		// @STR.ACCESS.VIOLATION.VAR = global i8* null, align 8
+
+		// define void @access_violation () {
+		// entry:
+		//   %Temp_91 = load i8*, i8** @STR.ACCESS.VIOLATION.VAR, align 8
+		//   call void @PrintString(i8* %Temp_91)
+		//   call void @exit(i32 0)
+		//   ret void
+		// }
+		//
+		// ;;;;;;;;;;;;;;;;
+		// ;              ;
+		// ; init strings ;
+		// ;              ;
+		// ;;;;;;;;;;;;;;;;
+		// define i32 @init_strings() {
+		//   store i8* getelementptr inbounds ([17 x i8], [17 x i8]* @STR.ACCESS.VIOLATION, i32 0, i32 0), i8** @STR.ACCESS.VIOLATION.VAR, align 8
+		//   ret i32 0
+		// }
 	}
 }

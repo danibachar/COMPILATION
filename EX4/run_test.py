@@ -40,11 +40,10 @@ def test_generator(input_file, output_file, compare_file):
         ensure_path(input_file)
         ensure_path(output_file)
 
-        _run_command("java -jar COMPILER {input} {output}".format(input=input_file, output=output_file),True)
-        # os.system("java -jar COMPILER {input} {output}".format(input=input_file, output=output_file))
+        _run_command("make run INPUT_FILE='{input}' OUTPUT_FILE='{output}'".format(input=input_file, output=output_file),True)
 
         ensure_path(compare_file)
-        if os.path.exists(compare_file):
+        if os.path.exists(compare_file) and os.path.exists(output_file):
             if not filecmp.cmp(output_file, compare_file):
                 # print("\n\n####{} - output file not as expected####\n\n".format(output_file))
                 print("\nexpected output\n".format(output_file))

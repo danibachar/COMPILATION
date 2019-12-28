@@ -67,6 +67,8 @@ public class Main
 			/**********************/
 			/* [8] IR the AST ... */
 			/**********************/
+			LLVM.getInstance().fileWriter = new PrintWriter(outputFilename);
+			LLVM.getInstance().bootStrapProgram();
 			AST.IRme();
 
 			/*******************************/
@@ -98,7 +100,7 @@ public class Main
 			/**************************/
 			/* [14] Close output file */
 			/**************************/
-			file_writer.print("OK\n");
+			// file_writer.print("OK\n");
 			file_writer.close();
     } catch (AST_EXCEPTION e) {
 			// Semantic Exception handling, thrown from within th AST_Node

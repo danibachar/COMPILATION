@@ -98,8 +98,10 @@ public class AST_STMT_WHILE extends AST_STMT
 		/*********************************/
 		/* [2] entry label for the while */
 		/*********************************/
-		IR.getInstance().Add_IRcommand(new IRcommand_Jump_Label(label_loop_header));
-		IR.getInstance().Add_IRcommand(new IRcommand_Label(label_loop_header));
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Jump_Label(label_loop_header));
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Label(label_loop_header));
 
 		/********************/
 		/* [3] cond.IRme(); */
@@ -109,7 +111,10 @@ public class AST_STMT_WHILE extends AST_STMT
 		/******************************************/
 		/* [4] Jump conditionally to the loop end */
 		/******************************************/
-		IR.getInstance().Add_IRcommand(new IRcommand_Jump_If_Eq_To_Zero(cond_temp,label_loop_exit,label_loop_body));
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Jump_If_Eq_To_Zero(
+				cond_temp,label_loop_exit, label_loop_body
+			));
 
 		/*******************/
 		/* [5] body.IRme() */
@@ -119,12 +124,14 @@ public class AST_STMT_WHILE extends AST_STMT
 		/******************************/
 		/* [6] Jump to the loop entry */
 		/******************************/
-		IR.getInstance().Add_IRcommand(new IRcommand_Jump_Label(label_loop_header));
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Jump_Label(label_loop_header));
 
 		/**********************/
 		/* [7] Loop end label */
 		/**********************/
-		IR.getInstance().Add_IRcommand(new IRcommand_Label(label_loop_exit));
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Label(label_loop_exit));
 
 		/*******************/
 		/* [8] return null */

@@ -2,7 +2,7 @@ int IsPrime(int p)
 {
     int i := 2;
     int j := 2;
-    
+
     while (i<p)
     {
 		j := 2;
@@ -22,7 +22,7 @@ int IsPrime(int p)
 void PrintPrimes(int start, int end)
 {
     int p := start;
-    
+
     while (p < end+1)
     {
         if (IsPrime(p))
@@ -35,5 +35,5 @@ void PrintPrimes(int start, int end)
 
 void main()
 {
-    PrintPrimes(2,100);
+    PrintPrimes(2, 100);
 }

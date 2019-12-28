@@ -250,11 +250,59 @@ public class AST_EXP_CALL extends AST_EXP
 	public TEMP IRme() throws Exception
 	{
 		TEMP t=null;
-		if (params != null) { t = params.head.IRme(); }
-		
-		System.out.format("IRme - AST_EXP_CALL(%s)\nON:(%s)\nWITH:(%s)\nScope=%d\n",funcName, var!=null ? var.name:null, t!=null ? t.getSerialNumber():null,myScope);
+		TEMP t_var=null;
+
+		// if (var != null) { t_var = var.IRme(); } // No need to handle instance function
+		// if (params != null) {  t = params.head.IRme();  }
+
+		/*
+		Calling function is a bit of a tricky issue we need to take care of 2 cases
+		1) Global function call
+		2) Instance function call - need to fetch this address - we will not handle such case - not required
+		*/
+
+		System.out.format("IRme - AST_EXP_CALL(%s)", funcName);
+		System.out.format("IRme - ON:(%s)\n", t_var!=null ? t_var.getSerialNumber():null);
+		System.out.format("IRme - WITH:(%s)\n",t!=null ? t.getSerialNumber():null);
+		System.out.format("IRme - Scope=%d\n",myScope);
+
+
+		/*
+		 - load params
+		 %3 = load i32, i32* %1, align 4
+		 %4 = load i32, i32* %2, align 4
+		 fileWriter.format("  %%Temp_%d = load i32, i32* @%s, align 4\n",idxdst, var_name);
+		 if (params != null) {  t = params.head.IRme();  }
+		*/
+		String params_sent_string = "";
+		int counter = 0;
+		for (AST_EXP_LIST it = params; it  != null; it = it.tail) {
+			if (it.head != null)  {
+
+				TEMP temp_param = it.head.IRme();
+
+				String name = String.format("%%Temp_%d", temp_param.getSerialNumber());
+				// We should remo
+				// IR.getInstance()
+				// 	.Add_IRcommand(new IRcommand_Load(temp_param, name, myScope));
+				//type temp_x
+				String type = "i32";
+				if (counter == 0) {
+					params_sent_string+=String.format("%s %s", type, name);
+				} else {
+					params_sent_string+=String.format(",  %s %s",  type, name);
+				}
+			}
+			counter++;
+		}
+
+		// System.out.format("TYPE_LIST (%d) original value %s = %s\n",expected_input_params.size(), it.head.name, it.head);
+		// TODO - according to type
 		IR.getInstance()
-			.Add_IRcommand(new IRcommand_PrintInt(t));
+			.Add_IRcommand(new IRcommand_Call_Void_Func(funcName, params_sent_string, myScope));
+		// OLD - for debug first programs
+		// IR.getInstance()
+		// 	.Add_IRcommand(new IRcommand_PrintInt(t));
 
 		return null;
 	}

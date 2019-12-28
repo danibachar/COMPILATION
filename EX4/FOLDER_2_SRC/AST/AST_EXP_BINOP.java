@@ -220,7 +220,7 @@ public class AST_EXP_BINOP extends AST_EXP
 
 		if (left  != null) t1 = left.IRme();
 		if (right != null) t2 = right.IRme();
-		
+
 		System.out.format("IRme - AST_EXP_BINOP(%s) between t1=%s, t2=%s\nScope=%d\n",opSymbol(), t1.getSerialNumber(), t2.getSerialNumber(),myScope);
 		if (OP == 0) {
 			IR.getInstance()
@@ -246,7 +246,8 @@ public class AST_EXP_BINOP extends AST_EXP
 				.Add_IRcommand(new IRcommand_Binop_Mul_Integers(dst,t1,t2));
 		}
 		if (OP == 6){
-			System.out.format("IRme - DEVIDE impl is missing");
+			IR.getInstance()
+				.Add_IRcommand(new IRcommand_Binop_Div_Integers(dst,t1,t2));
 		}
 
 		return dst;

@@ -8,6 +8,7 @@ SRC_DIR           = ${BASEDIR}/FOLDER_2_SRC
 BIN_DIR           = ${BASEDIR}/FOLDER_3_BIN
 INPUT_DIR         = ${BASEDIR}/FOLDER_4_INPUT
 OUTPUT_DIR        = ${BASEDIR}/FOLDER_5_OUTPUT
+EXP_OUTPUT_DIR    = ${BASEDIR}/FOLDER_6_EXPECTED_OUTPUT
 EXTERNAL_JARS_DIR = ${BASEDIR}/FOLDER_7_EXTERNAL_JARS
 MANIFEST_DIR      = ${BASEDIR}/FOLDER_8_MANIFEST
 
@@ -243,9 +244,26 @@ everything:
 	opt -dot-cfg ${OUTPUT_DIR}/LLVM_bitcode.bc 1>/dev/null 2>/dev/null
 	dot -Tjpeg -o${OUTPUT_DIR}/CFG.jpeg .main.dot
 	eog ${OUTPUT_DIR}/CFG.jpeg &
+run-old:
+	# Will create the *.ll file from source code
+	java -jar COMPILER ${INPUT_DIR}/$(INPUT_FILE).txt ${OUTPUT_DIR}/$(OUTPUT_FILE).ll
+	# Will convert the *.ll file to *.bc file
+	llvm-as ${OUTPUT_DIR}/$(OUTPUT_FILE).ll
+	# PROGRAM = ${BASEDIR}/${OUTPUT_DIR}/$(OUTPUT_FILE)
+	# Will compile the actual program with the name of the output file
+	# clang -Wno-override-module ${OUTPUT_DIR}/LLVM_bitcode.bc -o ${BASEDIR}/program
 
+	clang -Wno-override-module ${OUTPUT_DIR}/$(OUTPUT_FILE).bc -o ${BASEDIR}/program
+	# Will run the program and create an output file to compare with the expected
+	${BASEDIR}/program > ${OUTPUT_DIR}/$(OUTPUT_FILE).txt
+	# ${BASEDIR}/${OUTPUT_DIR}/program > ${EXP_OUTPUT_DIR}/$(OUTPUT_FILE)_EXPECTED_OUTPUT.txt
 run:
-	java -jar COMPILER ${INPUT_DIR}/$(INPUT_FILE) ${OUTPUT_DIR}/SemanticStatus.txt
-	llvm-as ${OUTPUT_DIR}/LLVM_bitcode.ll
-	clang -Wno-override-module ${OUTPUT_DIR}/LLVM_bitcode.bc -o ${BASEDIR}/program
-	${BASEDIR}/program
+	# Will create the *.ll file from source code
+	java -jar COMPILER $(INPUT_FILE) $(OUTPUT_FILE).ll
+	# Will convert the *.ll file to *.bc file
+	llvm-as $(OUTPUT_FILE).ll
+	# Will compile the actual program with the name of the output file
+	clang -Wno-override-module $(OUTPUT_FILE).bc -o ${BASEDIR}/program
+	# Will run the program and create an output file to compare with the expected
+	${BASEDIR}/program > $(OUTPUT_FILE)
+	# ${BASEDIR}/${OUTPUT_DIR}/program > ${EXP_OUTPUT_DIR}/$(OUTPUT_FILE)_EXPECTED_OUTPUT.txt
