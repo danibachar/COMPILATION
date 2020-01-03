@@ -283,8 +283,7 @@ public class AST_EXP_CALL extends AST_EXP
 
 				String name = String.format("%%Temp_%d", temp_param.getSerialNumber());
 				// We should remo
-				// IR.getInstance()
-				// 	.Add_IRcommand(new IRcommand_Load(temp_param, name, myScope));
+	
 				//type temp_x
 				String type = "i32";
 				if (counter == 0) {

@@ -56,70 +56,26 @@ entry:
 @.str = private unnamed_addr constant [4 x i8] c"%d \00", align 1
 declare dso_local i32 @printf(i8*, ...)
 
-;;;;;;;;;;;;;;;;;;;;;;;
-;                     ;
-; ENTRY POINT :: main ;
-;                     ;
-;;;;;;;;;;;;;;;;;;;;;;;
-define dso_local i32 @main(i32 %argc, i8** %argv) {
-entry:
-  %retval = alloca i32, align 4
-  %argc.addr = alloca i32, align 4
-  %argv.addr = alloca i8**, align 8
-  store i32 0, i32* %retval, align 4
-  store i32 %argc, i32* %argc.addr, align 4
-  store i8** %argv, i8*** %argv.addr, align 8
-  br label %main_body
-
-main_body:
-
-  %Temp_1 = load i32, i32* @x, align 4
-  %Temp_2 = load i32, i32* @y, align 4
-  %Temp_0 = add nsw i32 %Temp_1, %Temp_2
-  %Temp_0 = load i32, i32* @%Temp_0, align 4
- call void @PrintInt(i32 %Temp_0)
-;;;;;;;;;;;;;;;;;;;;;;;
-;                     ;
-; ENTRY POINT :: main ;
-;                     ;
-;;;;;;;;;;;;;;;;;;;;;;;
-define dso_local i32 @main(i32 %argc, i8** %argv) {
-entry:
-  %retval = alloca i32, align 4
-  %argc.addr = alloca i32, align 4
-  %argv.addr = alloca i8**, align 8
-  store i32 0, i32* %retval, align 4
-  store i32 %argc, i32* %argc.addr, align 4
-  store i8** %argv, i8*** %argv.addr, align 8
-  br label %main_body
-
-main_body:
-
-  ;;;;;;;;;;;;;;;;;;;
-  ;                 ;
-  ; LOCAL VARIABLE  ;
-  ;                 ;
-  ;;;;;;;;;;;;;;;;;;;
-  %Temp_7 = alloca i32, align 4
-
+;;;;;;;;;;;;;;;;;;;
+;                 ;
+; GLOBAL VARIABLE ;
+;                 ;
+;;;;;;;;;;;;;;;;;;;
+define void @main() #0 {
+  %Temp_0 = alloca i32, align 4
   %zero_0 = load i32, i32* @my_zero, align 4
-  %Temp_3 = add nsw i32 %zero_0, 4
-  store i32 %Temp_3, i32* %Temp_7, align 4
-  ;;;;;;;;;;;;;;;;;;;
-  ;                 ;
-  ; LOCAL VARIABLE  ;
-  ;                 ;
-  ;;;;;;;;;;;;;;;;;;;
-  %Temp_8 = alloca i32, align 4
-
+  %Temp_1 = add nsw i32 %zero_0, 10
+  store i32 %Temp_1, i32* %Temp_0, align 4
+  %Temp_2 = alloca i32, align 4
   %zero_1 = load i32, i32* @my_zero, align 4
-  %Temp_4 = add nsw i32 %zero_1, 5
-  store i32 %Temp_4, i32* %Temp_8, align 4
-
-  %Temp_5 = load i32, i32* %Temp_7, align 4
-  %Temp_5 = load i32, i32* @%Temp_5, align 4
-  %Temp_6 = load i32, i32* %Temp_8, align 4
-  %Temp_6 = load i32, i32* @%Temp_6, align 4
- call void @foo(i32 %Temp_5,  i32 %Temp_6)
-  ret i32 0
+  %Temp_3 = add nsw i32 %zero_1, 10
+  store i32 %Temp_3, i32* %Temp_2, align 4
+  %Temp_4 = alloca i32, align 4
+  %Temp_6 = load i32, i32* %Temp_0, align 4
+  %Temp_7 = load i32, i32* %Temp_2, align 4
+  %Temp_5 = add nsw i32 %Temp_6, %Temp_7
+  store i32 %Temp_5, i32* %Temp_4, align 4
+  %Temp_8 = load i32, i32* %Temp_4, align 4
+  call void @PrintInt(i32 %Temp_8) 
+  ret void
 }

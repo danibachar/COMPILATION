@@ -129,7 +129,7 @@ public class AST_DEC_VAR extends AST_DEC
 
 	public TEMP IRme() throws Exception
 	{
-		
+
 		if (initialValue != null) System.out.format("IRme - VAR-DEC(%s):%s := initialValue\nScope=%d\n",name,type,myScope);
 		if (initialValue == null) System.out.format("IRme - VAR-DEC(%s):%s                \nScope=%d\n",name,type,myScope);
 
@@ -167,7 +167,14 @@ public class AST_DEC_VAR extends AST_DEC
 			align = 8;
 		}
 
-		IR.getInstance().Add_IRcommand(new IRcommand_Allocate(name, type, type_val, align, myScope));
+
+		if (myScope == 0) {
+				IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Global(name, type, type_val, align, myScope));
+		} else {
+			TEMP tt = IR.getInstance().fetchTempFromScope(name, myScope, true);
+			IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Local(tt, type, type_val, align, myScope));
+		}
+		// IR.getInstance().Add_IRcommand(new IRcommand_Allocate(name, type, type_val, align, myScope));
 		if (initialValue != null) {
 			IR.getInstance().Add_IRcommand(new IRcommand_Store(name, initialValue.IRme(), myScope));
 		}

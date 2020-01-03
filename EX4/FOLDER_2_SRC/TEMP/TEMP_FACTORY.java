@@ -13,13 +13,12 @@ package TEMP;
 
 public class TEMP_FACTORY
 {
-	private int counter=0;
-	
-	public TEMP getFreshTEMP()
-	{
+	public int counter=0;
+
+	public TEMP getFreshTEMP() {
 		return new TEMP(counter++);
 	}
-	
+
 	/**************************************/
 	/* USUAL SINGLETON IMPLEMENTATION ... */
 	/**************************************/
@@ -33,10 +32,8 @@ public class TEMP_FACTORY
 	/******************************/
 	/* GET SINGLETON INSTANCE ... */
 	/******************************/
-	public static TEMP_FACTORY getInstance()
-	{
-		if (instance == null)
-		{
+	public static TEMP_FACTORY getInstance() {
+		if (instance == null) {
 			/*******************************/
 			/* [0] The instance itself ... */
 			/*******************************/

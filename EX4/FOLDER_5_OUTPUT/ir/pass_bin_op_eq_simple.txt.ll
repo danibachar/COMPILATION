@@ -56,46 +56,29 @@ entry:
 @.str = private unnamed_addr constant [4 x i8] c"%d \00", align 1
 declare dso_local i32 @printf(i8*, ...)
 
-;;;;;;;;;;;;;;;;;;;;;;;
-;                     ;
-; ENTRY POINT :: main ;
-;                     ;
-;;;;;;;;;;;;;;;;;;;;;;;
-define dso_local i32 @main(i32 %argc, i8** %argv) {
-entry:
-  %retval = alloca i32, align 4
-  %argc.addr = alloca i32, align 4
-  %argv.addr = alloca i8**, align 8
-  store i32 0, i32* %retval, align 4
-  store i32 %argc, i32* %argc.addr, align 4
-  store i8** %argv, i8*** %argv.addr, align 8
-  br label %main_body
-
-main_body:
-
-  ;;;;;;;;;;;;;;;;;;;
-  ;                 ;
-  ; LOCAL VARIABLE  ;
-  ;                 ;
-  ;;;;;;;;;;;;;;;;;;;
-  %Temp_5 = alloca i32, align 4
-
+;;;;;;;;;;;;;;;;;;;
+;                 ;
+; GLOBAL VARIABLE ;
+;                 ;
+;;;;;;;;;;;;;;;;;;;
+define void @main() #0 {
+  %Temp_0 = alloca i32, align 4
   %zero_0 = load i32, i32* @my_zero, align 4
-  %Temp_0 = add nsw i32 %zero_0, 5
-  store i32 %Temp_0, i32* %Temp_5, align 4
-  ;;;;;;;;;;;;;;;;;;;
-  ;                 ;
-  ; LOCAL VARIABLE  ;
-  ;                 ;
-  ;;;;;;;;;;;;;;;;;;;
-  %Temp_6 = alloca i32, align 4
-
+  %Temp_1 = add nsw i32 %zero_0, 13
+  store i32 %Temp_1, i32* %Temp_0, align 4
+  %Temp_2 = alloca i32, align 4
   %zero_1 = load i32, i32* @my_zero, align 4
-  %Temp_1 = add nsw i32 %zero_1, 10
-  store i32 %Temp_1, i32* %Temp_6, align 4
-  %Temp_3 = load i32, i32* %Temp_5, align 4
-  %Temp_4 = load i32, i32* %Temp_6, align 4
-  %Temp_2 = sub nsw i32 %Temp_3, %Temp_4
-  call void @PrintInt(i32 %Temp_2)
-  ret i32 0
+  %Temp_3 = add nsw i32 %zero_1, 13
+  store i32 %Temp_3, i32* %Temp_2, align 4
+  %Temp_4 = alloca i32, align 4
+  %Temp_6 = load i32, i32* %Temp_2, align 4
+  %Temp_7 = load i32, i32* %Temp_0, align 4
+  %Temp_5 = icmp eq i32 %Temp_6, %Temp_7
+  store i32 %Temp_5, i32* %Temp_4, align 4
+  %Temp_9 = load i32, i32* %Temp_4, align 4
+  %zero_2 = load i32, i32* @my_zero, align 4
+  %Temp_10 = add nsw i32 %zero_2, 10
+  %Temp_8 = add nsw i32 %Temp_9, %Temp_10
+  call void @PrintInt(i32 %Temp_8) 
+  ret void
 }

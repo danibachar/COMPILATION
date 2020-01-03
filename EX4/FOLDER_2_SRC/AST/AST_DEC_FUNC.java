@@ -1,5 +1,7 @@
 package AST;
 
+import java.util.ArrayList;
+
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import TEMP.*;
@@ -168,10 +170,84 @@ public class AST_DEC_FUNC extends AST_DEC
 
 	public TEMP IRme() throws Exception
 	{
-		
 		System.out.format("IRme - AST_DEC_FUNC(%s):%s\nScope=%d\n",name, returnTypeName, myScope);
-		IR.getInstance().Add_IRcommand(new IRcommand_Label("main"));
+		// public String returnTypeName;
+		// public Integer returnTypeNameLineNumber;
+
+		// public AST_TYPE_NAME_LIST params;
+		// public Integer paramsLineNumber;
+
+		// define void @foo(i32, i32) #0 {
+		//   %3 = alloca i32, align 4
+		//   %4 = alloca i32, align 4
+		//   store i32 %0, i32* %3, align 4
+		//   store i32 %1, i32* %4, align 4
+		//   ret void
+		// }
+
+		String params_sent_string = "";
+		String params_get_string = "";
+		int counter = 0;
+
+		int bck_counter = TEMP_FACTORY.getInstance().counter;
+		TEMP_FACTORY.getInstance().counter = 0;
+
+		ArrayList<TEMP> params_list = new ArrayList<TEMP>();
+
+		for (AST_TYPE_NAME_LIST it = params; it  != null; it = it.tail) {
+			if (it.head != null)  {
+				String name = String.format("%s", it.head.name);
+				String type = "i32";
+				if (counter == 0) {
+					params_get_string+=String.format("%s", type);
+					params_sent_string+=String.format("%s %s", type, name);
+				} else {
+					params_get_string+=String.format(", %s", type);
+					params_sent_string+=String.format(",  %s %s",  type, name);
+				}
+
+				TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
+				params_list.add(t);
+			}
+			counter++;
+		}
+
+		String retType = "void";
+		// check void
+		// check pointer
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Decler_Func_Open(
+				name,
+				params_get_string,
+				retType,
+				myScope
+			));
+
+
+		counter = 0;
+		for (AST_TYPE_NAME_LIST it = params; it  != null; it = it.tail) {
+			if (it.head == null)  { continue; }
+			// TEMP_FACTORY.getInstance().getFreshTEMP();
+			TEMP t = IR.getInstance()
+				.fetchTempFromScope(it.head.name, myScope+1, true);
+
+			IR.getInstance()
+				.Add_IRcommand(new IRcommand_Allocate_Local(t, "i32", "0", 4, myScope+1));
+			IR.getInstance()
+				.Add_IRcommand(new IRcommand_Store_Func_Param(it.head.name, params_list.get(counter++), myScope+1));
+
+		}
 		if (body != null) body.IRme();
+		TEMP t = null;;
+		//fetch typeeee
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Decler_Func_Close(
+				t,
+				retType
+			));
+
+		TEMP_FACTORY.getInstance().counter = bck_counter;
+
 		return null;
 	}
 

@@ -19,10 +19,13 @@ class TestSequense(unittest.TestCase):
 
 
 def test_generator(input_file, output_file, compare_file):
-    def _run_command(command,log_command=False):
+    def _run_command(command,log_command=False, pip_command=True):
         if log_command:
             print("\n\nRunnig Command {}\n\n".format(command))
-        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if pip_command:
+            process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        else:
+            process = subprocess.Popen(command, shell=True)
         if process.stdout != None:
             for line in process.stdout:
         	    print(line)
@@ -40,7 +43,7 @@ def test_generator(input_file, output_file, compare_file):
         ensure_path(input_file)
         ensure_path(output_file)
 
-        _run_command("make run INPUT_FILE='{input}' OUTPUT_FILE='{output}'".format(input=input_file, output=output_file),True)
+        _run_command("make run INPUT_FILE='{input}' OUTPUT_FILE='{output}'".format(input=input_file, output=output_file),True, True)
 
         ensure_path(compare_file)
         if os.path.exists(compare_file) and os.path.exists(output_file):

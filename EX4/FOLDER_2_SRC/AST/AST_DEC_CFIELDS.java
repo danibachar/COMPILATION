@@ -67,4 +67,11 @@ public class AST_DEC_CFIELDS extends AST_DEC
 		if (head != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,head.SerialNumber);
 		if (tail != null) AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,tail.SerialNumber);
 	}
+
+	public TEMP IRme() throws Exception
+	{
+
+		System.out.format("IRme - AST_DEC_CFIELDS\n");
+		return null;
+	}
 }

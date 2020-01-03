@@ -28,7 +28,7 @@ public abstract class AST_Node
 	/*****************************************/
 	public TEMP IRme()  throws Exception
 	{
-		System.out.print("IRme - AST NODE UNKNOWN\n");
+		System.out.format("IRme - AST NODE UNKNOW - line = %d\n",lineNumber);
 		return null;
 	}
 }

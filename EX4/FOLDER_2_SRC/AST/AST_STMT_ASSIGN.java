@@ -64,6 +64,7 @@ public class AST_STMT_ASSIGN extends AST_STMT
 		AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,var.SerialNumber);
 		AST_GRAPHVIZ.getInstance().logEdge(SerialNumber,exp.SerialNumber);
 	}
+
 	public TYPE SemantMe() throws Exception
 	{
 		// System.out.print("SEMANTME - AST_STMT_ASSIGN\n");

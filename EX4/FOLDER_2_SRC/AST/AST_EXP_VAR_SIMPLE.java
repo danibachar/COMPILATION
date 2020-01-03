@@ -56,7 +56,7 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 	public TEMP IRme() throws Exception
 	{
 
-		System.out.format("IRme - GLOBAL - AST_EXP_VAR_SIMPLE ( %s )\nScope=%d\n",name,myScope);
+		System.out.format("IRme - AST_EXP_VAR_SIMPLE ( %s )\nScope=%d\n",name,myScope);
 		TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
 		IR.getInstance()
 			.Add_IRcommand(new IRcommand_Load(t, name, myScope));

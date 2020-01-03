@@ -14,6 +14,8 @@ import java.util.*;
 /* PROJECT IMPORTS */
 /*******************/
 import TEMP.*;
+import IR.*;
+import MIPS.*;
 
 /********/
 /* LLVM */
@@ -43,6 +45,7 @@ public class LLVM
 	}
 
 	public TEMP fetchTempFromScope(String var_name, int scope, boolean autoCreate) {
+		System.out.format("fetchTempFromScope - var_name=%s\nscope=%d\nautoCreate=%s\n",var_name, scope, autoCreate);
 		// Fetch the scope map and allocate if non-exists
 		Map<String, TEMP> scopeMap = varScopeMap.get(scope);
 		if (scopeMap == null) {
@@ -54,7 +57,10 @@ public class LLVM
 		TEMP t = scopeMap.get(var_name);
 		if (t == null && autoCreate) {
 			t = TEMP_FACTORY.getInstance().getFreshTEMP();
+			System.out.format("fetchTempFromScope - DIDNOT find var_name=%s\nin scope=%d\n created=%d\n",var_name, scope,t.getSerialNumber());
 			scopeMap.put(var_name, t);
+		} else {
+			System.out.format("fetchTempFromScope - DID find var_name=%s\nin scope=%d\n created=%d\n",var_name, scope,t.getSerialNumber());
 		}
 		//update not sure if needed - not familiar with java reference / value
 		varScopeMap.put(scope, scopeMap);
@@ -66,29 +72,44 @@ public class LLVM
 	/***********************/
 	public void finalizeFile()
 	{
-		fileWriter.format("  ret i32 0\n");
-		fileWriter.format("}\n");
+		// fileWriter.format("  ret i32 0\n");
+		// fileWriter.format("}\n");
 		fileWriter.close();
 	}
 
 	// MARK: - Function
-	// public void print_func(String funcName, String returnType, ArrayList<Pair<String, TEMP>> params) {
-	// 	// todo params string
-	// 	String p_string = "";
-	// 	fileWriter.format("define %s @%s($s) #0 {\n", returnType, funcName, p_string);
-	// 	fileWriter.format(";                 ;\n");
-	// 	fileWriter.format("; GLOBAL VARIABLE ;\n");
-	// 	fileWriter.format(";                 ;\n");
-	// 	fileWriter.format(";;;;;;;;;;;;;;;;;;;\n");
-	// }
+	public void print_open_func(
+		String func_name,
+		String params_string,
+		String returnType
+	) {
+		fileWriter.format("define %s @%s(%s) #0 {\n", returnType, func_name, params_string);
+	}
+
+	public void print_close_func(
+		TEMP t,
+		String returnType
+	) {
+		System.out.format("@@@@ LLVM - print_close_func(%s, %s):\n",t, returnType);
+		//TODO - make sure maybe we need to support global? @""?
+		if (t == null || returnType == "void") {
+			fileWriter.format("  ret void\n",returnType);
+		} else {
+			int idx=t.getSerialNumber();
+			fileWriter.format("  ret %s %%Temp_%d\n",returnType, idx);
+		}
+
+		fileWriter.format("}\n");
+	}
 
 	public void call_void_func(
-		String funcName,
+		String func_name,
 		String params_string,
 		int scope
 	) {
+		System.out.format("@@@@ LLVM - call_void_func(%s):\n",func_name);
 		//EXAMPLE: - call void @foo(i32 %3, i32 %4)
-		fileWriter.format("  call void @%s(%s) \n", funcName, params_string);
+		fileWriter.format("  call void @%s(%s) \n", func_name, params_string);
 	}
 	// MARK: -
 	public void print_int(TEMP t)
@@ -97,57 +118,77 @@ public class LLVM
 		fileWriter.format("  call void @PrintInt(i32 %%Temp_%d)\n",idx);
 	}
 
+	public void allocate_local(TEMP t, String ptr, String ptr_init_val, int align, int scope)
+	{
+
+		int idx = t.getSerialNumber();
+		fileWriter.format("  %%Temp_%d = alloca %s, align %d\n",idx, ptr, align);
+	}
+
+	public void allocate_global(String var_name, String ptr, String ptr_init_val, int align, int scope)
+	{
+		fileWriter.format("@%s = global %s %s, align %s\n",var_name, ptr, ptr_init_val, align);
+	}
+
+	// OLD - REMOVE Once using global/local
 	public void allocate(String var_name, String ptr, String ptr_init_val, int align, int scope)
 	{
+		System.out.format("@@@@ LLVM - allocate(%s):\n",var_name);
 		// global
 		if (scope == 0) {
-			fileWriter.format(";;;;;;;;;;;;;;;;;;;\n");
-			fileWriter.format(";                 ;\n");
-			fileWriter.format("; GLOBAL VARIABLE ;\n");
-			fileWriter.format(";                 ;\n");
-			fileWriter.format(";;;;;;;;;;;;;;;;;;;\n");
-			fileWriter.format("@%s = global %s %s, align %s\n\n",var_name, ptr, ptr_init_val, align);
+			fileWriter.format("@%s = global %s %s, align %s\n",var_name, ptr, ptr_init_val, align);
 			// TODO - update global scope
 			return;
 		}
-		fileWriter.format("  ;;;;;;;;;;;;;;;;;;;\n");
-		fileWriter.format("  ;                 ;\n");
-		fileWriter.format("  ; LOCAL VARIABLE  ;\n");
-		fileWriter.format("  ;                 ;\n");
-		fileWriter.format("  ;;;;;;;;;;;;;;;;;;;\n");
-		TEMP t = fetchTempFromScope(var_name, scope, true); // we want to allocate if not exists
+		TEMP t = IR.getInstance().fetchTempFromScope(var_name, scope, true); // we want to allocate if not exists
 		int idx = t.getSerialNumber();
-		fileWriter.format("  %%Temp_%d = alloca %s, align %d\n\n",idx, ptr, align);
+		fileWriter.format("  %%Temp_%d = alloca %s, align %d\n",idx, ptr, align);
 	}
 
 	public void load(TEMP dst, String var_name, int scope)
 	{
+		System.out.format("@@@@ LLVM - load from -> %s to -> %%Temp_%d\n",var_name, dst.getSerialNumber());
 		// global
 		int idxdst=dst.getSerialNumber();
-		TEMP t = findVarRecursive(var_name, scope);
+		TEMP t = IR.getInstance().findVarRecursive(var_name, scope);
 
 		if (scope == 0 || t == null) {
 			fileWriter.format("  %%Temp_%d = load i32, i32* @%s, align 4\n",idxdst, var_name);
 			return;
 		}
 		// Local
-		// TEMP t = fetchTempFromScope(var_name, scope, true);
 		int idxsrc = t.getSerialNumber();
 		fileWriter.format("  %%Temp_%d = load i32, i32* %%Temp_%d, align 4\n",idxdst, idxsrc);
 	}
 
+	public void store_func_param(String var_name, TEMP src, int scope) {
+
+
+		TEMP t = IR.getInstance().findVarRecursive(var_name, scope);
+		if (t == null) {
+				// TODO error we should not get here
+				System.out.format("!!!!! ERROR !!!!!!!!");
+		}
+		int idxdst = t.getSerialNumber();
+		int idxsrc = src.getSerialNumber();
+
+
+		fileWriter.format("  store i32 %%%d, i32* %%Temp_%d, align 4\n",idxsrc, idxdst);
+	}
+
+
 	public void store(String var_name,TEMP src, int scope)
 	{
+		System.out.format("@@@@ LLVM - store from -> %%Temp_%d to -> %s \n", src.getSerialNumber(), var_name);
 		// global
 		int idxsrc=src.getSerialNumber();
-		TEMP t = findVarRecursive(var_name, scope);
+		TEMP t = IR.getInstance().findVarRecursive(var_name, scope);
 
 		if (scope == 0 || t == null) {
 			fileWriter.format("  store i32 %%Temp_%d, i32* @%s, align 4\n",idxsrc, var_name);
 			return;
 		}
 		// Local
-		// TEMP t = fetchTempFromScope(var_name, scope, false);// if we don't find in local scope, we need to use global
 		int idxdst = t.getSerialNumber();
 		fileWriter.format("  store i32 %%Temp_%d, i32* %%Temp_%d, align 4\n",idxsrc, idxdst);
 	}
@@ -408,6 +449,13 @@ public class LLVM
 		//instance.fileWriter.format("@.str = private unnamed_addr constant [4 x i8] c\"%d \00\", align 1\n");
 		instance.fileWriter.format("@.str = private unnamed_addr constant [4 x i8] c\"%%d \\00\", align 1\n");
 		instance.fileWriter.format("declare dso_local i32 @printf(i8*, ...)\n\n");
+
+		// Descirbing of new global variables that are configured within the program
+		instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;\n");
+		instance.fileWriter.format(";                 ;\n");
+		instance.fileWriter.format("; GLOBAL VARIABLE ;\n");
+		instance.fileWriter.format(";                 ;\n");
+		instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;\n");
 
 		// ;;;;;;;;;;;;;;;;;;
 		// ;                ;

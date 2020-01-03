@@ -4,9 +4,13 @@
 // class Student
 
 void foo(int x, int y) {
+  int v = x+y;
   return;// y*x;
 }
 
+char* foo1(int x, int y) {
+  return "y*x";
+}
 
 int main()
 {
@@ -16,4 +20,5 @@ int main()
   // int *a = new int[100];
   foo(i1, i2);
   printf("%d\n", i1);
+  // printf("%d\n", foo(i1, i2));
 }

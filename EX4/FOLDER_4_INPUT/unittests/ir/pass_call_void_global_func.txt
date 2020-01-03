@@ -1,5 +1,6 @@
 void foo(int x, int y) {
-  PrintInt(x+y);
+  int i := x+y;
+  PrintInt(i);
 }
 
 void main()
