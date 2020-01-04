@@ -125,7 +125,7 @@ public class AST_STMT_IF extends AST_STMT
 		/* [5] body.IRme() */
 		/*******************/
 		TEMP_FACTORY.getInstance().beginScope(myScope);
-		body.IRme();
+		TEMP t = body.IRme();
 		TEMP_FACTORY.getInstance().endScope(myScope);
 
 		/***************************/
@@ -143,7 +143,7 @@ public class AST_STMT_IF extends AST_STMT
 		/*******************/
 		/* [8] return null */
 		/*******************/
-		return null;
+		return t;
 	}
 
 }

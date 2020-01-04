@@ -209,8 +209,6 @@ public class AST_DEC_FUNC extends AST_DEC
 					params_sent_string+=String.format(",  %s %s",  type, name);
 				}
 
-				// TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
-
 			}
 			params_list.add(counter++);
 			// counter++;
@@ -227,7 +225,14 @@ public class AST_DEC_FUNC extends AST_DEC
 				myScope
 			));
 
-		// IR.getInstance().beginScope(myScope+1);
+			String return_label = TEMP_FACTORY.getInstance().create_shared_return_label();
+			if (return_type_str != "void") {
+				// Alloc for return value
+				TEMP return_temp = TEMP_FACTORY.getInstance().create_shared_return_temp();
+				IR.getInstance()
+					.Add_IRcommand(new IRcommand_Allocate_Local(return_temp, "i32", "0", 4, myScope+1));
+			}
+
 		counter = 0;
 		for (AST_TYPE_NAME_LIST it = params; it  != null; it = it.tail) {
 			if (it.head == null)  { continue; }
@@ -246,12 +251,12 @@ public class AST_DEC_FUNC extends AST_DEC
 		// Hack for propiatery main init
 
 		TEMP tt = null;
-		System.out.format("******** BEFORE IRme - AST_DEC_FUNC return temp = %s\n",tt);
+		System.out.format("########## BEFORE IRme - AST_DEC_FUNC return temp = %s\n",tt);
 		if (body != null) { tt = body.IRme(); };
-		System.out.format("******** AFTER IRme - AST_DEC_FUNC return temp = %s\n",tt);
+		System.out.format("########## AFTER IRme - AST_DEC_FUNC return temp = %s\n",tt);
 		//fetch typeeee
 		IR.getInstance()
-			.Add_IRcommand(new IRcommand_Decler_Func_Close(tt, return_type_str));
+			.Add_IRcommand(new IRcommand_Decler_Func_Close(tt, return_type_str, return_label));
 		TEMP_FACTORY.getInstance().endScope(myScope);
 		// IR.getInstance().endScope();
 		// TEMP_FACTORY.getInstance().counter = bck_counter;

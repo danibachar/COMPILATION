@@ -5,12 +5,12 @@ int IsPrime(int p)
 
     while (i<p)
     {
-		j := 2;
+		    j := 2;
         while (j<p)
         {
             if (i*j = p)
             {
-                 return 0;
+                return 0;
             }
             j := j+1;
         }

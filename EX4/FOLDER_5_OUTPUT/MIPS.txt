@@ -2,89 +2,84 @@
 string_access_violation: .asciiz "Access Violation"
 string_illegal_div_by_0: .asciiz "Illegal Division By Zero"
 string_invalid_ptr_dref: .asciiz "Invalid Pointer Dereference"
-	li Temp_2,2
-	sw Temp_2,global_i
-	li Temp_4,2
-	sw Temp_4,global_j
+	li Temp_3,2
+	li Temp_5,2
 	j Label_2_while.cond
 Label_2_while.cond:
-	blt Temp_6,Temp_7,Label_16_AssignOne
-	bge Temp_6,Temp_7,Label_17_AssignZero
+	blt Temp_7,Temp_8,Label_16_AssignOne
+	bge Temp_7,Temp_8,Label_17_AssignZero
 Label_16_AssignOne:
-	li Temp_5,1
+	li Temp_6,1
 	j Label_15_end
 Label_17_AssignZero:
-	li Temp_5,0
+	li Temp_6,0
 	j Label_15_end
 Label_15_end:
-	beq Temp_5,$zero,Label_0_while.end
-	li Temp_8,2
-	sw Temp_8,global_j
+	beq Temp_6,$zero,Label_0_while.end
+	li Temp_9,2
 	j Label_5_while.cond
 Label_5_while.cond:
-	blt Temp_10,Temp_11,Label_19_AssignOne
-	bge Temp_10,Temp_11,Label_20_AssignZero
+	blt Temp_11,Temp_12,Label_19_AssignOne
+	bge Temp_11,Temp_12,Label_20_AssignZero
 Label_19_AssignOne:
-	li Temp_9,1
+	li Temp_10,1
 	j Label_18_end
 Label_20_AssignZero:
-	li Temp_9,0
+	li Temp_10,0
 	j Label_18_end
 Label_18_end:
-	beq Temp_9,$zero,Label_3_while.end
+	beq Temp_10,$zero,Label_3_while.end
 	j Label_6_if.cond
 Label_6_if.cond:
-	mul Temp_13,Temp_14,Temp_15
-	beq Temp_13,Temp_16,Label_22_AssignOne
-	bne Temp_13,Temp_16,Label_23_AssignZero
+	mul Temp_14,Temp_15,Temp_16
+	beq Temp_14,Temp_17,Label_22_AssignOne
+	bne Temp_14,Temp_17,Label_23_AssignZero
 Label_22_AssignOne:
-	li Temp_12,1
+	li Temp_13,1
 	j Label_21_end
 Label_23_AssignZero:
-	li Temp_12,0
+	li Temp_13,0
 	j Label_21_end
 Label_21_end:
-	beq Temp_12,$zero,Label_8_if.exit
-	li Temp_17,0
+	beq Temp_13,$zero,Label_8_if.exit
+	li Temp_18,0
+	j RETURN_27739
 	j Label_8_if.exit
 Label_8_if.exit:
-	li Temp_20,1
-	add Temp_18,Temp_19,Temp_20
-	sw Temp_18,global_j
+	li Temp_21,1
+	add Temp_19,Temp_20,Temp_21
 	j Label_5_while.cond
 Label_3_while.end:
-	li Temp_23,1
-	add Temp_21,Temp_22,Temp_23
-	sw Temp_21,global_i
+	li Temp_24,1
+	add Temp_22,Temp_23,Temp_24
 	j Label_2_while.cond
 Label_0_while.end:
-	li Temp_24,1
-	sw Temp_28,global_p
+	li Temp_25,1
+	j RETURN_27739
 	j Label_11_while.cond
 Label_11_while.cond:
-	li Temp_33,1
-	add Temp_31,Temp_32,Temp_33
-	blt Temp_30,Temp_31,Label_25_AssignOne
-	bge Temp_30,Temp_31,Label_26_AssignZero
+	li Temp_34,1
+	add Temp_32,Temp_33,Temp_34
+	blt Temp_31,Temp_32,Label_25_AssignOne
+	bge Temp_31,Temp_32,Label_26_AssignZero
 Label_25_AssignOne:
-	li Temp_29,1
+	li Temp_30,1
 	j Label_24_end
 Label_26_AssignZero:
-	li Temp_29,0
+	li Temp_30,0
 	j Label_24_end
 Label_24_end:
-	beq Temp_29,$zero,Label_9_while.end
+	beq Temp_30,$zero,Label_9_while.end
 	j Label_12_if.cond
 Label_12_if.cond:
-	beq Temp_35,$zero,Label_14_if.exit
+	beq Temp_36,$zero,Label_14_if.exit
 	j Label_14_if.exit
 Label_14_if.exit:
-	li Temp_40,1
-	add Temp_38,Temp_39,Temp_40
-	sw Temp_38,global_p
+	li Temp_41,1
+	add Temp_39,Temp_40,Temp_41
 	j Label_11_while.cond
 Label_9_while.end:
-	li Temp_41,2
-	li Temp_42,100
+	li Temp_42,2
+	li Temp_43,100
 	li $v0,10
 	syscall

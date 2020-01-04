@@ -162,7 +162,6 @@ public class AST_HELPERS
 
 
   static public String type_to_string(TYPE t) {
-    System.out.format("1 ######type_to_string := (%s)\n",t);
     String type = "void";
     if (t == null) {
 

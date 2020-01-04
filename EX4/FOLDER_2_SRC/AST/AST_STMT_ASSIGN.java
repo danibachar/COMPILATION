@@ -151,10 +151,22 @@ public class AST_STMT_ASSIGN extends AST_STMT
 
 	public TEMP IRme()  throws Exception
 	{
-		System.out.format("IRme - AST_STMT_ASSIGN\nScope=%d\n",myScope);
+		System.out.format("IRme - AST_STMT_ASSIGN (%s) -> (%s), Scope=%d\n",exp, var, myScope);
 		TEMP src = exp.IRme();
+		// TEMP dst = var.IRme();
+
+		TEMP dst = TEMP_FACTORY.getInstance()
+			.findVarRecursive(((AST_EXP_VAR_SIMPLE) var).name, myScope);
+		if (dst == null) {
+			// throw new AST_EXCEPTION(var.lineNumber);
+			IR.getInstance()
+				.Add_IRcommand(new IRcommand_Store_To_Var(((AST_EXP_VAR_SIMPLE) var).name, src));
+				return null;
+		}
 		IR.getInstance()
-			.Add_IRcommand(new IRcommand_Store(((AST_EXP_VAR_SIMPLE) var).name, src, myScope));
+			.Add_IRcommand(new IRcommand_Store_To_Temp(dst, src));
+		// IR.getInstance()
+		// 	.Add_IRcommand(new IRcommand_Store(((AST_EXP_VAR_SIMPLE) var).name, src, myScope));
 
 		return null;
 	}

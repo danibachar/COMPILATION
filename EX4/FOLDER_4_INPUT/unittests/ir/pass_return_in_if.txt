@@ -1,6 +1,8 @@
 
 int foo1(int i1, int i2) {
-  //PrintInt(i1+i2);
+  if (i1+i2 < 50) {
+    return i1-i2;
+  }
   return i1+i2;
 }
 

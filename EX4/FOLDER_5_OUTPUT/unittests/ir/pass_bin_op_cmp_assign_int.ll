@@ -61,29 +61,29 @@ declare dso_local i32 @printf(i8*, ...)
 ; GLOBAL VARIABLES ;
 ;                  ;
 ;;;;;;;;;;;;;;;;;;:;
-define i32 @foo1(i32, i32) #0 {
-  %Temp_0 = alloca i32, align 4
-  store i32 %0, i32* %Temp_0, align 4
-  %Temp_1 = alloca i32, align 4
-  store i32 %1, i32* %Temp_1, align 4
-  %Temp_3 = load i32, i32* %Temp_0, align 4
-  %Temp_4 = load i32, i32* %Temp_1, align 4
-  %Temp_2 = add nsw i32 %Temp_3, %Temp_4
-  ret i32 %Temp_2
-}
 define void @init_globals() #0 {
   ret void
 }
 define void @main() #0 {
   call void @init_globals()
-  %Temp_5 = alloca i32, align 4
+  %Temp_0 = alloca i32, align 4
   %zero_0 = load i32, i32* @my_zero, align 4
-  %Temp_6 = add nsw i32 %zero_0, 15
+  %Temp_1 = add nsw i32 %zero_0, 10
+  store i32 %Temp_1, i32* %Temp_0, align 4
+  %Temp_2 = alloca i32, align 4
   %zero_1 = load i32, i32* @my_zero, align 4
-  %Temp_7 = add nsw i32 %zero_1, 15
-  %Temp_8 = call i32 @foo1(i32 %Temp_6,  i32 %Temp_7) 
-  store i32 %Temp_8, i32* %Temp_5, align 4
-  %Temp_9 = load i32, i32* %Temp_5, align 4
-  call void @PrintInt(i32 %Temp_9) 
+  %Temp_3 = add nsw i32 %zero_1, 11
+  store i32 %Temp_3, i32* %Temp_2, align 4
+  %Temp_4 = alloca i32, align 4
+  %Temp_6 = load i32, i32* %Temp_0, align 4
+  %Temp_7 = load i32, i32* %Temp_2, align 4
+  %oren_5 = icmp eq i32 %Temp_6, %Temp_7
+  %Temp_5 = zext i1 %oren_5 to i32
+  store i32 %Temp_5, i32* %Temp_4, align 4
+  %Temp_9 = load i32, i32* %Temp_4, align 4
+  %zero_2 = load i32, i32* @my_zero, align 4
+  %Temp_10 = add nsw i32 %zero_2, 2
+  %Temp_8 = add nsw i32 %Temp_9, %Temp_10
+  call void @PrintInt(i32 %Temp_8) 
   ret void
 }

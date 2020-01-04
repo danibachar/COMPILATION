@@ -90,8 +90,9 @@ Label_2_while.cond:
   %zero_3 = load i32, i32* @my_zero, align 4
   %Temp_7 = add nsw i32 %zero_3, 1
   %Temp_5 = add nsw i32 %Temp_6, %Temp_7
-  %Temp_3 = icmp slt i32 %Temp_4, %Temp_5
-  %equal_zero_4 = icmp eq i1 %Temp_3, 0
+  %oren_3 = icmp slt i32 %Temp_4, %Temp_5
+  %Temp_3 = zext i1 %oren_3 to i32
+  %equal_zero_4 = icmp eq i32 %Temp_3, 0
   br i1 %equal_zero_4, label %Label_0_while.end, label %Label_1_while.body
   
 Label_1_while.body:
@@ -111,8 +112,9 @@ Label_5_while.cond:
 
   %Temp_12 = load i32, i32* @i, align 4
   %Temp_13 = load i32, i32* @p, align 4
-  %Temp_11 = icmp slt i32 %Temp_12, %Temp_13
-  %equal_zero_8 = icmp eq i1 %Temp_11, 0
+  %oren_11 = icmp slt i32 %Temp_12, %Temp_13
+  %Temp_11 = zext i1 %oren_11 to i32
+  %equal_zero_8 = icmp eq i32 %Temp_11, 0
   br i1 %equal_zero_8, label %Label_3_while.end, label %Label_4_while.body
   
 Label_4_while.body:
@@ -126,8 +128,9 @@ Label_8_while.cond:
 
   %Temp_16 = load i32, i32* @j, align 4
   %Temp_17 = load i32, i32* @p, align 4
-  %Temp_15 = icmp slt i32 %Temp_16, %Temp_17
-  %equal_zero_10 = icmp eq i1 %Temp_15, 0
+  %oren_15 = icmp slt i32 %Temp_16, %Temp_17
+  %Temp_15 = zext i1 %oren_15 to i32
+  %equal_zero_10 = icmp eq i32 %Temp_15, 0
   br i1 %equal_zero_10, label %Label_6_while.end, label %Label_7_while.body
   
 Label_7_while.body:
@@ -140,8 +143,9 @@ Label_9_if.cond:
   %Temp_21 = load i32, i32* @j, align 4
   %Temp_19 = mul nsw i32 %Temp_20, %Temp_21
   %Temp_22 = load i32, i32* @p, align 4
-  %Temp_18 = icmp eq i32 %Temp_19, %Temp_22
-  %equal_zero_11 = icmp eq i1 %Temp_18, 0
+  %oren_18 = icmp eq i32 %Temp_19, %Temp_22
+  %Temp_18 = zext i1 %oren_18 to i32
+  %equal_zero_11 = icmp eq i32 %Temp_18, 0
   br i1 %equal_zero_11, label %Label_11_if.exit, label %Label_10_if.body
   
 Label_10_if.body:
@@ -178,8 +182,9 @@ Label_12_if.cond:
   %Temp_31 = load i32, i32* @isPrime, align 4
   %zero_15 = load i32, i32* @my_zero, align 4
   %Temp_32 = add nsw i32 %zero_15, 1
-  %Temp_30 = icmp eq i32 %Temp_31, %Temp_32
-  %equal_zero_16 = icmp eq i1 %Temp_30, 0
+  %oren_30 = icmp eq i32 %Temp_31, %Temp_32
+  %Temp_30 = zext i1 %oren_30 to i32
+  %equal_zero_16 = icmp eq i32 %Temp_30, 0
   br i1 %equal_zero_16, label %Label_14_if.exit, label %Label_13_if.body
   
 Label_13_if.body:
