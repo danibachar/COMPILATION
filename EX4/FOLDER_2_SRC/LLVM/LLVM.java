@@ -297,52 +297,42 @@ public class LLVM
 	}
 	private void bit_code_globals(Pair<String, AST_EXP> pair) {
 		System.out.format("@@@@ LLVM - globalVarsInitCommands\n");
-
-		if (is_string_exp(pair.getValue())) {
-			return;
+		AST_EXP exp = pair.getValue();
+		if (exp instanceof AST_EXP_STRING) {
+			AST_EXP_STRING e = (AST_EXP_STRING)exp;
+			stringify(pair.getKey(), e.value);
+		} else {
+			try {
+				IR.getInstance().auto_exec_mode = true;
+				store(pair.getKey(), pair.getValue().IRme(), 0);// 0 as we are in global scope
+				IR.getInstance().auto_exec_mode = false;
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.format("!!!! ERROR LLVM - bit_code_globals\n");
+			}
 		}
-		try {
-			IR.getInstance().auto_exec_mode = true;
-			store(pair.getKey(), pair.getValue().IRme(), 0);// 0 as we are in global scope
-			IR.getInstance().auto_exec_mode = false;
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.format("!!!! ERROR LLVM - bit_code_globals\n");
-		}
 
-		// ir_command.LLVM_bitcode_me();
 	}
 	private boolean is_string_exp(AST_EXP e) {
 		return (e instanceof AST_EXP_STRING);
 	}
-	private void print_consts_strings(Pair<String, AST_EXP> pair) {
-		if (!is_string_exp(pair.getValue())) {
-			return;
-		}
-		AST_EXP_STRING e = (AST_EXP_STRING)pair.getValue();
-		constify(pair.getKey(), e.value);
-	}
 
-	private void print_copy_const_str_to_var_str(Pair<String, AST_EXP> pair) {
-		if (!is_string_exp(pair.getValue())) {
-			return;
-		}
-		AST_EXP_STRING e = (AST_EXP_STRING)pair.getValue();
-		stringify(pair.getKey(), e.value);
-	}
+	// private void print_copy_const_str_to_var_str(Pair<String, AST_EXP> pair) {
+	// 	if (!is_string_exp(pair.getValue())) {
+	// 		return;
+	// 	}
+	// 	AST_EXP_STRING e = (AST_EXP_STRING)pair.getValue();
+	// 	stringify(pair.getKey(), e.value);
+	// }
 
 	private void init_global_vars() {
-		// Predefine string constatnts
-		// IR.getInstance()
-		// 	.globalVarsInitCommands
-		// 	.forEach((nameExpTuple) -> print_consts_strings(nameExpTuple));
 			// Declare func
 		print_open_func("init_globals", "", "void");
 		// init all globals (int, string, array, class)
 		// STRINGS
-		IR.getInstance()
-			.globalVarsInitCommands
-			.forEach((nameExpTuple) -> print_copy_const_str_to_var_str(nameExpTuple));
+		// IR.getInstance()
+		// 	.globalVarsInitCommands
+		// 	.forEach((nameExpTuple) -> print_copy_const_str_to_var_str(nameExpTuple));
 		// REST
 		IR.getInstance()
 			.globalVarsInitCommands

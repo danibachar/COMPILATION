@@ -71,9 +71,9 @@ define void @main() #0 {
   store i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str.VAR, i32 0, i32 0), i8** %Temp_0, align 8
   %Temp_1 = load i8*, i8** %Temp_0, align 8
   call void @PrintString(i8* %Temp_1) 
-  br label %RETURN_50241
+  br label %RETURN_35963
 
-RETURN_50241:
+RETURN_35963:
 
   ret void
 }
