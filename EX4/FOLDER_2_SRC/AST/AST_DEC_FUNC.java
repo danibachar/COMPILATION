@@ -189,11 +189,13 @@ public class AST_DEC_FUNC extends AST_DEC
 		String params_get_string = "";
 		int counter = 0;
 
-		int bck_counter = TEMP_FACTORY.getInstance().counter;
-		TEMP_FACTORY.getInstance().counter = 0;
+		// int bck_counter = TEMP_FACTORY.getInstance().counter;
+		// TEMP_FACTORY.getInstance().counter = 0;
+		TEMP_FACTORY.getInstance().beginScope(myScope+1);
 
-		ArrayList<TEMP> params_list = new ArrayList<TEMP>();
-		// SYMBOL_TABLE.getInstance().beginScope();
+
+		ArrayList<Integer> params_list = new ArrayList<Integer>();
+		// SYMBOL_TABEL.getInstance().beginScope();
 		// IR.getInstance().beginScope();
 		for (AST_TYPE_NAME_LIST it = params; it  != null; it = it.tail) {
 			if (it.head != null)  {
@@ -207,10 +209,11 @@ public class AST_DEC_FUNC extends AST_DEC
 					params_sent_string+=String.format(",  %s %s",  type, name);
 				}
 
-				TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
-				params_list.add(t);
+				// TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
+
 			}
-			counter++;
+			params_list.add(counter++);
+			// counter++;
 		}
 		TYPE return_type = SYMBOL_TABLE.getInstance().find(returnTypeName);
 		String return_type_str = AST_HELPERS.type_to_string(return_type);
@@ -224,18 +227,20 @@ public class AST_DEC_FUNC extends AST_DEC
 				myScope
 			));
 
-
+		// IR.getInstance().beginScope(myScope+1);
 		counter = 0;
 		for (AST_TYPE_NAME_LIST it = params; it  != null; it = it.tail) {
 			if (it.head == null)  { continue; }
 			// TEMP_FACTORY.getInstance().getFreshTEMP();
-			TEMP t = IR.getInstance()
+			TEMP t = TEMP_FACTORY.getInstance()
 				.fetchTempFromScope(it.head.name, myScope+1, true);
+
+			// TEMP src = TEMP_FACTORY.getInstance().findVarRecursive(it.head.name, scope);
 
 			IR.getInstance()
 				.Add_IRcommand(new IRcommand_Allocate_Local(t, "i32", "0", 4, myScope+1));
 			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Store_Func_Param(it.head.name, params_list.get(counter++), myScope+1));
+				.Add_IRcommand(new IRcommand_Store_Func_Param(t, params_list.get(counter++)));
 
 		}
 		// Hack for propiatery main init
@@ -247,9 +252,9 @@ public class AST_DEC_FUNC extends AST_DEC
 		//fetch typeeee
 		IR.getInstance()
 			.Add_IRcommand(new IRcommand_Decler_Func_Close(tt, return_type_str));
-
+		TEMP_FACTORY.getInstance().endScope(myScope);
 		// IR.getInstance().endScope();
-		TEMP_FACTORY.getInstance().counter = bck_counter;
+		// TEMP_FACTORY.getInstance().counter = bck_counter;
 
 		return null;
 	}

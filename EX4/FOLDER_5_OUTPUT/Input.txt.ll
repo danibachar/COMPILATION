@@ -67,7 +67,11 @@ declare dso_local i32 @printf(i8*, ...)
 @start = global i32 0, align 4
 @end = global i32 0, align 4
 @isPrime = global i32 0, align 4
+define void @init_globals() #0 {
+  ret void
+}
 define void @main() #0 {
+  call void @init_globals()
   %zero_0 = load i32, i32* @my_zero, align 4
   %Temp_0 = add nsw i32 %zero_0, 2
   store i32 %Temp_0, i32* @p, align 4
@@ -186,11 +190,11 @@ Label_13_if.body:
 
 Label_14_if.exit:
 
-  %Temp_35 = load i32, i32* @p, align 4
+  %Temp_36 = load i32, i32* @p, align 4
   %zero_17 = load i32, i32* @my_zero, align 4
-  %Temp_36 = add nsw i32 %zero_17, 1
-  %Temp_34 = add nsw i32 %Temp_35, %Temp_36
-  store i32 %Temp_34, i32* @p, align 4
+  %Temp_37 = add nsw i32 %zero_17, 1
+  %Temp_35 = add nsw i32 %Temp_36, %Temp_37
+  store i32 %Temp_35, i32* @p, align 4
   br label %Label_2_while.cond
 
 Label_0_while.end:

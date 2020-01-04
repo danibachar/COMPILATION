@@ -28,43 +28,7 @@ public class IR
 	/* 	IT Scoping 		*/
 	/******************/
 	public boolean auto_exec_mode = false;
-	private Map<Integer, Map<String, TEMP>> varScopeMap = new HashMap<Integer,Map<String, TEMP>>();
 
-	public TEMP fetchTempFromScope(String var_name, int scope, boolean autoCreate) {
-		System.out.format("fetchTempFromScope - var_name=%s\nscope=%d\nautoCreate=%s\n",var_name, scope, autoCreate);
-		// Fetch the scope map and allocate if non-exists
-		Map<String, TEMP> scopeMap = varScopeMap.get(scope);
-		if (scopeMap == null) {
-			scopeMap = new HashMap();
-			varScopeMap.put(scope, scopeMap);
-		}
-		// try fetch from current scope.
-		// if fails try to fetch from global scope
-		TEMP t = scopeMap.get(var_name);
-		if (t == null && autoCreate) {
-			t = TEMP_FACTORY.getInstance().getFreshTEMP();
-			System.out.format("fetchTempFromScope - DIDNOT find var_name=%s\nin scope=%d\n created=%d\n",var_name, scope,t.getSerialNumber());
-			scopeMap.put(var_name, t);
-		} else {
-			System.out.format("fetchTempFromScope - DID find var_name=%s\nin scope=%d\n created=%d\n",var_name, scope,t.getSerialNumber());
-		}
-		//update not sure if needed - not familiar with java reference / value
-		varScopeMap.put(scope, scopeMap);
-		return t;
-	}
-
-	public TEMP findVarRecursive(String var_name, int scope) {
-			for (int i = scope; i >= 0; i--) {
-				Map<String, TEMP> scopeMap = varScopeMap.get(scope);
-				if (scopeMap != null) {
-					TEMP t = scopeMap.get(var_name);
-					if (t != null) {
-						return t;
-					}
-				}
-			}
-			return null;
-	}
 
 	/******************/
 	/* Add IR command */

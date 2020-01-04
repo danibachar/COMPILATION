@@ -172,7 +172,7 @@ public class AST_DEC_VAR extends AST_DEC
 		}
 		// If Local Scope
 		// Find or alloc if needed
-		TEMP tt = IR.getInstance().fetchTempFromScope(name, myScope, true);
+		TEMP tt = TEMP_FACTORY.getInstance().fetchTempFromScope(name, myScope, true);
 		IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Local(tt, type, type_val, align, myScope));
 		if (initialValue != null) {
 			IR.getInstance().Add_IRcommand(new IRcommand_Store(name, initialValue.IRme(), myScope));

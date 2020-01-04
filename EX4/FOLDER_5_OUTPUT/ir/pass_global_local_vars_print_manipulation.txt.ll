@@ -61,16 +61,63 @@ declare dso_local i32 @printf(i8*, ...)
 ; GLOBAL VARIABLES ;
 ;                  ;
 ;;;;;;;;;;;;;;;;;;:;
-@i = global i32 0, align 4
+@i1 = global i32 0, align 4
+@i2 = global i32 0, align 4
+@i3 = global i32 0, align 4
+@i4 = global i32 0, align 4
 define void @init_globals() #0 {
   %zero_0 = load i32, i32* @my_zero, align 4
-  %Temp_0 = add nsw i32 %zero_0, 101
-  store i32 %Temp_0, i32* @i, align 4
+  %Temp_1 = add nsw i32 %zero_0, 101
+  %zero_1 = load i32, i32* @my_zero, align 4
+  %Temp_3 = add nsw i32 %zero_1, 2
+  %zero_2 = load i32, i32* @my_zero, align 4
+  %Temp_4 = add nsw i32 %zero_2, 3
+  %Temp_2 = mul nsw i32 %Temp_3, %Temp_4
+  %Temp_0 = add nsw i32 %Temp_1, %Temp_2
+  store i32 %Temp_0, i32* @i1, align 4
+  %zero_3 = load i32, i32* @my_zero, align 4
+  %Temp_5 = add nsw i32 %zero_3, 15
+  store i32 %Temp_5, i32* @i2, align 4
+  %zero_4 = load i32, i32* @my_zero, align 4
+  %Temp_6 = add nsw i32 %zero_4, 17
+  store i32 %Temp_6, i32* @i3, align 4
+  %zero_5 = load i32, i32* @my_zero, align 4
+  %Temp_8 = add nsw i32 %zero_5, 62
+  %zero_6 = load i32, i32* @my_zero, align 4
+  %Temp_9 = add nsw i32 %zero_6, 2
+  %Temp_7 = add nsw i32 %Temp_8, %Temp_9
+  store i32 %Temp_7, i32* @i4, align 4
   ret void
 }
 define void @main() #0 {
   call void @init_globals()
-  %Temp_0 = load i32, i32* @i, align 4
-  call void @PrintInt(i32 %Temp_0) 
+  %Temp_0 = alloca i32, align 4
+  %zero_7 = load i32, i32* @my_zero, align 4
+  %Temp_1 = add nsw i32 %zero_7, 3
+  store i32 %Temp_1, i32* %Temp_0, align 4
+  %Temp_2 = load i32, i32* %Temp_0, align 4
+  call void @PrintInt(i32 %Temp_2) 
+  %Temp_4 = load i32, i32* @i2, align 4
+  call void @PrintInt(i32 %Temp_4) 
+  %Temp_7 = load i32, i32* @i2, align 4
+  %Temp_8 = load i32, i32* %Temp_0, align 4
+  %Temp_6 = add nsw i32 %Temp_7, %Temp_8
+  call void @PrintInt(i32 %Temp_6) 
+  %Temp_11 = load i32, i32* @i2, align 4
+  %Temp_12 = load i32, i32* @i3, align 4
+  %Temp_10 = add nsw i32 %Temp_11, %Temp_12
+  call void @PrintInt(i32 %Temp_10) 
+  %Temp_15 = load i32, i32* @i2, align 4
+  %Temp_17 = load i32, i32* @i3, align 4
+  %Temp_18 = load i32, i32* @i4, align 4
+  %Temp_16 = mul nsw i32 %Temp_17, %Temp_18
+  %Temp_14 = add nsw i32 %Temp_15, %Temp_16
+  call void @PrintInt(i32 %Temp_14) 
+  %Temp_22 = load i32, i32* @i2, align 4
+  %Temp_23 = load i32, i32* @i3, align 4
+  %Temp_21 = add nsw i32 %Temp_22, %Temp_23
+  %Temp_24 = load i32, i32* @i4, align 4
+  %Temp_20 = mul nsw i32 %Temp_21, %Temp_24
+  call void @PrintInt(i32 %Temp_20) 
   ret void
 }

@@ -105,41 +105,10 @@ public class AST_DEC_ARRAY extends AST_DEC
 
 	public TEMP IRme() throws Exception
 	{
-		
+
 		System.out.format("IRme - AST_DEC_ARRAY name = %s, type = %s\nScope=%d\n",name, type,myScope);
 		// IR.getInstance().Add_IRcommand(new IRcommand_Label("main"));
 		// if (body != null) body.IRme();
 		return null;
 	}
-
-	// public TEMP IRme() {
-	// 	 // create constructor
-	// 	 // IRLabel constructorLabel = context.constructorOf(array);
-	// 	 // context.openScope(constructorLabel.toString(), Collections.emptyList(), IRContext.ScopeType.Function, false, false);
-	//
-	// 	 // getting size as first parameter
-	// 	 // context.label(constructorLabel);
-	// 	 // context.command(new IRFunctionInfo(constructorLabel.toString() , 1, 0));
-	//
-	// 	 // calculate the right size to allocate
-	// 	 // Register allocationSize = context.newRegister();
-	// 	 // context.command(new IRBinOpRightConstCommand(allocationSize, IRContext.FIRST_FUNCTION_PARAMETER, Operation.Times, IRContext.PRIMITIVE_DATA_SIZE));
-	// 	 // context.command(new IRBinOpRightConstCommand(allocationSize, allocationSize, Operation.Plus, IRContext.ARRAY_DATA_INITIAL_OFFSET));
-	//
-	// 	 // call malloc
-	// 	 // Register mallocResult = context.malloc(allocationSize);
-	//
-	// 	 // save length
-	// 	 // Register temp = context.newRegister();
-	// 	 // context.command(new IRBinOpRightConstCommand(temp, mallocResult, Operation.Plus, IRContext.ARRAY_LENGTH_OFFSET));
-	// 	 // context.command(new IRStoreCommand(temp, IRContext.FIRST_FUNCTION_PARAMETER));
-	//
-	// 	 // return
-	// 	 // context.command(new IRSetValueCommand(ReturnRegister.instance, mallocResult));
-	// 	 // context.label(context.returnLabelForConstructor(array));
-	// 	 // context.command(new IRReturnCommand());
-	// 	 // context.closeScope();
-	//
-	// 	 return null;
- 	// }
 }

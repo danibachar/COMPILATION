@@ -171,36 +171,42 @@ public class LLVM
 		fileWriter.format("@%s = global %s %s, align %s\n",var_name, ptr, ptr_init_val, align);
 	}
 
-	public void load(TEMP dst, String var_name, int scope)
+	public void load_from_temp(TEMP dst, TEMP src)
 	{
-		System.out.format("@@@@ LLVM - load from -> %s to -> %%Temp_%d\n",var_name, dst.getSerialNumber());
-		// global
-		int idxdst=dst.getSerialNumber();
-		TEMP t = IR.getInstance().findVarRecursive(var_name, scope);
-
-		if (scope == 0 || t == null) {
-			fileWriter.format("  %%Temp_%d = load i32, i32* @%s, align 4\n",idxdst, var_name);
-			return;
-		}
-		// Local
-		int idxsrc = t.getSerialNumber();
+		int idxdst = dst.getSerialNumber();
+		int idxsrc = src.getSerialNumber();
+		System.out.format("@@@@ LLVM - load from -> %%Temp_%d to -> %%Temp_%d\n",idxsrc, idxdst);
 		fileWriter.format("  %%Temp_%d = load i32, i32* %%Temp_%d, align 4\n",idxdst, idxsrc);
 	}
 
-	public void store_func_param(String var_name, TEMP src, int scope)
+	public void load_from_var(TEMP dst, String var_name)
 	{
-		System.out.format("@@@@ LLVM - store_func_param(%s):\n",var_name);
+		System.out.format("@@@@ LLVM - load from -> %s to -> %%Temp_%d\n",var_name, dst.getSerialNumber());
+		int idxdst=dst.getSerialNumber();
+		fileWriter.format("  %%Temp_%d = load i32, i32* @%s, align 4\n",idxdst, var_name);
+	}
 
-		TEMP t = IR.getInstance().findVarRecursive(var_name, scope);
-		if (t == null) {
-				// TODO error we should not get here
-				System.out.format("!!!!! ERROR !!!!!!!!");
-		}
-		int idxdst = t.getSerialNumber();
-		int idxsrc = src.getSerialNumber();
+	// public void load(TEMP dst, String var_name, int scope)
+	// {
+	// 	System.out.format("@@@@ LLVM - load from -> %s to -> %%Temp_%d\n",var_name, dst.getSerialNumber());
+	// 	// global
+	// 	int idxdst=dst.getSerialNumber();
+	// 	TEMP t = TEMP_FACTORY.getInstance().findVarRecursive(var_name, scope);
+	//
+	// 	if (scope == 0 || t == null) {
+	// 		fileWriter.format("  %%Temp_%d = load i32, i32* @%s, align 4\n",idxdst, var_name);
+	// 		return;
+	// 	}
+	// 	// Local
+	// 	int idxsrc = t.getSerialNumber();
+	// 	fileWriter.format("  %%Temp_%d = load i32, i32* %%Temp_%d, align 4\n",idxdst, idxsrc);
+	// }
 
-
-		fileWriter.format("  store i32 %%%d, i32* %%Temp_%d, align 4\n",idxsrc, idxdst);
+	public void store_func_param(TEMP dst, Integer src)
+	{
+		int idxdst = dst.getSerialNumber();
+		System.out.format("@@@@ LLVM - store_func_param:(%s) -> (%s)\n",src,idxdst);
+		fileWriter.format("  store i32 %%%d, i32* %%Temp_%d, align 4\n",src, idxdst);
 	}
 
 
@@ -209,7 +215,7 @@ public class LLVM
 		System.out.format("@@@@ LLVM - store from -> %%Temp_%d to -> %s \n", src.getSerialNumber(), var_name);
 		// global
 		int idxsrc=src.getSerialNumber();
-		TEMP t = IR.getInstance().findVarRecursive(var_name, scope);
+		TEMP t = TEMP_FACTORY.getInstance().findVarRecursive(var_name, scope);
 
 		if (scope == 0 || t == null) {
 			fileWriter.format("  store i32 %%Temp_%d, i32* @%s, align 4\n",idxsrc, var_name);
@@ -236,11 +242,7 @@ public class LLVM
 		int i2 =oprnd2.getSerialNumber();
 		int dstidx=dst.getSerialNumber();
 
-		fileWriter.format(
-			"  %%Temp_%d = add nsw i32 %%Temp_%d, %%Temp_%d\n",
-			dstidx,
-			i1,
-			i2);
+		fileWriter.format("  %%Temp_%d = add nsw i32 %%Temp_%d, %%Temp_%d\n",dstidx,i1,i2);
 	}
 	public void sub(TEMP dst,TEMP oprnd1,TEMP oprnd2)
 	{
@@ -249,11 +251,7 @@ public class LLVM
 		int i2 =oprnd2.getSerialNumber();
 		int dstidx=dst.getSerialNumber();
 
-		fileWriter.format(
-			"  %%Temp_%d = sub nsw i32 %%Temp_%d, %%Temp_%d\n",
-			dstidx,
-			i1,
-			i2);
+		fileWriter.format("  %%Temp_%d = sub nsw i32 %%Temp_%d, %%Temp_%d\n",dstidx,i1,i2);
 	}
 	public void mul(TEMP dst,TEMP oprnd1,TEMP oprnd2)
 	{
@@ -262,11 +260,7 @@ public class LLVM
 		int i2 =oprnd2.getSerialNumber();
 		int dstidx=dst.getSerialNumber();
 
-		fileWriter.format(
-			"  %%Temp_%d = mul nsw i32 %%Temp_%d, %%Temp_%d\n",
-			dstidx,
-			i1,
-			i2);
+		fileWriter.format("  %%Temp_%d = mul nsw i32 %%Temp_%d, %%Temp_%d\n", dstidx,i1,i2);
 	}
 	public void div(TEMP dst,TEMP oprnd1,TEMP oprnd2)
 	{
@@ -275,11 +269,7 @@ public class LLVM
 		int i2 =oprnd2.getSerialNumber();
 		int dstidx=dst.getSerialNumber();
 
-		fileWriter.format(
-			"  %%Temp_%d = sdiv i32 %%Temp_%d, %%Temp_%d\n",
-			dstidx,
-			i1,
-			i2);
+		fileWriter.format("  %%Temp_%d = sdiv i32 %%Temp_%d, %%Temp_%d\n",dstidx,i1,i2);
 	}
 	public void icmp_lt(TEMP dst,TEMP oprnd1,TEMP oprnd2)
 	{
@@ -288,11 +278,8 @@ public class LLVM
 		int i2 =oprnd2.getSerialNumber();
 		int dstidx=dst.getSerialNumber();
 
-		fileWriter.format(
-			"  %%Temp_%d = icmp slt i32 %%Temp_%d, %%Temp_%d\n",
-			dstidx,
-			i1,
-			i2);
+		fileWriter.format("  %%oren_%d = icmp slt i32 %%Temp_%d, %%Temp_%d\n",dstidx,i1,i2);
+		fileWriter.format("  %%Temp_%d = zext i1 %%oren_%d to i32\n",dstidx,dstidx);
 	}
 	public void icmp_eq(TEMP dst,TEMP oprnd1,TEMP oprnd2)
 	{
@@ -301,11 +288,9 @@ public class LLVM
 		int i2 =oprnd2.getSerialNumber();
 		int dstidx=dst.getSerialNumber();
 
-		fileWriter.format(
-			"  %%Temp_%d = icmp eq i32 %%Temp_%d, %%Temp_%d\n",
-			dstidx,
-			i1,
-			i2);
+		fileWriter.format("  %%oren_%d = icmp eq i32 %%Temp_%d, %%Temp_%d\n",dstidx,i1,i2);
+		fileWriter.format("  %%Temp_%d = zext i1 %%oren_%d to i32\n",dstidx,dstidx);
+		// fileWriter.format("  %%Temp_%d = icmp eq i32 %%Temp_%d, %%Temp_%d\n",dstidx,i1,i2);
 	}
 	private void bit_code_globals(Pair<String, AST_EXP> pair) {
 		System.out.format("@@@@ LLVM - globalVarsInitCommands\n");
@@ -372,8 +357,9 @@ public class LLVM
 	{
 		int i1 =oprnd1.getSerialNumber();
 		int i2 =oprnd2.getSerialNumber();
-
 		fileWriter.format("  %%oren = icmp slt i32 %%Temp_%d, 0\n",i1);
+		// %Temp_33 = zext i1 %Temp_14 to i32
+		// fileWriter.format("  %%oren = zext i1 %%temp_oren to i32\n",i1);
 		fileWriter.format("  br i1 %%oren, label %%%s, label %%any.label_%d\n",label,x);
 		fileWriter.format("  \nany.label_%d:\n\n",x++);
 	}
@@ -408,7 +394,7 @@ public class LLVM
 	{
 		int i1 = oprnd1.getSerialNumber();
 
-		fileWriter.format("  %%equal_zero_%d = icmp eq i1 %%Temp_%d, 0\n",x,i1);
+		fileWriter.format("  %%equal_zero_%d = icmp eq i32 %%Temp_%d, 0\n",x,i1);
 		fileWriter.format("  br i1 %%equal_zero_%d, label %%%s, label %%%s\n",x,label1,label2);
 		fileWriter.format("  \n%s:\n\n",label2);
 		x++;

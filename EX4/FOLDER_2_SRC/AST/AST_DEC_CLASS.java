@@ -232,65 +232,12 @@ public class AST_DEC_CLASS extends AST_DEC
 
 	public TEMP IRme() throws Exception
 	{
-		
+
 		System.out.format("IRme - AST_DEC_CLASS name = %s, parent = %s\nScope=%d\n",name, parent,myScope);
 		// IR.getInstance().Add_IRcommand(new IRcommand_Label("main"));
-		// if (body != null) body.IRme();
+		TEMP_FACTORY.getInstance().beginScope(myScope+1);
+		if (body != null) body.IRme();
+		TEMP_FACTORY.getInstance().endScope(myScope+1);
 		return null;
 	}
-
-	// public TEMP IRme() {
-	// 	// context.loadClass(representingType);
-  //       // int size = context.sizeOf(representingType);
-	// 			//
-  //       // IRLabel constructorLabel = context.constructorOf(representingType);
-  //       // context.openScope(constructorLabel.toString(), Collections.emptyList(), IRContext.ScopeType.Function, false, false);
-	// 			//
-  //       // context.label(constructorLabel);
-  //       // context.command(new IRFunctionInfo(constructorLabel.toString(),0, 0));
-  //       // Register allocationSize = context.newRegister();
-  //       // context.command(new IRConstCommand(allocationSize, size));
-  //       // Register thisReg = context.malloc(allocationSize);
-  //       // context.assignVirtualTable(thisReg, representingType);
-	// 			//
-  //       // Register temp = context.newRegister();
-	// 			//
-  //       // callInternalConstructor(representingType, context, thisReg, temp);
-	//
-	//
-  //       // return instance
-  //       // context.command(new IRSetValueCommand(ReturnRegister.instance, thisReg));
-  //       // context.label(context.returnLabelForConstructor(representingType));
-  //       // context.command(new IRReturnCommand());
-	// 			//
-  //       // context.closeScope();
-	// 			//
-  //       // context.openObjectScope(representingType);
-	//
-  //       // now, internal constructor
-  //       // IRLabel internalLabel = context.internalConstructorOf(representingType);
-  //       // context.label(internalLabel);
-  //       // context.command(new IRFunctionInfo(internalLabel.toString(), 1, 0));
-  //       // context.openScope(internalLabel.toString(), Collections.emptyList(), IRContext.ScopeType.Function, false, false);
-	// 			//
-  //       // for (AST_DEC field : fields) {
-  //       //     if (field instanceof AST_DEC_VAR) {
-  //       //         field.irMe(context);
-  //       //     }
-  //       // }
-  //       // context.label(context.returnLabelForInternalConstructor(representingType));
-  //       // context.command(new IRReturnCommand());
-  //       // context.closeScope();
-	//
-  //       // now, class body
-  //       // for (AST_DEC field : fields) {
-  //       //     if (!(field instanceof AST_DEC_VAR)) {
-  //       //         field.irMe(context);
-  //       //     }
-  //       // }
-	//
-  //       // context.closeObjectScope();
-	// 			return null;
-  //       // return NonExistsRegister.instance;
-	// }
 }

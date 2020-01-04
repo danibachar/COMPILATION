@@ -112,6 +112,7 @@ public class AST_STMT_IF extends AST_STMT
 		/********************/
 		/* [3] cond.IRme(); */
 		/********************/
+
 		TEMP cond_temp = cond.IRme();
 
 		/************************************/
@@ -123,7 +124,9 @@ public class AST_STMT_IF extends AST_STMT
 		/*******************/
 		/* [5] body.IRme() */
 		/*******************/
+		TEMP_FACTORY.getInstance().beginScope(myScope);
 		body.IRme();
+		TEMP_FACTORY.getInstance().endScope(myScope);
 
 		/***************************/
 		/* [6] Jump to the if exit */

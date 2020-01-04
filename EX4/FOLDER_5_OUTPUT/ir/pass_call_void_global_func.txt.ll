@@ -75,7 +75,11 @@ define void @foo(i32, i32) #0 {
   call void @PrintInt(i32 %Temp_8) 
   ret void
 }
+define void @init_globals() #0 {
+  ret void
+}
 define void @main() #0 {
+  call void @init_globals()
   %Temp_0 = alloca i32, align 4
   %zero_0 = load i32, i32* @my_zero, align 4
   %Temp_1 = add nsw i32 %zero_0, 4

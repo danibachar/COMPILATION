@@ -119,7 +119,9 @@ public class AST_STMT_WHILE extends AST_STMT
 		/*******************/
 		/* [5] body.IRme() */
 		/*******************/
+		TEMP_FACTORY.getInstance().beginScope(myScope);
 		body.IRme();
+		TEMP_FACTORY.getInstance().endScope(myScope);
 
 		/******************************/
 		/* [6] Jump to the loop entry */
