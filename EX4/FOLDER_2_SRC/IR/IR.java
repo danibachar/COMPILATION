@@ -9,6 +9,7 @@ package IR;
 import java.io.*;
 import java.io.PrintWriter;
 import java.util.*;
+import javafx.util.Pair;
 /*******************/
 /* PROJECT IMPORTS */
 /*******************/
@@ -21,11 +22,12 @@ public class IR
 	private IRcommand head=null;
 	private IRcommandList tail=null;
 
-	public ArrayList<IRcommand> globalVarsInitCommands = new ArrayList<IRcommand>();
+	public ArrayList< Pair<String, AST_EXP> > globalVarsInitCommands = new ArrayList< Pair<String, AST_EXP> >();
 
 	/******************/
 	/* 	IT Scoping 		*/
 	/******************/
+	public boolean auto_exec_mode = false;
 	private Map<Integer, Map<String, TEMP>> varScopeMap = new HashMap<Integer,Map<String, TEMP>>();
 
 	public TEMP fetchTempFromScope(String var_name, int scope, boolean autoCreate) {
@@ -67,18 +69,26 @@ public class IR
 	/******************/
 	/* Add IR command */
 	/******************/
-	public void Add_IRcommand(IRcommand cmd)
-	{
+	public void Add_IRcommand(IRcommand cmd) {
+		if (auto_exec_mode) {
+			cmd.LLVM_bitcode_me();
+			return;
+		}
+
+
 		if ((head == null) && (tail == null))
 		{
+			// new , first head
 			this.head = cmd;
 		}
 		else if ((head != null) && (tail == null))
 		{
+			// we have haed, init tail!
 			this.tail = new IRcommandList(cmd,null);
 		}
 		else
 		{
+			//appened to tail
 			IRcommandList it = tail;
 			while ((it != null) && (it.tail != null))
 			{

@@ -78,9 +78,9 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 		}
 	}
 
-	public TEMP IRMe() throws Exception
+	public TEMP IRme() throws Exception
 	{
-		System.out.format("IRMe - UNKNOWN AST AST_TYPE_NAME_LIST NODE\nScope=%d\n",myScope);
+		System.out.format("IRme - UNKNOWN AST AST_TYPE_NAME_LIST NODE\nScope=%d\n",myScope);
 		return null;
 	}
 }

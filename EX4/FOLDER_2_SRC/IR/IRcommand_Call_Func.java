@@ -14,17 +14,20 @@ import TEMP.*;
 import LLVM.*;
 import MIPS.*;
 
-public class IRcommand_Call_Void_Func extends IRcommand
+public class IRcommand_Call_Func extends IRcommand
 {
 	String funcName;
 	String params_string;
-	int scope;
+	String return_type;
+	TEMP ret_ptr;
+	// int scope;
 
-	public IRcommand_Call_Void_Func(String funcName, String params_string, int scope)
+	public IRcommand_Call_Func(String funcName, String params_string, String return_type, TEMP ret_ptr, int scope)
 	{
 		this.funcName 				 = funcName;
-		this.params_string 				 = params_string;
-		this.scope 						 = scope;
+		this.params_string 		 = params_string;
+		this.return_type 			 = return_type;
+		this.ret_ptr 					 = ret_ptr;
 	}
 
 	/*******************/
@@ -32,7 +35,7 @@ public class IRcommand_Call_Void_Func extends IRcommand
 	/*******************/
 	public void LLVM_bitcode_me()
 	{
-		LLVM.getInstance().call_void_func(funcName, params_string, scope);
+		LLVM.getInstance().call_func(funcName, params_string, return_type, ret_ptr, scope);
 	}
 
 	/***************/

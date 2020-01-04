@@ -159,4 +159,41 @@ public class AST_HELPERS
     System.out.format(">> ERROR [%d] type mismatch for var(%s) := exp(%s)\n",exp.lineNumber,t,tValue);
     throw new AST_EXCEPTION(exp.lineNumber);
   }
+
+
+  static public String type_to_string(TYPE t) {
+    System.out.format("1 ######type_to_string := (%s)\n",t);
+    String type = "void";
+    if (t == null) {
+
+      return type;
+    }
+    if (t.isClassVar()) {
+      TYPE_CLASS_VAR_DEC tc = (TYPE_CLASS_VAR_DEC)t;
+      t = tc.t;
+    }
+    if (t.isClassFunc()) {
+      TYPE_CLASS_FUNC_DEC tc = (TYPE_CLASS_FUNC_DEC)t;
+      t = tc.returnType;
+    }
+    if (t == null || t == TYPE_VOID.getInstance()) {
+      return type;
+    }
+    if (t == TYPE_INT.getInstance()) {
+      type = "i32";
+    }
+    // String type_val = "0";
+    // int align = 4;
+    if (t.isArray()) {
+      type = "i32*";
+      // type_val = "null";
+      // align = 8;
+    }
+    if (t.isClass() || t == TYPE_STRING.getInstance()) {
+      type = "i8*";
+      // type_val = "null";
+      // align = 8;
+    }
+    return type;
+  }
 }

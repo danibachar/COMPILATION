@@ -9,6 +9,7 @@ package LLVM;
 import java.io.*;
 import java.io.PrintWriter;
 import java.util.*;
+import javafx.util.Pair;
 
 /*******************/
 /* PROJECT IMPORTS */
@@ -16,6 +17,7 @@ import java.util.*;
 import TEMP.*;
 import IR.*;
 import MIPS.*;
+import AST.*;
 
 /********/
 /* LLVM */
@@ -83,11 +85,21 @@ public class LLVM
 		String params_string,
 		String returnType
 	) {
-		System.out.format("@@@@ LLVM - print_open_func %s(%s) -> $s \n",func_name, params_string, returnType);
+		//EXAMPLES:
+		// define i32 @goo(i32, i32) #0 { // int
+		// define i8* @goo(i32, i32) #0 { // string / char*
+		if (func_name.equals("main")) {
+			init_global_vars();
+		}
+
+		System.out.format("@@@@ LLVM - print_open_func %s(%s) -> %s \n",func_name, params_string, returnType);
 		if (params_string == null || params_string.isEmpty()) {
 			fileWriter.format("define %s @%s() #0 {\n", returnType, func_name);
 		} else {
 				fileWriter.format("define %s @%s(%s) #0 {\n", returnType, func_name, params_string);
+		}
+		if (func_name.equals("main")) {
+			call_init_global_vars();
 		}
 	}
 
@@ -107,22 +119,44 @@ public class LLVM
 		fileWriter.format("}\n");
 	}
 
-	public void call_void_func(
-		String func_name,
-		String params_string,
-		int scope
-	) {
-		System.out.format("@@@@ LLVM - call_void_func(%s):\n",func_name);
-		//EXAMPLE: - call void @foo(i32 %3, i32 %4)
-		fileWriter.format("  call void @%s(%s) \n", func_name, params_string);
-	}
-	// MARK: -
-	public void print_int(TEMP t)
-	{
-		System.out.format("@@@@ LLVM - print_int \n");
-		int idx=t.getSerialNumber();
-		fileWriter.format("  call void @PrintInt(i32 %%Temp_%d)\n",idx);
-	}
+	 public void call_func(
+		 String func_name,
+		 String params_string,
+		 String return_type,
+		 TEMP ret_ptr,
+		 int scope
+	 ) {
+		 System.out.format("@@@@ LLVM - call_func(%s):%s\nParams:(%s)\n", func_name, return_type, params_string);
+ 		//EXAMPLES:
+		// call void @foo(i32 %3, i32 %4)
+		// %2 = call i8* @goo(i32 11, i32 12) //strings and classes
+		// %2 = call i32 @goo(i32 11, i32 12) // int maybe arrays?
+		// %2 = call i32* @goo(i32 11, i32 12) // maybe arrays?
+		if (return_type == "void" || return_type == null) {
+				fileWriter.format("  call void @%s(%s) \n", func_name, params_string);
+				return;
+		}
+		int idx=ret_ptr.getSerialNumber();
+		fileWriter.format("  %%Temp_%d = call %s @%s(%s) \n", idx, return_type, func_name, params_string);
+
+	 }
+	//
+	// public void call_void_func(
+	// 	String func_name,
+	// 	String params_string,
+	// 	int scope
+	// ) {
+	// 	System.out.format("@@@@ LLVM - call_void_func(%s):\n",func_name);
+	// 	//EXAMPLE: - call void @foo(i32 %3, i32 %4)
+	// 	fileWriter.format("  call void @%s(%s) \n", func_name, params_string);
+	// }
+	// // MARK: -
+	// public void print_int(TEMP t)
+	// {
+	// 	System.out.format("@@@@ LLVM - print_int \n");
+	// 	int idx=t.getSerialNumber();
+	// 	fileWriter.format("  call void @PrintInt(i32 %%Temp_%d)\n",idx);
+	// }
 
 	public void allocate_local(TEMP t, String ptr, String ptr_init_val, int align, int scope)
 	{
@@ -136,21 +170,6 @@ public class LLVM
 		System.out.format("@@@@ LLVM - allocate_global(%s):\n",var_name);
 		fileWriter.format("@%s = global %s %s, align %s\n",var_name, ptr, ptr_init_val, align);
 	}
-
-	// OLD - REMOVE Once using global/local
-	// public void allocate(String var_name, String ptr, String ptr_init_val, int align, int scope)
-	// {
-	// 	System.out.format("@@@@ LLVM - allocate(%s):\n",var_name);
-	// 	// global
-	// 	if (scope == 0) {
-	// 		fileWriter.format("@%s = global %s %s, align %s\n",var_name, ptr, ptr_init_val, align);
-	// 		// TODO - update global scope
-	// 		return;
-	// 	}
-	// 	TEMP t = IR.getInstance().fetchTempFromScope(var_name, scope, true); // we want to allocate if not exists
-	// 	int idx = t.getSerialNumber();
-	// 	fileWriter.format("  %%Temp_%d = alloca %s, align %d\n",idx, ptr, align);
-	// }
 
 	public void load(TEMP dst, String var_name, int scope)
 	{
@@ -204,6 +223,7 @@ public class LLVM
 	static int x=0;
 	public void li(TEMP t,int value)
 	{
+		System.out.format("@@@@ LLVM - li\n");
 		int idx=t.getSerialNumber();
 
 		fileWriter.format("  %%zero_%d = load i32, i32* @my_zero, align 4\n",x);
@@ -211,6 +231,7 @@ public class LLVM
 	}
 	public void add(TEMP dst,TEMP oprnd1,TEMP oprnd2)
 	{
+		System.out.format("@@@@ LLVM - add\n");
 		int i1 =oprnd1.getSerialNumber();
 		int i2 =oprnd2.getSerialNumber();
 		int dstidx=dst.getSerialNumber();
@@ -223,6 +244,7 @@ public class LLVM
 	}
 	public void sub(TEMP dst,TEMP oprnd1,TEMP oprnd2)
 	{
+		System.out.format("@@@@ LLVM - sub\n");
 		int i1 =oprnd1.getSerialNumber();
 		int i2 =oprnd2.getSerialNumber();
 		int dstidx=dst.getSerialNumber();
@@ -235,6 +257,7 @@ public class LLVM
 	}
 	public void mul(TEMP dst,TEMP oprnd1,TEMP oprnd2)
 	{
+		System.out.format("@@@@ LLVM - mul\n");
 		int i1 =oprnd1.getSerialNumber();
 		int i2 =oprnd2.getSerialNumber();
 		int dstidx=dst.getSerialNumber();
@@ -247,6 +270,7 @@ public class LLVM
 	}
 	public void div(TEMP dst,TEMP oprnd1,TEMP oprnd2)
 	{
+		System.out.format("@@@@ LLVM - div\n");
 		int i1 =oprnd1.getSerialNumber();
 		int i2 =oprnd2.getSerialNumber();
 		int dstidx=dst.getSerialNumber();
@@ -259,6 +283,7 @@ public class LLVM
 	}
 	public void icmp_lt(TEMP dst,TEMP oprnd1,TEMP oprnd2)
 	{
+		System.out.format("@@@@ LLVM - icmp_lt\n");
 		int i1 =oprnd1.getSerialNumber();
 		int i2 =oprnd2.getSerialNumber();
 		int dstidx=dst.getSerialNumber();
@@ -271,6 +296,7 @@ public class LLVM
 	}
 	public void icmp_eq(TEMP dst,TEMP oprnd1,TEMP oprnd2)
 	{
+		System.out.format("@@@@ LLVM - icmp_eq\n");
 		int i1 =oprnd1.getSerialNumber();
 		int i2 =oprnd2.getSerialNumber();
 		int dstidx=dst.getSerialNumber();
@@ -281,37 +307,60 @@ public class LLVM
 			i1,
 			i2);
 	}
+	private void bit_code_globals(Pair<String, AST_EXP> pair) {
+		System.out.format("@@@@ LLVM - globalVarsInitCommands\n");
+		// String var_name,TEMP src, int scope
+		try {
+			IR.getInstance().auto_exec_mode = true;
+			store(pair.getKey(), pair.getValue().IRme(), 0);// 0 as we are in global scope
+			IR.getInstance().auto_exec_mode = false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.format("!!!! ERROR LLVM - bit_code_globals\n");
+		}
+
+		// ir_command.LLVM_bitcode_me();
+	}
+
+	private void init_global_vars() {
+		print_open_func("init_globals", "", "void");
+		IR.getInstance()
+			.globalVarsInitCommands
+			.forEach((ir_command) -> bit_code_globals(ir_command));
+		print_close_func(null, "void");
+	}
+
+	private void call_init_global_vars() {
+		fileWriter.format("  call void @init_globals()\n");
+	}
+
+	private void init_main() {
+		System.out.format("@@@@ LLVM - label(main):\n");
+		fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;\n");
+		fileWriter.format(";                     ;\n");
+		fileWriter.format("; ENTRY POINT :: main ;\n");
+		fileWriter.format(";                     ;\n");
+		fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;\n");
+		fileWriter.format("define dso_local i32 @main(i32 %%argc, i8** %%argv) {\n");
+		fileWriter.format("entry:\n");
+		fileWriter.format("  %%retval = alloca i32, align 4\n");
+		fileWriter.format("  %%argc.addr = alloca i32, align 4\n");
+		fileWriter.format("  %%argv.addr = alloca i8**, align 8\n");
+		fileWriter.format("  store i32 0, i32* %%retval, align 4\n");
+		fileWriter.format("  store i32 %%argc, i32* %%argc.addr, align 4\n");
+		fileWriter.format("  store i8** %%argv, i8*** %%argv.addr, align 8\n");
+		// Init Global Vars
+		call_init_global_vars();
+		// %Temp_13 = call i32 @init_strings()
+		fileWriter.format("  br label %%main_body\n");
+		fileWriter.format("\nmain_body:\n\n");
+	}
+
 	public void label(String inlabel)
 	{
-		if (inlabel.equals("main"))
-		{
-			System.out.format("@@@@ LLVM - label(main):\n");
-			print_open_func("init_globals", "", "void");
-			IR.getInstance()
-				.globalVarsInitCommands
-				.forEach((ir_command) -> ir_command.LLVM_bitcode_me());
-			print_close_func(null, "void");
-			fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;\n");
-			fileWriter.format(";                     ;\n");
-			fileWriter.format("; ENTRY POINT :: main ;\n");
-			fileWriter.format(";                     ;\n");
-			fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;\n");
-			fileWriter.format("define dso_local i32 @main(i32 %%argc, i8** %%argv) {\n");
-			fileWriter.format("entry:\n");
-			fileWriter.format("  %%retval = alloca i32, align 4\n");
-			fileWriter.format("  %%argc.addr = alloca i32, align 4\n");
-			fileWriter.format("  %%argv.addr = alloca i8**, align 8\n");
-			fileWriter.format("  store i32 0, i32* %%retval, align 4\n");
-			fileWriter.format("  store i32 %%argc, i32* %%argc.addr, align 4\n");
-			fileWriter.format("  store i8** %%argv, i8*** %%argv.addr, align 8\n");
-			// Init Global Vars
-			fileWriter.format("  call void i32 @init_globals()\n");
-			// %Temp_13 = call i32 @init_strings()
-			fileWriter.format("  br label %%main_body\n");
-			fileWriter.format("\nmain_body:\n\n");
-		}
-		else
-		{
+		if (inlabel.equals("main")) {
+			init_main();
+		} else {
 			fileWriter.format("\n%s:\n\n",inlabel);
 		}
 	}

@@ -2,13 +2,22 @@
 #include <stdio.h>
 
 // class Student
-
+struct Student
+{
+   int pin;
+};
 int d1 = 10 * 10;
 int d2 = 71;
-char *s = "asdfafsdf";
+// char *s = "asdfafsdf";
+struct Student s =  {.pin = 11};// = Student(11);
+struct Student goo(int i1, int i2) {
+  char * s1 = "asdfsa";
+  return s;
+}
 // int d3 = d1 - d2;
 int main() {
-  printf("%d\n", d1);
+  struct Student v = goo(11, 12);
+  printf("%d\n", s.pin);
 }
 
 // void foo(int x, int y) {

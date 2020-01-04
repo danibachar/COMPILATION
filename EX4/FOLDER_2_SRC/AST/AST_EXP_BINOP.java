@@ -220,8 +220,10 @@ public class AST_EXP_BINOP extends AST_EXP
 
 		if (left  != null) t1 = left.IRme();
 		if (right != null) t2 = right.IRme();
-
-		System.out.format("IRme - AST_EXP_BINOP(%s) between t1=%s, t2=%s\nScope=%d\n",opSymbol(), t1.getSerialNumber(), t2.getSerialNumber(),myScope);
+		if (t1 == null || t2 == null) {
+				System.out.format("********NULL IRme - AST_EXP_BINOP(%s) between t1=%s, t2=%s\nScope=%d\n",opSymbol(), t1 == null ? null:t1.getSerialNumber(), t2 == null ? null:t2.getSerialNumber(),myScope);
+		}
+		System.out.format("IRme - AST_EXP_BINOP(%s) between t1=%s, t2=%s\nScope=%d\n",opSymbol(), t1 == null ? null:t1.getSerialNumber(), t2 == null ? null:t2.getSerialNumber(),myScope);
 		if (OP == 0) {
 			IR.getInstance()
 				.Add_IRcommand(new IRcommand_Binop_EQ_Integers(dst,t1,t2));

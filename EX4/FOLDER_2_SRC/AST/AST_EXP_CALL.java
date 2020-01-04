@@ -265,6 +265,9 @@ public class AST_EXP_CALL extends AST_EXP
 		System.out.format("IRme - ON:(%s)\n", t_var!=null ? t_var.getSerialNumber():null);
 		System.out.format("IRme - WITH:(%s)\n",t!=null ? t.getSerialNumber():null);
 		System.out.format("IRme - Scope=%d\n",myScope);
+		TYPE_FUNCTION funcTypeValidated = (TYPE_FUNCTION)SYMBOL_TABLE.getInstance().find(funcName);
+		String type_string = AST_HELPERS.type_to_string(funcTypeValidated.returnType);
+		System.out.format("IRme - Return type=%sm\n",type_string);
 
 
 		/*
@@ -293,15 +296,11 @@ public class AST_EXP_CALL extends AST_EXP
 			counter++;
 		}
 
-		// System.out.format("TYPE_LIST (%d) original value %s = %s\n",expected_input_params.size(), it.head.name, it.head);
-		// TODO - according to type
+		TEMP tt = TEMP_FACTORY.getInstance().getFreshTEMP();
 		IR.getInstance()
-			.Add_IRcommand(new IRcommand_Call_Void_Func(funcName, params_sent_string, myScope));
-		// OLD - for debug first programs
-		// IR.getInstance()
-		// 	.Add_IRcommand(new IRcommand_PrintInt(t));
+			.Add_IRcommand(new IRcommand_Call_Func(funcName, params_sent_string, type_string, tt, myScope));
 
-		return null;
+		return tt;
 	}
 
 }

@@ -193,7 +193,8 @@ public class AST_DEC_FUNC extends AST_DEC
 		TEMP_FACTORY.getInstance().counter = 0;
 
 		ArrayList<TEMP> params_list = new ArrayList<TEMP>();
-
+		// SYMBOL_TABLE.getInstance().beginScope();
+		// IR.getInstance().beginScope();
 		for (AST_TYPE_NAME_LIST it = params; it  != null; it = it.tail) {
 			if (it.head != null)  {
 				String name = String.format("%s", it.head.name);
@@ -211,15 +212,15 @@ public class AST_DEC_FUNC extends AST_DEC
 			}
 			counter++;
 		}
-
-		String retType = "void";
+		TYPE return_type = SYMBOL_TABLE.getInstance().find(returnTypeName);
+		String return_type_str = AST_HELPERS.type_to_string(return_type);
 		// check void
 		// check pointer
 		IR.getInstance()
 			.Add_IRcommand(new IRcommand_Decler_Func_Open(
 				name,
 				params_get_string,
-				retType,
+				return_type_str,
 				myScope
 			));
 
@@ -237,15 +238,17 @@ public class AST_DEC_FUNC extends AST_DEC
 				.Add_IRcommand(new IRcommand_Store_Func_Param(it.head.name, params_list.get(counter++), myScope+1));
 
 		}
-		if (body != null) body.IRme();
-		TEMP t = null;;
+		// Hack for propiatery main init
+
+		TEMP tt = null;
+		System.out.format("******** BEFORE IRme - AST_DEC_FUNC return temp = %s\n",tt);
+		if (body != null) { tt = body.IRme(); };
+		System.out.format("******** AFTER IRme - AST_DEC_FUNC return temp = %s\n",tt);
 		//fetch typeeee
 		IR.getInstance()
-			.Add_IRcommand(new IRcommand_Decler_Func_Close(
-				t,
-				retType
-			));
+			.Add_IRcommand(new IRcommand_Decler_Func_Close(tt, return_type_str));
 
+		// IR.getInstance().endScope();
 		TEMP_FACTORY.getInstance().counter = bck_counter;
 
 		return null;

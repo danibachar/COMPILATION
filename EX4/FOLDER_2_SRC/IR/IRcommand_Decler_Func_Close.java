@@ -21,7 +21,7 @@ public class IRcommand_Decler_Func_Close extends IRcommand
 
 	public IRcommand_Decler_Func_Close(TEMP t, String returnType)
 	{
-		this.t 		 = t;
+		this.t 		 			= t;
 		this.returnType = returnType;
 	}
 

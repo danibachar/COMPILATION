@@ -112,10 +112,12 @@ public class AST_STMT_RETURN extends AST_STMT
 		return null;
 	}
 
-	public TEMP IRMe() throws Exception
+	public TEMP IRme() throws Exception
 	{
 
-		System.out.format("IRMe - UNKNOWN AST AST_STMT_RETURN NODE\nScope=%d\n",myScope);
-		return null;
+		TEMP t = exp.IRme();
+		System.out.format("IRme - AST_STMT_RETURN NODE(%s)\nScope=%d\n",t, myScope);
+		return t;//exp.IRme();
+		// return null;
 	}
 }

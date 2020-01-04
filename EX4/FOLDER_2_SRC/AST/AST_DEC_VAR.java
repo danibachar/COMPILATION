@@ -6,7 +6,8 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
-import java.util.ArrayList;
+import java.util.*;
+import javafx.util.Pair;
 
 public class AST_DEC_VAR extends AST_DEC
 {
@@ -161,10 +162,11 @@ public class AST_DEC_VAR extends AST_DEC
 			IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Global(name, type, type_val, align, myScope));
 			// Add global function
 			if (initialValue != null) {
-
+				Pair<String, AST_EXP> p = new Pair<String, AST_EXP>(name, initialValue);
 				IR.getInstance()
 					.globalVarsInitCommands
-					.add(new IRcommand_Store(name, initialValue.IRme(), myScope));
+					.add(p);
+					// .add(new IRcommand_Store(name, initialValue.IRme(), myScope));
 			}
 			return null;
 		}

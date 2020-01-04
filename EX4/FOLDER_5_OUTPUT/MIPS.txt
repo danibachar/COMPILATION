@@ -2,7 +2,13 @@
 string_access_violation: .asciiz "Access Violation"
 string_illegal_div_by_0: .asciiz "Illegal Division By Zero"
 string_invalid_ptr_dref: .asciiz "Invalid Pointer Dereference"
-	li Temp_0,101
-	lw Temp_0,global_i
+	lw Temp_5,global_i1
+	lw Temp_6,global_i2
+	add Temp_4,Temp_5,Temp_6
+	li Temp_8,1
+	li Temp_1,15
+	li Temp_2,15
+	sw Temp_3,global_i
+	li Temp_4,1
 	li $v0,10
 	syscall

@@ -78,12 +78,12 @@ public class AST_STMT_LIST extends AST_Node
 
 	public TEMP IRme() throws Exception
 	{
-		
+		TEMP t = null;
 		System.out.format("IRme - AST_STMT_LIST\nScope=%d\n",myScope);
-		if (head != null) head.IRme();
-		if (tail != null) tail.IRme();
+		if (head != null) {  t = head.IRme(); }
+		if (tail != null) {  t = tail.IRme(); }
 
-		return null;
+		return t;
 	}
 
 }

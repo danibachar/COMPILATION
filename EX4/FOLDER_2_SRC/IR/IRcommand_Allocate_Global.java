@@ -35,7 +35,7 @@ public class IRcommand_Allocate_Global extends IRcommand
 	/*******************/
 	public void LLVM_bitcode_me()
 	{
-		LLVM.getInstance().allocate(var_name, ptr_type, ptr_type_init_val, align, scope);
+		LLVM.getInstance().allocate_global(var_name, ptr_type, ptr_type_init_val, align, scope);
 	}
 
 	/***************/

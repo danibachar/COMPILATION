@@ -61,16 +61,35 @@ declare dso_local i32 @printf(i8*, ...)
 ; GLOBAL VARIABLES ;
 ;                  ;
 ;;;;;;;;;;;;;;;;;;:;
-@i = global i32 0, align 4
-define void @init_globals() #0 {
+define i32 @foo1(i32, i32) #0 {
+  %Temp_2 = alloca i32, align 4
+  store i32 %0, i32* %Temp_2, align 4
+  %Temp_3 = alloca i32, align 4
+  store i32 %1, i32* %Temp_3, align 4
+  %Temp_5 = load i32, i32* %Temp_2, align 4
+  %Temp_6 = load i32, i32* %Temp_3, align 4
+  %Temp_4 = add nsw i32 %Temp_5, %Temp_6
+  call void @PrintInt(i32 %Temp_4) 
+  call void @PrintInt(i32 %Temp_4) 
   %zero_0 = load i32, i32* @my_zero, align 4
-  %Temp_0 = add nsw i32 %zero_0, 101
-  store i32 %Temp_0, i32* @i, align 4
+  %Temp_8 = add nsw i32 %zero_0, 1
+  ret i32 %Temp_8
+}
+define void @init_globals() #0 {
   ret void
 }
 define void @main() #0 {
   call void @init_globals()
-  %Temp_0 = load i32, i32* @i, align 4
-  call void @PrintInt(i32 %Temp_0) 
+  %Temp_0 = alloca i32, align 4
+  %zero_1 = load i32, i32* @my_zero, align 4
+  %Temp_1 = add nsw i32 %zero_1, 15
+  %zero_2 = load i32, i32* @my_zero, align 4
+  %Temp_2 = add nsw i32 %zero_2, 15
+  %Temp_3 = call i32 @foo1(i32 %Temp_1,  i32 %Temp_2) 
+  store i32 %Temp_3, i32* %Temp_0, align 4
+  %zero_3 = load i32, i32* @my_zero, align 4
+  %Temp_4 = add nsw i32 %zero_3, 1
+  call void @PrintInt(i32 %Temp_4) 
+  call void @PrintInt(i32 %Temp_4) 
   ret void
 }

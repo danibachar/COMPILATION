@@ -82,7 +82,7 @@ public class AST_TYPE_NAME extends AST_Node
 
 	public TEMP IRme() throws Exception
 	{
-		System.out.format("IRMe - AST_TYPE_NAME NODE(%s):%s\nScope=%d\n",name, type, myScope+1);
+		System.out.format("IRme - AST_TYPE_NAME NODE(%s):%s\nScope=%d\n",name, type, myScope+1);
 		return null;
 	}
 }
