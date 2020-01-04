@@ -14,16 +14,15 @@ import TEMP.*;
 import LLVM.*;
 import MIPS.*;
 
-public class IRcommand_Store extends IRcommand
+public class IRcommandTempString extends IRcommand
 {
-	String var_name;
-	TEMP src;
+	String name;
+	String value;
 
-	public IRcommand_Store(String var_name,TEMP src, int scope)
+	public IRcommandTempString(String name, String value)
 	{
-		this.src      = src;
-		this.scope 		= scope;
-		this.var_name = var_name;
+		this.value = value;
+		this.name = name;
 	}
 
 	/*******************/
@@ -31,7 +30,7 @@ public class IRcommand_Store extends IRcommand
 	/*******************/
 	public void LLVM_bitcode_me()
 	{
-		// LLVM.getInstance().store(var_name, src, scope);
+		LLVM.getInstance().stringify(name, value);
 	}
 
 	/***************/
@@ -39,6 +38,6 @@ public class IRcommand_Store extends IRcommand
 	/***************/
 	public void MIPSme()
 	{
-		// sir_MIPS_a_lot.getInstance().store(var_name, src);
+		// sir_MIPS_a_lot.getInstance().li(t,value);
 	}
 }

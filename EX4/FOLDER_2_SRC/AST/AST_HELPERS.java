@@ -160,20 +160,53 @@ public class AST_HELPERS
     throw new AST_EXCEPTION(exp.lineNumber);
   }
 
-
-  static public String type_to_string(TYPE t) {
-    String type = "void";
+  static public int type_to_align(TYPE t) {
+    int align = 4;
     if (t == null) {
-
-      return type;
+      return align;
     }
     if (t.isClassVar()) {
       TYPE_CLASS_VAR_DEC tc = (TYPE_CLASS_VAR_DEC)t;
       t = tc.t;
     }
-    if (t.isClassFunc()) {
-      TYPE_CLASS_FUNC_DEC tc = (TYPE_CLASS_FUNC_DEC)t;
-      t = tc.returnType;
+    if (t == null || t == TYPE_VOID.getInstance()) {
+      return align;
+    }
+
+    if (t.isClass() || t.isArray()) {
+      align = 8;
+    }
+    if (t == TYPE_STRING.getInstance()) {
+      align = 8;
+    }
+    return align;
+  }
+  static public String type_to_def_ret_val(TYPE t) {
+    if (t.isClassVar()) {
+      TYPE_CLASS_VAR_DEC tc = (TYPE_CLASS_VAR_DEC)t;
+      t = tc.t;
+    }
+    String def_ret_val = "0";
+    if (t == null) {
+      return def_ret_val;
+    }
+    if (t.isClass() || t.isArray()) {
+      def_ret_val = "null";
+    }
+    if (t == TYPE_STRING.getInstance()) {
+      def_ret_val = "null";
+    }
+    return def_ret_val;
+  }
+  static public String type_to_string(TYPE t) {
+    String type = "void";
+    if (t == null) {
+      System.out.format("ERROR type to string\n");
+      return type;
+    }
+    if (t.isClassVar()) {
+      TYPE_CLASS_VAR_DEC tc = (TYPE_CLASS_VAR_DEC)t;
+      t = tc.t;
     }
     if (t == null || t == TYPE_VOID.getInstance()) {
       return type;

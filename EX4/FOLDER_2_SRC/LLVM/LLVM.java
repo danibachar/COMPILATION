@@ -31,47 +31,6 @@ public class LLVM
 	/***********************/
 	public PrintWriter fileWriter;
 
-	// private Map<Integer, Map<String, TEMP>> varScopeMap = new HashMap<Integer,Map<String, TEMP>>();
-
-	// public TEMP findVarRecursive(String var_name, int scope) {
-	// 		for (int i = scope; i >= 0; i--) {
-	// 			Map<String, TEMP> scopeMap = varScopeMap.get(scope);
-	// 			if (scopeMap != null) {
-	// 				TEMP t = scopeMap.get(var_name);
-	// 				if (t != null) {
-	// 					return t;
-	// 				}
-	// 			}
-	// 		}
-	// 		return null;
-	// }
-
-	// public TEMP fetchTempFromScope(String var_name, int scope, boolean autoCreate) {
-	// 	System.out.format("fetchTempFromScope - var_name=%s\nscope=%d\nautoCreate=%s\n",var_name, scope, autoCreate);
-	// 	// Fetch the scope map and allocate if non-exists
-	// 	Map<String, TEMP> scopeMap = varScopeMap.get(scope);
-	// 	if (scopeMap == null) {
-	// 		scopeMap = new HashMap();
-	// 		varScopeMap.put(scope, scopeMap);
-	// 	}
-	// 	// try fetch from current scope.
-	// 	// if fails try to fetch from global scope
-	// 	TEMP t = scopeMap.get(var_name);
-	// 	if (t == null && autoCreate) {
-	// 		t = TEMP_FACTORY.getInstance().getFreshTEMP();
-	// 		System.out.format("fetchTempFromScope - DIDNOT find var_name=%s\nin scope=%d\n created=%d\n",var_name, scope,t.getSerialNumber());
-	// 		scopeMap.put(var_name, t);
-	// 	} else {
-	// 		System.out.format("fetchTempFromScope - DID find var_name=%s\nin scope=%d\n created=%d\n",var_name, scope,t.getSerialNumber());
-	// 	}
-	// 	//update not sure if needed - not familiar with java reference / value
-	// 	varScopeMap.put(scope, scopeMap);
-	// 	return t;
-	// }
-
-	/***********************/
-	/* The file writer ... */
-	/***********************/
 	public void finalizeFile()
 	{
 		// fileWriter.format("  ret i32 0\n");
@@ -176,11 +135,14 @@ public class LLVM
 		fileWriter.format("  %%Temp_%d = load i32, i32* %%Temp_%d, align 4\n",idxdst, idxsrc);
 	}
 
-	public void load_from_var(TEMP dst, String var_name)
+	public void load_from_var(TEMP dst, String var_name, String src_type, String dst_type, int align)
 	{
+		// Load Examples:
+	 	// 	%1 = load i8*, i8** @y, align 8 // global
+		//	%14 = load i8*, i8** %4, align 8 // local/temp
 		System.out.format("@@@@ LLVM - load from -> %s to -> %%Temp_%d\n",var_name, dst.getSerialNumber());
 		int idxdst=dst.getSerialNumber();
-		fileWriter.format("  %%Temp_%d = load i32, i32* @%s, align 4\n",idxdst, var_name);
+		fileWriter.format("  %%Temp_%d = load %s, %s @%s, align %d\n",idxdst, src_type, dst_type, var_name, align);
 	}
 
 	public void store_to_temp(TEMP dst, TEMP src)
@@ -233,6 +195,34 @@ public class LLVM
 		fileWriter.format("  %%zero_%d = load i32, i32* @my_zero, align 4\n",x);
 		fileWriter.format("  %%Temp_%d = add nsw i32 %%zero_%d, %d\n",idx,x++,value);
 	}
+
+	public void constify(String name, String value) {
+		value = value.replace("\"", "");
+		System.out.format("@@@@ LLVM - constify - %s = %s\n",name,value);
+		// Example:
+		// @STR.AAA = constant [4 x i8] c"AAA\00", align 1
+
+		int len = value.length()+1;
+
+		fileWriter.format("@%s = constant [%d x i8] c\"%s\\00\", align 1\n", name+".VAR",len,value);
+	}
+
+	public void stringify(String name, String value)
+	{
+		value = value.replace("\"", "");
+		System.out.format("@@@@ LLVM - stringify- %s = %s\n",name,value);
+		// int idx=dst.getSerialNumber();
+		// Examples:
+		// store i8* getelementptr inbounds ([4 x i8], [4 x i8]* @STR.BBB, i32 0, i32 0), i8** @STR.BBB.VAR, align 8
+		// VARIABLES
+		// 1) @STR.BBB
+		// 2) @STR.BBB.VAR
+
+		// 3) len
+		int len = value.length()+1;
+		fileWriter.format("  store i8* getelementptr inbounds ([%d x i8], [%d x i8]* @%s, i32 0, i32 0), i8** @%s, align 8\n", len, len, name+".VAR",name );
+	}
+
 	public void add(TEMP dst,TEMP oprnd1,TEMP oprnd2)
 	{
 		System.out.format("@@@@ LLVM - add\n");
@@ -293,6 +283,9 @@ public class LLVM
 	private void bit_code_globals(Pair<String, AST_EXP> pair) {
 		System.out.format("@@@@ LLVM - globalVarsInitCommands\n");
 		// String var_name,TEMP src, int scope
+		if (is_string_exp(pair.getValue())) {
+			return;
+		}
 		try {
 			IR.getInstance().auto_exec_mode = true;
 			store(pair.getKey(), pair.getValue().IRme(), 0);// 0 as we are in global scope
@@ -304,12 +297,41 @@ public class LLVM
 
 		// ir_command.LLVM_bitcode_me();
 	}
+	private boolean is_string_exp(AST_EXP e) {
+		return (e instanceof AST_EXP_STRING);
+	}
+	private void print_consts_strings(Pair<String, AST_EXP> pair) {
+		if (!is_string_exp(pair.getValue())) {
+			return;
+		}
+		AST_EXP_STRING e = (AST_EXP_STRING)pair.getValue();
+		constify(pair.getKey(), e.value);
+	}
+
+	private void print_copy_const_str_to_var_str(Pair<String, AST_EXP> pair) {
+		if (!is_string_exp(pair.getValue())) {
+			return;
+		}
+		AST_EXP_STRING e = (AST_EXP_STRING)pair.getValue();
+		stringify(pair.getKey(), e.value);
+	}
 
 	private void init_global_vars() {
+		// Predefine string constatnts
+		// IR.getInstance()
+		// 	.globalVarsInitCommands
+		// 	.forEach((nameExpTuple) -> print_consts_strings(nameExpTuple));
+			// Declare func
 		print_open_func("init_globals", "", "void");
+		// init all globals (int, string, array, class)
+		// STRINGS
 		IR.getInstance()
 			.globalVarsInitCommands
-			.forEach((ir_command) -> bit_code_globals(ir_command));
+			.forEach((nameExpTuple) -> print_copy_const_str_to_var_str(nameExpTuple));
+		// REST
+		IR.getInstance()
+			.globalVarsInitCommands
+			.forEach((nameExpTuple) -> bit_code_globals(nameExpTuple));
 		print_close_func(null, "void", null);
 	}
 

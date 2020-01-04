@@ -55,13 +55,15 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 
 	public TEMP IRme() throws Exception
 	{
+		TYPE t = SYMBOL_TABLE.getInstance().find(name);
+		String src_type = AST_HELPERS.type_to_string(t);
+		int align = AST_HELPERS.type_to_align(t);
 
 		TEMP dst = TEMP_FACTORY.getInstance().getFreshTEMP();
 		TEMP src = TEMP_FACTORY.getInstance().findVarRecursive(name, myScope);
 		if (src == null) {
-
 			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Load_From_Var(dst, name));
+				.Add_IRcommand(new IRcommand_Load_From_Var(dst, name, src_type, src_type+"*", align));
 				return dst;
 		}
 		IR.getInstance()

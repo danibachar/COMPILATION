@@ -54,8 +54,15 @@ public class AST_EXP_STRING extends AST_EXP
 	public TEMP IRme() throws Exception
 	{
 		//TODO - Specail handling strings, separate needs to handle globaly
-		
-		System.out.format("IRme AST_EXP_STRING\n(%s)\nScope=%d",value,myScope);
-		return null;
+
+		System.out.format("IRme AST_EXP_STRING(%s), Scope=%d\n",value,myScope);
+		if (myScope == 0) {
+				return null;
+		}
+		TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
+		// IR.getInstance().Add_IRcommand(new IRcommandTempString(t,value));
+		return t;
+		// return null;
+
 	}
 }

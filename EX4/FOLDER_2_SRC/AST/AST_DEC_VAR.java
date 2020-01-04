@@ -124,6 +124,31 @@ public class AST_DEC_VAR extends AST_DEC
 		/*********************************************************/
 		/* [4] Return value is irrelevant for class declarations */
 		/*********************************************************/
+
+		// Constant declarations
+		if (initialValue != null && t == TYPE_STRING.getInstance()){
+			AST_EXP_STRING e = (AST_EXP_STRING)initialValue;
+			IR.getInstance()
+				.Add_IRcommand(new IRcommandConstString(name, e.value));
+				// name = name+".VAR1"
+				Pair<String, AST_EXP> p = new Pair<String, AST_EXP>(name, initialValue);
+				IR.getInstance()
+					.globalVarsInitCommands
+					.add(p);
+
+		} else {
+			System.out.format("###### ONLY STRING IRme - VAR-DEC(%s):%s GLOBAL Scope=%d\n",name,type,myScope);
+		}
+
+		if (myScope == 0 ||  t == TYPE_STRING.getInstance()) {
+			String type = AST_HELPERS.type_to_string(t);
+			int align = AST_HELPERS.type_to_align(t);
+			String type_val = AST_HELPERS.type_to_def_ret_val(t);
+			// Alloc
+			IR.getInstance()
+				.Add_IRcommand(new IRcommand_Allocate_Global(name, type, type_val, align, myScope));
+		}
+
 		// return null;
 		return t;
 	}
@@ -142,40 +167,59 @@ public class AST_DEC_VAR extends AST_DEC
 			t = tc.t;
 		}
 
-		String type = "i32";
-		String type_val = "0";
-		int align = 4;
-		if (t.isClass() || t.isArray()) {
-			type = "i32*";
-			type_val = "null";
-			align = 8;
-		}
-		if (t == TYPE_STRING.getInstance()) {
-			type = "i8*";
-			type_val = "null";
-			align = 8;
-		}
+		String type = AST_HELPERS.type_to_string(t);
+		int align = AST_HELPERS.type_to_align(t);
+		String type_val = AST_HELPERS.type_to_def_ret_val(t);
+
+		// if (t.isClass() || t.isArray()) {
+		// 	type = "i32*";
+		// 	type_val = "null";
+		// 	align = 8;
+		// }
+		// if (t == TYPE_STRING.getInstance()) {
+		// 	type = "i8*";
+		// 	type_val = "null";
+		// 	align = 8;
+		// }
+
+		/* Handling logic
+			int:
+			 handled,
+			string:
+				we need to create a global var with the value, just like for a regular global var,
+				then we need to continue with the local var
+				note we need to use the name to genarate 2 names!
+				one for the global var that holds the value - copied from the const - remeber to handled
+				and one for the local var - need to alloc!
+			array:
+			class:
+		*/
+
 
 		// If Global VAR
 		if (myScope == 0) {
+			// name = name+".VAR1"
+			System.out.format("IRme - VAR-DEC(%s):%s GLOBAL Scope=%d\n",name,type,myScope);
 			// Alloc
-			IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Global(name, type, type_val, align, myScope));
-			// Add global function
-			if (initialValue != null) {
-				Pair<String, AST_EXP> p = new Pair<String, AST_EXP>(name, initialValue);
-				IR.getInstance()
-					.globalVarsInitCommands
-					.add(p);
-					// .add(new IRcommand_Store(name, initialValue.IRme(), myScope));
-			}
+			// IR.getInstance()
+			// 	.Add_IRcommand(new IRcommand_Allocate_Global(name, type, type_val, align, myScope));
+
+			// if (initialValue != null) {
+			// 	// Add global function
+			// 	Pair<String, AST_EXP> p = new Pair<String, AST_EXP>(name, initialValue);
+			// 	IR.getInstance()
+			// 		.globalVarsInitCommands
+			// 		.add(p);
+			// 		// .add(new IRcommand_Store(name, initialValue.IRme(), myScope));
+			// }
 			return null;
 		}
 		// If Local Scope
+		System.out.format("IRme - VAR-DEC(%s):%s LOCAL Scope=%d\n",name,type,myScope);
 		// Find or alloc if needed
 		TEMP tt = TEMP_FACTORY.getInstance().fetchTempFromScope(name, myScope, true);
 		IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Local(tt, type, type_val, align, myScope));
 		if (initialValue != null) {
-			// TODO - check if global or local!
 			IR.getInstance()
 				.Add_IRcommand(new IRcommand_Store_To_Temp(tt, initialValue.IRme()));
 		}

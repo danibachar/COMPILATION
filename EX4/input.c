@@ -1,6 +1,6 @@
 
 #include <stdio.h>
-
+#include <string.h>
 // class Student
 // struct Student
 // {
@@ -20,34 +20,52 @@
 //   printf("%d\n", s.pin);
 // }
 
-void foo(int x, int y) {
-  int v = x+y;
-  if (v > 10) {
-    printf("%d\n", 100);
-    return;
-  }
-  printf("%d\n", 10);
-  return;// y*x;
-}
-//
-// char* foo1(int x, int y) {
-//   return "y*x";
+// void foo(int x, int y) {
+//   int v = x+y;
+//   if (v > 10) {
+//     printf("%d\n", 100);
+//     return;
+//   }
+//   printf("%d\n", 10);
+//   return;// y*x;
 // }
 //
-int main()
-{
-  int i1 = 7;
-  int i2 = 10;
-  // Student *st = new Student();
-  if (i1 > 5) {
-      printf("%d\n", i1);
-      return 1;
-  }
-  // int *a = new int[100];
-  foo(i1, i2);
-  printf("%d\n", i2);
-  // printf("%d\n", foo(i1, i2));
+// char * foo() {
+//   char *grr = "dfgd";
+//   return  grr;
+// }
+
+int main() {
+  char* y = "1234555";
+  printf("%s\n", y);
+  // printf("%s\n", x);
+  // printf("%s\n", foo());
+  //
+  // char str[80];
+  // strcpy_s(str, "these ");
+  // strcat_s(str, "strings ");
+  // strcat_s(str, "are ");
+  // strcat_s(str, "concatenated.");
+  // printf("%s\n", str);
 }
+// char* foo1(int x, int y) {
+//   return "y*xdddddd";
+// }
+//
+// int main()
+// {
+//   int i1 = 7;
+//   int i2 = 10;
+//   // Student *st = new Student();
+//   if (i1 < 5) {
+//       printf("%d\n", i1);
+//       return 1;
+//   }
+//   // int *a = new int[100];
+//   char* res = foo1(i1, i2);
+//   printf("%s\n", res);
+//   // printf("%d\n", foo(i1, i2));
+// }
 
 // int foo1(int i1, int i2) {
 //   if (i1+i2 < 50) {

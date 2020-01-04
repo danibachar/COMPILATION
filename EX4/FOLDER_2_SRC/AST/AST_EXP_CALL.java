@@ -19,6 +19,8 @@ public class AST_EXP_CALL extends AST_EXP
 	public AST_EXP_LIST params;
 	public AST_EXP_VAR var;
 
+	private ArrayList<TYPE> sent_input_params = new ArrayList<TYPE>();
+
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
@@ -182,7 +184,7 @@ public class AST_EXP_CALL extends AST_EXP
 	{
 
 		ArrayList<TYPE> expected_input_params = new ArrayList<TYPE>();
-		ArrayList<TYPE> sent_input_params = new ArrayList<TYPE>();
+		sent_input_params.clear();
 
 		for (TYPE_LIST it = original; it  != null; it = it.tail) {
 			if (it.head != null)  {
@@ -286,7 +288,7 @@ public class AST_EXP_CALL extends AST_EXP
 
 				String name = String.format("%%Temp_%d", temp_param.getSerialNumber());
 				//type temp_x
-				String type = "i32";
+				String type = AST_HELPERS.type_to_string(sent_input_params.get(counter));
 				if (counter == 0) {
 					params_sent_string+=String.format("%s %s", type, name);
 				} else {

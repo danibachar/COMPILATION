@@ -59,8 +59,8 @@ public class AST_EXP_INT extends AST_EXP
 
 	public TEMP IRme() throws Exception
 	{
-		
-		System.out.format("IRme - AST_EXP_INT( %d )\nnScope=%d\n",value,myScope);
+
+		System.out.format("IRme - AST_EXP_INT( %d ), nScope=%d\n",value,myScope);
 		TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
 		IR.getInstance().Add_IRcommand(new IRcommandConstInt(t,value));
 		return t;

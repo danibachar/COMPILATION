@@ -141,14 +141,6 @@ public class AST_DEC_FUNC extends AST_DEC
 		/*********************************************/
 		TYPE actualReturnType = null;
 		if (body != null) { actualReturnType = body.SemantMe(); }
-
-		// Validate the the actual return type from the body is identical to the retuen type configured
-		// TODO -- actualReturnType == returnType
-		// if (actualReturnType != returnType)
-		// {
-		// 	System.out.format(">> ERROR [%d] return type = %s, and body (actual return type = %s) are not the same \n",this.lineNumber, returnType, actualReturnType);
-		// 	throw new AST_EXCEPTION(this);
-		// }
 		/*****************/
 		/* [4] End Scope */
 		/*****************/
