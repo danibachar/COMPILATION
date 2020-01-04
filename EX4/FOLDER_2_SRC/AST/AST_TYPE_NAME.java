@@ -82,17 +82,6 @@ public class AST_TYPE_NAME extends AST_Node
 
 	public TEMP IRme() throws Exception
 	{
-		// TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
-
-		// String var_name;
-		// String ptr_type;
-		// String ptr_type_init_val;
-		// int align;
-
-		// IR.getInstance()
-		// 	.Add_IRcommand(new IRcommand_Allocate(name, "i32", "0", 4, myScope+1));
-		// IR.getInstance()
-			// 	.Add_IRcommand(new IRcommand_Load(temp_param, name, myScope));
 		System.out.format("IRMe - AST_TYPE_NAME NODE(%s):%s\nScope=%d\n",name, type, myScope+1);
 		return null;
 	}

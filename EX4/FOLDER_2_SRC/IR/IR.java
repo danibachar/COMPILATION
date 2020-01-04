@@ -13,13 +13,15 @@ import java.util.*;
 /* PROJECT IMPORTS */
 /*******************/
 import TEMP.*;
+import AST_EXCEPTION.*;
+import AST.*;
 
 public class IR
 {
 	private IRcommand head=null;
 	private IRcommandList tail=null;
 
-	private ArrayList<String> globalFunctions = new ArrayList<String>();
+	public ArrayList<IRcommand> globalVarsInitCommands = new ArrayList<IRcommand>();
 
 	/******************/
 	/* 	IT Scoping 		*/

@@ -56,11 +56,11 @@ entry:
 @.str = private unnamed_addr constant [4 x i8] c"%d \00", align 1
 declare dso_local i32 @printf(i8*, ...)
 
-;;;;;;;;;;;;;;;;;;;
-;                 ;
-; GLOBAL VARIABLE ;
-;                 ;
-;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;:;
+;                  ;
+; GLOBAL VARIABLES ;
+;                  ;
+;;;;;;;;;;;;;;;;;;:;
 define void @main() #0 {
   %zero_0 = load i32, i32* @my_zero, align 4
   %Temp_0 = add nsw i32 %zero_0, 10

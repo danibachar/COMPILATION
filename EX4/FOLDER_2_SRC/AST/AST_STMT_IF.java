@@ -92,7 +92,7 @@ public class AST_STMT_IF extends AST_STMT
 
 	public TEMP IRme() throws Exception
 	{
-		
+
 		System.out.format("IRme - AST_STMT_IF\nScope=%d\n",myScope);
 		/*******************************/
 		/* [1] Allocate 2 fresh labels */
@@ -104,12 +104,10 @@ public class AST_STMT_IF extends AST_STMT
 		/*********************************/
 		/* [2] entry label for the while */
 		/*********************************/
-		IR.getInstance().Add_IRcommand(
-			new IRcommand_Jump_Label(
-				label_if_cond));
-		IR.getInstance().Add_IRcommand(
-			new IRcommand_Label(
-				label_if_cond));
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Jump_Label(label_if_cond));
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Label(label_if_cond));
 
 		/********************/
 		/* [3] cond.IRme(); */
@@ -119,11 +117,8 @@ public class AST_STMT_IF extends AST_STMT
 		/************************************/
 		/* [4] Jump conditionally to if end */
 		/************************************/
-		IR.getInstance().Add_IRcommand(
-			new IRcommand_Jump_If_Eq_To_Zero(
-				cond_temp,
-				label_if_exit,
-				label_if_body));
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Jump_If_Eq_To_Zero(cond_temp,label_if_exit,label_if_body));
 
 		/*******************/
 		/* [5] body.IRme() */
@@ -133,15 +128,14 @@ public class AST_STMT_IF extends AST_STMT
 		/***************************/
 		/* [6] Jump to the if exit */
 		/***************************/
-		IR.getInstance().Add_IRcommand(
-			new IRcommand_Jump_Label(
-				label_if_exit));
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Jump_Label(label_if_exit));
 
 		/**********************/
 		/* [7] Loop end label */
 		/**********************/
-		IR.getInstance().Add_IRcommand(
-			new IRcommand_Label(label_if_exit));
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Label(label_if_exit));
 
 		/*******************/
 		/* [8] return null */

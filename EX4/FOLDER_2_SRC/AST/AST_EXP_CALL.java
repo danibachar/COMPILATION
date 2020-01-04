@@ -282,8 +282,6 @@ public class AST_EXP_CALL extends AST_EXP
 				TEMP temp_param = it.head.IRme();
 
 				String name = String.format("%%Temp_%d", temp_param.getSerialNumber());
-				// We should remo
-	
 				//type temp_x
 				String type = "i32";
 				if (counter == 0) {

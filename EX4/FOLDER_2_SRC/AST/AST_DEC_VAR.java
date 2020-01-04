@@ -133,19 +133,7 @@ public class AST_DEC_VAR extends AST_DEC
 		if (initialValue != null) System.out.format("IRme - VAR-DEC(%s):%s := initialValue\nScope=%d\n",name,type,myScope);
 		if (initialValue == null) System.out.format("IRme - VAR-DEC(%s):%s                \nScope=%d\n",name,type,myScope);
 
-
-		/*
-		 Here we need to pay attention to the scope:
-		 If we are in a global scope:
-			- allocate global var
-			- if initValue ?
-				- we need to create private func
-				- we need to apply store from within it
-		Else we are in some scope -
-			- allocate local var - use scope from symbole tyble
-			- if initValue ?
-				- we need to sttore
-		*/
+		// Move this to separate class to hold the type logice over there
 		TYPE t = SYMBOL_TABLE.getInstance().find(type);
 
 		if (t.isClassVar()) {
@@ -167,14 +155,23 @@ public class AST_DEC_VAR extends AST_DEC
 			align = 8;
 		}
 
-
+		// If Global VAR
 		if (myScope == 0) {
-				IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Global(name, type, type_val, align, myScope));
-		} else {
-			TEMP tt = IR.getInstance().fetchTempFromScope(name, myScope, true);
-			IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Local(tt, type, type_val, align, myScope));
+			// Alloc
+			IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Global(name, type, type_val, align, myScope));
+			// Add global function
+			if (initialValue != null) {
+
+				IR.getInstance()
+					.globalVarsInitCommands
+					.add(new IRcommand_Store(name, initialValue.IRme(), myScope));
+			}
+			return null;
 		}
-		// IR.getInstance().Add_IRcommand(new IRcommand_Allocate(name, type, type_val, align, myScope));
+		// If Local Scope
+		// Find or alloc if needed
+		TEMP tt = IR.getInstance().fetchTempFromScope(name, myScope, true);
+		IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Local(tt, type, type_val, align, myScope));
 		if (initialValue != null) {
 			IR.getInstance().Add_IRcommand(new IRcommand_Store(name, initialValue.IRme(), myScope));
 		}

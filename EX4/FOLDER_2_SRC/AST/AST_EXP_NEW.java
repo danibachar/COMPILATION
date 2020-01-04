@@ -104,7 +104,7 @@ public class AST_EXP_NEW extends AST_EXP
 
 	public TEMP IRme() throws Exception
 	{
-
+		// This is done only for arrays or classes
 		System.out.format("IRme - AST_EXP_NEW type - %s\nScope=%d\n" ,type,myScope);
 		return null;
 	}
