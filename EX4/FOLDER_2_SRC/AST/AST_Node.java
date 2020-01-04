@@ -1,6 +1,7 @@
 package AST;
 
 import TEMP.*;
+import TYPES.*;
 
 public abstract class AST_Node
 {
@@ -14,6 +15,8 @@ public abstract class AST_Node
 	public int lineNumber;
 
 	public int myScope;
+
+	public TYPE myType;
 
 	/***********************************************/
 	/* The default message for an unknown AST node */

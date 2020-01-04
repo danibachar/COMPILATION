@@ -50,12 +50,13 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 	{
 		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// System.out.format("SEMANTME - AST_EXP_VAR_SIMPLE( %s )\n",name);
-		return SYMBOL_TABLE.getInstance().findField(name,false);
+		myType = SYMBOL_TABLE.getInstance().findField(name,false);
+		return myType;
 	}
 
 	public TEMP IRme() throws Exception
 	{
-		TYPE t = SYMBOL_TABLE.getInstance().find(name);
+		TYPE t = myType;//SYMBOL_TABLE.getInstance().findField(name,false);
 		String src_type = AST_HELPERS.type_to_string(t);
 		int align = AST_HELPERS.type_to_align(t);
 
@@ -66,8 +67,9 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 				.Add_IRcommand(new IRcommand_Load_From_Var(dst, name, src_type, src_type+"*", align));
 				return dst;
 		}
+		System.out.format("Load_From_Temp - name = %s, src_type = %s, align = %d\n",name,src_type,align);
 		IR.getInstance()
-			.Add_IRcommand(new IRcommand_Load_From_Temp(dst, src));
+			.Add_IRcommand(new IRcommand_Load_From_Temp(dst, src, src_type, src_type+"*", align));
 		return dst;
 	}
 

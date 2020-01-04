@@ -25,7 +25,7 @@ public class AST_EXP_STRING extends AST_EXP
 
 		// System.out.format("====================== exp -> STRING( %s )\n", value);
 		this.lineNumber = lineNumber;
-		this.value = value;
+		this.value = value.replace("\"", "");;
 	}
 
 	/******************************************************/
@@ -60,7 +60,10 @@ public class AST_EXP_STRING extends AST_EXP
 				return null;
 		}
 		TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
+		// public void store_to_temp(TEMP dst, TEMP src, String src_type, String dst_type, int align)
 		// IR.getInstance().Add_IRcommand(new IRcommandTempString(t,value));
+		// IR.getInstance()
+		// 	.Add_IRcommand(new IRcommand_Store_To_Temp(tt, t, type, type+"*", align));
 		return t;
 		// return null;
 

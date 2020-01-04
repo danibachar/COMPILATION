@@ -123,6 +123,7 @@ public class AST_EXP_CALL extends AST_EXP
 					}
 
 				}
+				myType = funcDec.returnType;
 				return funcDec.returnType;
 		} else {
 			// Global/Global in scope function call!!!
@@ -174,7 +175,7 @@ public class AST_EXP_CALL extends AST_EXP
 				}
 
 			}
-
+			myType = funcTypeValidated.returnType;
 			return funcTypeValidated.returnType;
 		}
 
@@ -269,7 +270,7 @@ public class AST_EXP_CALL extends AST_EXP
 		System.out.format("IRme - Scope=%d\n",myScope);
 		TYPE_FUNCTION funcTypeValidated = (TYPE_FUNCTION)SYMBOL_TABLE.getInstance().find(funcName);
 		String type_string = AST_HELPERS.type_to_string(funcTypeValidated.returnType);
-		System.out.format("IRme - Return type=%sm\n",type_string);
+		System.out.format("IRme - Return type = %s\n",type_string);
 
 
 		/*

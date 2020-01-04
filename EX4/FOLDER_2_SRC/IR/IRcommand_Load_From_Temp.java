@@ -18,11 +18,17 @@ public class IRcommand_Load_From_Temp extends IRcommand
 {
 	TEMP dst;
 	TEMP src;
+	String src_type;
+	String dst_type;
+	int align;
 
-	public IRcommand_Load_From_Temp(TEMP dst, TEMP src)
+	public IRcommand_Load_From_Temp(TEMP dst, TEMP src, String src_type, String dst_type, int align)
 	{
 		this.dst = dst;
 		this.src = src;
+		this.src_type = src_type;
+		this.dst_type = dst_type;
+		this.align = align;
 	}
 
 	/*******************/
@@ -30,7 +36,7 @@ public class IRcommand_Load_From_Temp extends IRcommand
 	/*******************/
 	public void LLVM_bitcode_me()
 	{
-		LLVM.getInstance().load_from_temp(dst, src);
+		LLVM.getInstance().load_from_temp(dst, src, src_type, dst_type, align);
 	}
 
 	/***************/

@@ -18,11 +18,18 @@ public class IRcommand_Store_To_Var extends IRcommand
 {
 	String var_name;
 	TEMP src;
+	String src_type;
+	String dst_type;
+	int align;
 
-	public IRcommand_Store_To_Var(String var_name,TEMP src)
+	public IRcommand_Store_To_Var(String var_name,TEMP src,String src_type, String dst_type, int align)
 	{
 		this.src      = src;
 		this.var_name = var_name;
+		this.src_type = src_type;
+		this.dst_type = dst_type;
+		this.align = align;
+
 	}
 
 	/*******************/
@@ -30,7 +37,7 @@ public class IRcommand_Store_To_Var extends IRcommand
 	/*******************/
 	public void LLVM_bitcode_me()
 	{
-		LLVM.getInstance().store_to_var(var_name, src);
+		LLVM.getInstance().store_to_var(var_name, src, src_type, dst_type, align);
 	}
 
 	/***************/

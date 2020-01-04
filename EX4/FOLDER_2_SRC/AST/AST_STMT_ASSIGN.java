@@ -160,11 +160,11 @@ public class AST_STMT_ASSIGN extends AST_STMT
 		if (dst == null) {
 			// throw new AST_EXCEPTION(var.lineNumber);
 			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Store_To_Var(((AST_EXP_VAR_SIMPLE) var).name, src));
+				.Add_IRcommand(new IRcommand_Store_To_Var(((AST_EXP_VAR_SIMPLE) var).name, src, "i32", "i32*",4));
 				return null;
 		}
 		IR.getInstance()
-			.Add_IRcommand(new IRcommand_Store_To_Temp(dst, src));
+			.Add_IRcommand(new IRcommand_Store_To_Temp(dst, src, "i32", "i32*", 4));
 		// IR.getInstance()
 		// 	.Add_IRcommand(new IRcommand_Store(((AST_EXP_VAR_SIMPLE) var).name, src, myScope));
 

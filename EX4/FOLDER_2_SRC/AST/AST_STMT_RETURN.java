@@ -116,14 +116,14 @@ public class AST_STMT_RETURN extends AST_STMT
 	{
 		TEMP dst = TEMP_FACTORY.getInstance().fetch_shared_return_temp();
 		TEMP src = null;
-		if (exp != null) { src =exp.IRme(); }
+		if (exp != null) { src = exp.IRme(); }
 
 		System.out.format("IRme - AST_STMT_RETURN NODE - SRC:(%s), DST:(%s), Scope=%d\n",src, dst, myScope);
 
 		if (src != null) {
 			if (dst != null) {
 				IR.getInstance()
-					.Add_IRcommand(new IRcommand_Store_To_Temp(dst, src));
+					.Add_IRcommand(new IRcommand_Store_To_Temp(dst, src, "i32", "i32*", 4));
 			}
 		}
 		String return_label = TEMP_FACTORY.getInstance().fetch_shared_return_label();

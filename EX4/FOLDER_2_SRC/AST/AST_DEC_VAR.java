@@ -124,30 +124,74 @@ public class AST_DEC_VAR extends AST_DEC
 		/*********************************************************/
 		/* [4] Return value is irrelevant for class declarations */
 		/*********************************************************/
-
-		// Constant declarations
-		if (initialValue != null && t == TYPE_STRING.getInstance()){
-			AST_EXP_STRING e = (AST_EXP_STRING)initialValue;
+		String type = AST_HELPERS.type_to_string(t);
+		int align = AST_HELPERS.type_to_align(t);
+		String type_val = AST_HELPERS.type_to_def_ret_val(t);
+		if (myScope == 0) {
+			// Alloc
 			IR.getInstance()
-				.Add_IRcommand(new IRcommandConstString(name, e.value));
-				// name = name+".VAR1"
+				.Add_IRcommand(new IRcommand_Allocate_Global(name, type, type_val, align, myScope));
+			if (initialValue != null) {
 				Pair<String, AST_EXP> p = new Pair<String, AST_EXP>(name, initialValue);
 				IR.getInstance()
 					.globalVarsInitCommands
 					.add(p);
-
-		} else {
-			System.out.format("###### ONLY STRING IRme - VAR-DEC(%s):%s GLOBAL Scope=%d\n",name,type,myScope);
+			}
 		}
 
-		if (myScope == 0 ||  t == TYPE_STRING.getInstance()) {
-			String type = AST_HELPERS.type_to_string(t);
-			int align = AST_HELPERS.type_to_align(t);
-			String type_val = AST_HELPERS.type_to_def_ret_val(t);
-			// Alloc
+		if (t == TYPE_STRING.getInstance()) {
+			// TEMP tt = TEMP_FACTORY.getInstance().fetchTempFromScope(name, myScope, true);
+			if (initialValue != null) {
+				AST_EXP_STRING e = (AST_EXP_STRING)initialValue;
+				IR.getInstance()
+					.Add_IRcommand(new IRcommandConstString(name, e.value));
+			}
+
+		} else if (t == TYPE_INT.getInstance()) {
+			if (myScope == 0) {
+				System.out.format("@@@@@EARLY RETURN\n");
+				return null; //global handeled in sesmantme
+			}
+			TEMP tt = TEMP_FACTORY.getInstance().fetchTempFromScope(name, myScope, true);
 			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Allocate_Global(name, type, type_val, align, myScope));
+				.Add_IRcommand(new IRcommand_Allocate_Local(tt, type, type_val, align, myScope));
+			if (initialValue != null) {
+				System.out.format("2@@@@@initialValue\n");
+				IR.getInstance()
+					.Add_IRcommand(new IRcommand_Store_To_Temp(tt, initialValue.IRme(), type, type+"*", align));
+			}
+
+		} else if (t.isClass()) {
+			throw new AST_EXCEPTION(this.lineNumber);
+		} else if (t.isArray()) {
+			throw new AST_EXCEPTION(this.lineNumber);
+		} else if (t == TYPE_NIL.getInstance()) {
+			throw new AST_EXCEPTION(this.lineNumber);
+		} else if (t == TYPE_VOID.getInstance()) {
+		} else {
+			throw new AST_EXCEPTION(this.lineNumber);
+			// IR.getInstance()
+			// 	.Add_IRcommand(new IRcommand_Store_To_Temp(tt, initialValue.IRme(), type, type+"*", align));
 		}
+		// Constant declarations
+		// if (initialValue != null && t == TYPE_STRING.getInstance()){
+		// 	AST_EXP_STRING e = (AST_EXP_STRING)initialValue;
+		// 	IR.getInstance()
+		// 		.Add_IRcommand(new IRcommandConstString(name, e.value));
+		// 		// name = name+".VAR1"
+		// 		if (myScope == 0) {
+		// 			Pair<String, AST_EXP> p = new Pair<String, AST_EXP>(name, initialValue);
+		// 			IR.getInstance()
+		// 				.globalVarsInitCommands
+		// 				.add(p);
+		// 		}
+		//
+		//
+		// } else {
+		// 	System.out.format("###### ONLY STRING IRme - VAR-DEC(%s):%s GLOBAL Scope=%d\n",name,type,myScope);
+		// }
+
+
 
 		// return null;
 		return t;
@@ -171,60 +215,135 @@ public class AST_DEC_VAR extends AST_DEC
 		int align = AST_HELPERS.type_to_align(t);
 		String type_val = AST_HELPERS.type_to_def_ret_val(t);
 
-		// if (t.isClass() || t.isArray()) {
-		// 	type = "i32*";
-		// 	type_val = "null";
-		// 	align = 8;
-		// }
-		// if (t == TYPE_STRING.getInstance()) {
-		// 	type = "i8*";
-		// 	type_val = "null";
-		// 	align = 8;
-		// }
-
 		/* Handling logic
 			int:
-			 handled,
+				if global:
+					alloc global - outside here in semant me - hack
+					if have value:
+						init in global vars init function - outside here in semant me - hack
+					else:
+						nothing?
+				if local:
+					alloc local - %Temp_0 = alloca i32, align 4
+					if have value:
+						create new temp to store the value in
+						IRcommand_Store_To_Temp
+					else:
+						nothing?
+
 			string:
-				we need to create a global var with the value, just like for a regular global var,
-				then we need to continue with the local var
-				note we need to use the name to genarate 2 names!
-				one for the global var that holds the value - copied from the const - remeber to handled
-				and one for the local var - need to alloc!
+				create const with var name - outside here in semant me - hack
+				if global:
+					alloc global - outside here in semant me - hack
+					if have value:
+						init in global vars init function - outside here in semant me - hack
+					else:
+						nothing?
+				if local:
+					alloc local - %Temp_0 = alloca i8*, align 8
+					if have value:
+						store from global const - store i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str.VAR, i32 0, i32 0), i8** %Temp_0, align 8
+					else:
+						nothing?
 			array:
+
 			class:
+
+			nil:
+
+			void:
 		*/
 
-
-		// If Global VAR
-		if (myScope == 0) {
-			// name = name+".VAR1"
-			System.out.format("IRme - VAR-DEC(%s):%s GLOBAL Scope=%d\n",name,type,myScope);
-			// Alloc
-			// IR.getInstance()
-			// 	.Add_IRcommand(new IRcommand_Allocate_Global(name, type, type_val, align, myScope));
-
-			// if (initialValue != null) {
-			// 	// Add global function
-			// 	Pair<String, AST_EXP> p = new Pair<String, AST_EXP>(name, initialValue);
-			// 	IR.getInstance()
-			// 		.globalVarsInitCommands
-			// 		.add(p);
-			// 		// .add(new IRcommand_Store(name, initialValue.IRme(), myScope));
-			// }
-			return null;
-		}
-		// If Local Scope
-		System.out.format("IRme - VAR-DEC(%s):%s LOCAL Scope=%d\n",name,type,myScope);
-		// Find or alloc if needed
-		TEMP tt = TEMP_FACTORY.getInstance().fetchTempFromScope(name, myScope, true);
-		IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Local(tt, type, type_val, align, myScope));
-		if (initialValue != null) {
+		if (t == TYPE_STRING.getInstance()) {
+			if (myScope == 0) {
+				System.out.format("@@@@@EARLY RETURN\n");
+				return null; //global handeled in sesmantme
+			}
+			TEMP tt = TEMP_FACTORY.getInstance().fetchTempFromScope(name, myScope, true);
 			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Store_To_Temp(tt, initialValue.IRme()));
+				.Add_IRcommand(new IRcommand_Allocate_Local(tt, type, type_val, align, myScope));
+			if (initialValue != null) {
+				AST_EXP_STRING e = (AST_EXP_STRING)initialValue;
+				IR.getInstance()
+					.Add_IRcommand(new IRcommand_Store_To_Var_String(name+".VAR", tt, e.value, type, type+"*", align));
+			}
+
+		} else if (t == TYPE_INT.getInstance()) {
+			if (myScope == 0) {
+				System.out.format("@@@@@EARLY RETURN\n");
+				return null; //global handeled in sesmantme
+			}
+			TEMP tt = TEMP_FACTORY.getInstance().fetchTempFromScope(name, myScope, true);
+			IR.getInstance()
+				.Add_IRcommand(new IRcommand_Allocate_Local(tt, type, type_val, align, myScope));
+			if (initialValue != null) {
+				System.out.format("2@@@@@initialValue\n");
+				IR.getInstance()
+					.Add_IRcommand(new IRcommand_Store_To_Temp(tt, initialValue.IRme(), type, type+"*", align));
+			}
+
+		} else if (t.isClass()) {
+			throw new AST_EXCEPTION(this.lineNumber);
+		} else if (t.isArray()) {
+			throw new AST_EXCEPTION(this.lineNumber);
+		} else if (t == TYPE_NIL.getInstance()) {
+			throw new AST_EXCEPTION(this.lineNumber);
+		} else if (t == TYPE_VOID.getInstance()) {
+		} else {
+			throw new AST_EXCEPTION(this.lineNumber);
+			// IR.getInstance()
+			// 	.Add_IRcommand(new IRcommand_Store_To_Temp(tt, initialValue.IRme(), type, type+"*", align));
 		}
 
 		return null;
+
+		//
+		//
+		// // If Global VAR
+		// if (myScope == 0) {
+		// 	// name = name+".VAR1"
+		// 	System.out.format("IRme - VAR-DEC(%s):%s GLOBAL Scope=%d\n",name,type,myScope);
+		// 	// Alloc
+		// 	// IR.getInstance()
+		// 	// 	.Add_IRcommand(new IRcommand_Allocate_Global(name, type, type_val, align, myScope));
+		//
+		// 	// if (initialValue != null) {
+		// 	// 	// Add global function
+		// 	// 	Pair<String, AST_EXP> p = new Pair<String, AST_EXP>(name, initialValue);
+		// 	// 	IR.getInstance()
+		// 	// 		.globalVarsInitCommands
+		// 	// 		.add(p);
+		// 	// 		// .add(new IRcommand_Store(name, initialValue.IRme(), myScope));
+		// 	// }
+		// 	return null;
+		// }
+		// // If Local Scope
+		// System.out.format("IRme - VAR-DEC(%s):%s LOCAL Scope=%d\n",name,type,myScope);
+		// // Find or alloc if needed
+		// TEMP tt = TEMP_FACTORY.getInstance().fetchTempFromScope(name, myScope, true);
+		//
+		// IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Local(tt, type, type_val, align, myScope));
+		// if (initialValue != null) {
+		// 	System.out.format("IRme - VAR-DEC(%s)\n",t);
+		// 	if (t == TYPE_STRING.getInstance()) {
+		// 		System.out.format("IRme - VAR-DEC(%s)\n","TYPE_STRING");
+		// 		IR.getInstance()
+		// 			.Add_IRcommand(new IRcommand_Store_To_Var(name, tt, type, type+"*", align));
+		// 	} else if (t.isClass()) {
+		// 		throw new AST_EXCEPTION(this.lineNumber);
+		// 	} else if (t.isArray()) {
+		// 		throw new AST_EXCEPTION(this.lineNumber);
+		// 	} else if (t == TYPE_NIL.getInstance()) {
+		// 		throw new AST_EXCEPTION(this.lineNumber);
+		// 	} else if (t == TYPE_VOID.getInstance()) {
+		// 	} else {
+		// 		IR.getInstance()
+		// 			.Add_IRcommand(new IRcommand_Store_To_Temp(tt, initialValue.IRme(), type, type+"*", align));
+		// 	}
+		//
+		// }
+		//
+		// return null;
 	}
 
 

@@ -96,7 +96,7 @@ public class AST_DEC_ARRAY extends AST_DEC
 		/***************************************************/
 		TYPE_ARRAY newT = new TYPE_ARRAY(name, t);
 		SYMBOL_TABLE.getInstance().enter(name,newT);
-
+		myType = newT;
 		/*********************************************************/
 		/* [4] Return value is irrelevant for class declarations */
 		/*********************************************************/

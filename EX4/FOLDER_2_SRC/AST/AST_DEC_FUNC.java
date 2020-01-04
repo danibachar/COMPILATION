@@ -150,6 +150,7 @@ public class AST_DEC_FUNC extends AST_DEC
 		/* [5] Enter the Function Type to the Symbol Table */
 		/***************************************************/
 		SYMBOL_TABLE.getInstance().enter(name,f);
+		myType = returnType;
 
 		/*********************************************************/
 		/* [6] Return value is irrelevant for class declarations */
@@ -207,6 +208,8 @@ public class AST_DEC_FUNC extends AST_DEC
 		}
 		TYPE return_type = SYMBOL_TABLE.getInstance().find(returnTypeName);
 		String return_type_str = AST_HELPERS.type_to_string(return_type);
+		int align = AST_HELPERS.type_to_align(return_type);
+		String def_ret_val = AST_HELPERS.type_to_def_ret_val(return_type);
 		// check void
 		// check pointer
 		IR.getInstance()
@@ -222,7 +225,7 @@ public class AST_DEC_FUNC extends AST_DEC
 				// Alloc for return value
 				TEMP return_temp = TEMP_FACTORY.getInstance().create_shared_return_temp();
 				IR.getInstance()
-					.Add_IRcommand(new IRcommand_Allocate_Local(return_temp, "i32", "0", 4, myScope+1));
+					.Add_IRcommand(new IRcommand_Allocate_Local(return_temp, return_type_str, def_ret_val, align, myScope+1));
 			}
 
 		counter = 0;
@@ -248,7 +251,7 @@ public class AST_DEC_FUNC extends AST_DEC
 		System.out.format("########## AFTER IRme - AST_DEC_FUNC return temp = %s\n",tt);
 		//fetch typeeee
 		IR.getInstance()
-			.Add_IRcommand(new IRcommand_Decler_Func_Close(tt, return_type_str, return_label));
+			.Add_IRcommand(new IRcommand_Decler_Func_Close(tt, return_type_str, return_label, return_type_str, return_type_str+"*", align));
 		TEMP_FACTORY.getInstance().endScope(myScope);
 		// IR.getInstance().endScope();
 		// TEMP_FACTORY.getInstance().counter = bck_counter;

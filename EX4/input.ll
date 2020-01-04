@@ -9,6 +9,7 @@ target triple = "x86_64-apple-macosx10.14.0"
 ; Function Attrs: noinline nounwind optnone ssp uwtable
 define i32 @main() #0 {
   %1 = alloca i8*, align 8
+  
   store i8* getelementptr inbounds ([8 x i8], [8 x i8]* @.str, i32 0, i32 0), i8** %1, align 8
   %2 = load i8*, i8** %1, align 8
   %3 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str.1, i32 0, i32 0), i8* %2)

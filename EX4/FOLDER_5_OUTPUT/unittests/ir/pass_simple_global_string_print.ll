@@ -71,9 +71,9 @@ define void @main() #0 {
   call void @init_globals()
   %Temp_0 = load i8*, i8** @str, align 8
   call void @PrintString(i8* %Temp_0) 
-  br label %RETURN_73090
+  br label %RETURN_41315
 
-RETURN_73090:
+RETURN_41315:
 
   ret void
 }

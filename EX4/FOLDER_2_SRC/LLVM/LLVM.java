@@ -65,25 +65,29 @@ public class LLVM
 	public void print_close_func(
 		TEMP t,
 		String return_type,
-		String return_label
+		String return_label,
+		String src_type,
+		String dst_type,
+		int align
+
 	) {
-		System.out.format("@@@@ LLVM - print_close_func(%s, %s):\n",t, return_type);
+		System.out.format("@@@@ LLVM - print_close_func(%s, %s), src_type = %s, dst_type = %s\n",t, return_type, src_type,dst_type);
 		// We decalr the return label, anyone who whishes ot eraly return can jump here!
 		if (return_label != null && !return_label.isEmpty()) {
 				jump(return_label);
 				label(return_label);
 		}
 
-		if (t == null || return_type == "void") {
+		if (t == null || return_type.equals("void") || src_type.equals("void")) {
 			fileWriter.format("  ret void\n");
 
 		} else {
-			// String l = String.format("RETURN_%s", t.getSerialNumber());
-			// label(l);
-			  // %19 = load i32, i32* %3, align 4
+			System.out.format("$$#$$#$#$#$ LLVM - print_close_func(%s, %s), src_type = %s, dst_type = %s\n",t, return_type, src_type,dst_type);
+			// Examples:
+			// %19 = load i32, i32* %3, align 4
 			TEMP ret_val = TEMP_FACTORY.getInstance().getFreshTEMP();
-
-			load_from_temp(ret_val, t);
+			// ERROR type to string
+			load_from_temp(ret_val, t, src_type, dst_type, align);
 
 			int idx=ret_val.getSerialNumber();
 			fileWriter.format("  ret %s %%Temp_%d\n",return_type, idx);
@@ -105,7 +109,7 @@ public class LLVM
 		// %2 = call i8* @goo(i32 11, i32 12) //strings and classes
 		// %2 = call i32 @goo(i32 11, i32 12) // int maybe arrays?
 		// %2 = call i32* @goo(i32 11, i32 12) // maybe arrays?
-		if (return_type == "void" || return_type == null) {
+		if (return_type == null || return_type.equals("void")) {
 				fileWriter.format("  call void @%s(%s) \n", func_name, params_string);
 				return;
 		}
@@ -127,12 +131,12 @@ public class LLVM
 		fileWriter.format("@%s = global %s %s, align %s\n",var_name, ptr, ptr_init_val, align);
 	}
 
-	public void load_from_temp(TEMP dst, TEMP src)
+	public void load_from_temp(TEMP dst, TEMP src, String src_type, String dst_type, int align)
 	{
 		int idxdst = dst.getSerialNumber();
 		int idxsrc = src.getSerialNumber();
-		System.out.format("@@@@ LLVM - load from -> %%Temp_%d to -> %%Temp_%d\n",idxsrc, idxdst);
-		fileWriter.format("  %%Temp_%d = load i32, i32* %%Temp_%d, align 4\n",idxdst, idxsrc);
+		System.out.format("@@@@ LLVM - load_from_temp -> %%Temp_%d to -> %%Temp_%d\n",idxsrc, idxdst);
+		fileWriter.format("  %%Temp_%d = load %s, %s %%Temp_%d, align %d\n",idxdst, src_type, dst_type, idxsrc, align);
 	}
 
 	public void load_from_var(TEMP dst, String var_name, String src_type, String dst_type, int align)
@@ -140,26 +144,37 @@ public class LLVM
 		// Load Examples:
 	 	// 	%1 = load i8*, i8** @y, align 8 // global
 		//	%14 = load i8*, i8** %4, align 8 // local/temp
-		System.out.format("@@@@ LLVM - load from -> %s to -> %%Temp_%d\n",var_name, dst.getSerialNumber());
+		System.out.format("@@@@ LLVM - load_from_var  -> %s to -> %%Temp_%d\n",var_name, dst.getSerialNumber());
 		int idxdst=dst.getSerialNumber();
 		fileWriter.format("  %%Temp_%d = load %s, %s @%s, align %d\n",idxdst, src_type, dst_type, var_name, align);
 	}
 
-	public void store_to_temp(TEMP dst, TEMP src)
+	public void store_to_temp(TEMP dst, TEMP src, String src_type, String dst_type, int align)
 	{
 		int idxdst = dst.getSerialNumber();
 		int idxsrc = src.getSerialNumber();
-		System.out.format("@@@@ LLVM - store %%Temp_%d to -> %%Temp_%d\n",idxsrc, idxdst);
-		fileWriter.format("  store i32 %%Temp_%d, i32* %%Temp_%d, align 4\n",idxsrc, idxdst);
+		System.out.format("@@@@ LLVM - store_to_temp %%Temp_%d to -> %%Temp_%d\n",idxsrc, idxdst);
+		fileWriter.format("  store %s %%Temp_%d, %s %%Temp_%d, align %d\n",src_type,idxsrc, dst_type,idxdst, align);
 
 		// fileWriter.format("  %%Temp_%d = load i32, i32* %%Temp_%d, align 4\n",idxdst, idxsrc);
 	}
-
-	public void store_to_var(String var_name,TEMP src)
+	public void store_to_var_string(String var_name,TEMP src, String value, String src_type, String dst_type, int align)
 	{
 		int idxsrc=src.getSerialNumber();
-		System.out.format("@@@@ LLVM - store %s to -> %%Temp_%d\n",var_name, idxsrc);
-		fileWriter.format("  store i32 %%Temp_%d, i32* @%s, align 4\n",idxsrc, var_name);
+		System.out.format("@@@@ LLVM - store_to_var_string %s to -> %%Temp_%d\n",var_name, idxsrc);
+		int size = value.length()+1;
+		fileWriter.format("  store %s getelementptr inbounds ([%d x i8], [%d x i8]* @%s, i32 0, i32 0), i8** %%Temp_%d, align %d\n",src_type, size, size, var_name, idxsrc ,align);
+	}
+	public void store_to_var(String var_name,TEMP src, String src_type, String dst_type, int align)
+	{
+		// Exmpales;
+		// Store from global var init
+		// store i8* getelementptr inbounds ([8 x i8], [8 x i8]* @.str, i32 0, i32 0), i8** %1, align 8
+		// store i8* getelementptr inbounds ([4 x i8], [4 x i8]* @STR.AAA, i32 0, i32 0), i8** @STR.AAA.VAR, align 8
+		// store i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str.VAR, i32 0, i32 0), i8** %Temp_0, align 8
+		int idxsrc=src.getSerialNumber();
+		System.out.format("@@@@ LLVM - store_to_var %s to -> %%Temp_%d\n",var_name, idxsrc);
+		fileWriter.format("  store %s %%Temp_%d, %s @%s, align %d\n",src_type, idxsrc,dst_type, var_name,align);
 	}
 
 	public void store(String var_name,TEMP src, int scope)
@@ -282,7 +297,7 @@ public class LLVM
 	}
 	private void bit_code_globals(Pair<String, AST_EXP> pair) {
 		System.out.format("@@@@ LLVM - globalVarsInitCommands\n");
-		// String var_name,TEMP src, int scope
+
 		if (is_string_exp(pair.getValue())) {
 			return;
 		}
@@ -332,7 +347,7 @@ public class LLVM
 		IR.getInstance()
 			.globalVarsInitCommands
 			.forEach((nameExpTuple) -> bit_code_globals(nameExpTuple));
-		print_close_func(null, "void", null);
+		print_close_func(null, "void", null, null, null, 4);
 	}
 
 	private void call_init_global_vars() {
