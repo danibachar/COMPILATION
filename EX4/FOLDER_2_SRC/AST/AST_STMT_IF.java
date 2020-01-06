@@ -146,4 +146,16 @@ public class AST_STMT_IF extends AST_STMT
 		return t;
 	}
 
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - AST_STMT_IF\nScope=%d\n",myScope);
+		if (cond != null) { cond.Globalize(); }
+		if (body != null) { body.Globalize(); }
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_STMT_IF\nScope=%d\n",myScope);
+		if (cond != null) { cond.InitGlobals(); }
+		if (body != null) { body.InitGlobals(); }
+	}
+
 }

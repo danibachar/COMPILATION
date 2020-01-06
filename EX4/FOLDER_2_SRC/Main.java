@@ -69,6 +69,20 @@ public class Main
 			/**********************/
 			LLVM.getInstance().fileWriter = new PrintWriter(outputFilename);
 			LLVM.getInstance().bootStrapProgram();
+
+			// Globalize init global var (e.g Alloc_Global_Var) and constify strings as needed
+			IR.getInstance().auto_exec_mode = true;
+			AST.Globalize();
+			IR.getInstance().auto_exec_mode = false;
+
+			// INIT Global vars, allocate and assign - int, str, array, class
+			LLVM.getInstance().fileWriter.format("\ndefine void @init_globals() #0 {\n");
+			IR.getInstance().auto_exec_mode = true;
+			AST.InitGlobals();
+			IR.getInstance().auto_exec_mode = false;
+			LLVM.getInstance().fileWriter.format("  ret void \n}\n");
+
+			// LLVM Code Generation
 			AST.IRme();
 
 			/*******************************/

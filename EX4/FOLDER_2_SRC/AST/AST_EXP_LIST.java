@@ -90,4 +90,15 @@ public class AST_EXP_LIST extends AST_Node
 		// return null;//head.IRme();
 	}
 
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - AST_EXP_LIST\nnScope=%d\n",myScope);
+		if (head != null) head.Globalize();
+		if (tail != null) tail.Globalize();
+	}
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_EXP_LIST\nnScope=%d\n",myScope);
+		if (head != null) head.InitGlobals();
+		if (tail != null) tail.InitGlobals();
+	}
+
 }

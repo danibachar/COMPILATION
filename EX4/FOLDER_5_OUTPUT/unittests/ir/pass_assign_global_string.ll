@@ -61,20 +61,29 @@ declare dso_local i32 @printf(i8*, ...)
 ; GLOBAL VARIABLES ;
 ;                  ;
 ;;;;;;;;;;;;;;;;;;:;
-@str.dasadf123.CONST = constant [10 x i8] c"dasadf123\00", align 1
+@y.123.CONST = constant [4 x i8] c"123\00", align 1
+@y = global i8* null, align 8
+@y.12345.CONST = constant [6 x i8] c"12345\00", align 1
+@y.125.CONST = constant [4 x i8] c"125\00", align 1
+
 define void @init_globals() #0 {
-  ret void
+  store i8* getelementptr inbounds ([4 x i8], [4 x i8]* @y.123.CONST, i32 0, i32 0), i8** @y, align 8
+  ret void 
 }
+
 define void @main() #0 {
   call void @init_globals()
-  %Temp_0 = alloca i8*, align 8
-  store i8* getelementptr inbounds ([10 x i8], [10 x i8]* @str, i32 0, i32 0), i8** %Temp_1, align 8
-  store i8* %Temp_1, i8** %Temp_0, align 8
-  %Temp_2 = load i8*, i8** %Temp_0, align 8
-  call void @PrintString(i8* %Temp_2) 
-  br label %RETURN_78747
+  store i8* getelementptr inbounds ([6 x i8], [6 x i8]* @y.12345.CONST, i32 0, i32 0), i8** @y, align 8
+  %Temp_0 = load i8*, i8** @y, align 8
+  %Temp_1 = load i8*, i8** @y, align 8
+  call void @PrintString(i8* %Temp_1) 
+  store i8* getelementptr inbounds ([4 x i8], [4 x i8]* @y.125.CONST, i32 0, i32 0), i8** @y, align 8
+  %Temp_3 = load i8*, i8** @y, align 8
+  %Temp_4 = load i8*, i8** @y, align 8
+  call void @PrintString(i8* %Temp_4) 
+  br label %RETURN_47025
 
-RETURN_78747:
+RETURN_47025:
 
   ret void
 }

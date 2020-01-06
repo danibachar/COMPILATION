@@ -234,11 +234,21 @@ public class AST_DEC_CLASS extends AST_DEC
 	public TEMP IRme() throws Exception
 	{
 
-		System.out.format("IRme - AST_DEC_CLASS name = %s, parent = %s\nScope=%d\n",name, parent,myScope);
+		System.out.format("IRme - AST_DEC_CLASS name = %s, parent = %s, Scope=%d\n",name, parent,myScope);
 		// IR.getInstance().Add_IRcommand(new IRcommand_Label("main"));
 		TEMP_FACTORY.getInstance().beginScope(myScope+1);
 		if (body != null) body.IRme();
 		TEMP_FACTORY.getInstance().endScope(myScope+1);
 		return null;
+	}
+
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - AST_DEC_CLASS name = %s, parent = %s, Scope=%d\n",name, parent,myScope);
+		if (body != null) body.Globalize();
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_DEC_CLASS name = %s, parent = %s, Scope=%d\n",name, parent,myScope);
+		if (body != null) body.InitGlobals();
 	}
 }

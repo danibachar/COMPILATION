@@ -22,8 +22,6 @@ public class IR
 	private IRcommand head=null;
 	private IRcommandList tail=null;
 
-	public ArrayList< Pair<String, AST_EXP> > globalVarsInitCommands = new ArrayList< Pair<String, AST_EXP> >();
-
 	/******************/
 	/* 	IT Scoping 		*/
 	/******************/

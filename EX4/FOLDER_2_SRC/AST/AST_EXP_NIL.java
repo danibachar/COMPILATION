@@ -52,9 +52,15 @@ public class AST_EXP_NIL extends AST_EXP
 
 	public TEMP IRme() throws Exception
 	{
-
 		System.out.format("IRme AST_EXP_NIL\nScope=%d\n",myScope);
 		return null;
+	}
+	public void Globalize() throws Exception {
+		System.out.format("Globalize AST_EXP_NIL\nScope=%d\n",myScope);
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals AST_EXP_NIL\nScope=%d\n",myScope);
 	}
 
 }

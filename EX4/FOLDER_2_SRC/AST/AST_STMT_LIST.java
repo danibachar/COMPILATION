@@ -86,4 +86,16 @@ public class AST_STMT_LIST extends AST_Node
 		return t;
 	}
 
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - AST_STMT_LIST, Scope=%d\n",myScope);
+		if (head != null) {  head.Globalize(); }
+		if (tail != null) {  tail.Globalize(); }
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_STMT_LIST\nScope=%d\n",myScope);
+		if (head != null) { head.InitGlobals(); }
+		if (tail != null) { tail.InitGlobals(); }
+	}
+
 }

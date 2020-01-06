@@ -20,8 +20,15 @@ public abstract class AST_EXP extends AST_Node
 
 	public TEMP IRme() throws Exception
 	{
-		
 		System.out.format("IRme - AST_EXP - unknown expression\nScope=%d\n",myScope);
 		return null;
+	}
+
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - AST_EXP - unknown expression\nScope=%d\n",myScope);
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_EXP - unknown expression\nScope=%d\n",myScope);
 	}
 }

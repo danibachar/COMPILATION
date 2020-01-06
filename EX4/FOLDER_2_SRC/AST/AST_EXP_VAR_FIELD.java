@@ -111,4 +111,13 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 		System.out.format("IRme AST_EXP_VAR_FIELD\n(___.%s)\nScope=%d\n",fieldName,myScope);
 		return null;
 	}
+
+	public void Globalize() throws Exception {
+		System.out.format("IRme Globalize\n(___.%s)\nScope=%d\n",fieldName,myScope);
+		if (var != null) var.Globalize();
+	}
+	public void InitGlobals() throws Exception {
+		System.out.format("IRme InitGlobals\n(___.%s)\nScope=%d\n",fieldName,myScope);
+		if (var != null) var.InitGlobals();
+	}
 }

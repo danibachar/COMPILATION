@@ -8,6 +8,9 @@ import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
 
+import java.util.*;
+import javafx.util.Pair;
+
 public class AST_STMT_ASSIGN extends AST_STMT
 {
 	/***************/
@@ -67,12 +70,12 @@ public class AST_STMT_ASSIGN extends AST_STMT
 
 	public TYPE SemantMe() throws Exception
 	{
-		// System.out.print("SEMANTME - AST_STMT_ASSIGN\n");
+		exp.name = var.name;
+
 		TYPE t1 = null;
 		TYPE t2 = null;
 
 		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
-
 		if (var != null) {
 			// System.out.format("SEMANTME - AST_STMT_ASSIGN before var\nlinenumber = %d\n", this.lineNumber);
 			t1 = var.SemantMe();
@@ -85,7 +88,6 @@ public class AST_STMT_ASSIGN extends AST_STMT
 			t2 = exp.SemantMe();
 			// System.out.format("SEMANTME - AST_STMT_ASSIGN exp name = %s\nlinenumber = %d\n", t2.name,this.lineNumber);
 		}
-
 		// Maybe validate that types exists
 
 		// allow class and array to get nil
@@ -151,24 +153,83 @@ public class AST_STMT_ASSIGN extends AST_STMT
 
 	public TEMP IRme()  throws Exception
 	{
-		System.out.format("IRme - AST_STMT_ASSIGN (%s) -> (%s), Scope=%d\n",exp, var, myScope);
-		TEMP src = exp.IRme();
-		// TEMP dst = var.IRme();
-
-		TEMP dst = TEMP_FACTORY.getInstance()
-			.findVarRecursive(((AST_EXP_VAR_SIMPLE) var).name, myScope);
-		if (dst == null) {
-			// throw new AST_EXCEPTION(var.lineNumber);
-			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Store_To_Var(((AST_EXP_VAR_SIMPLE) var).name, src, "i32", "i32*",4));
-				return null;
+		if (myScope == 0) {
+			// Global Scope Assignemnts are handled else where - TODO
+			return null;
 		}
-		IR.getInstance()
-			.Add_IRcommand(new IRcommand_Store_To_Temp(dst, src, "i32", "i32*", 4));
+
+		System.out.format("IRme - AST_STMT_ASSIGN (%s) -> (%s), myType=(%s) ,Scope=%d\n",exp, var, myType, myScope);
+
+		TYPE t = myType;
+		String src_type = AST_HELPERS.type_to_string(t);
+		int align = AST_HELPERS.type_to_align(t);
+
+		TEMP src = exp.IRme();
+		TEMP dst = var.IRme();
+		// This is a hack, it is better to explicit about var vs temp!
+		// if (src == null) {
+		// 	String n = exp.name;
+		// 	if (n == null) {
+		// 			n = var.name;
+		// 	}
+		// 	IR.getInstance()
+		// 		.Add_IRcommand(new IRcommand_Load_From_Var(dst, n, src_type, src_type+"*", align));
+		// 		return null;
+		// }
+		// IR.getInstance()
+		// 	.Add_IRcommand(new IRcommand_Load_From_Temp(dst, src, src_type, src_type+"*", align));
+
+		return null;
+
+		// if (var instanceof AST_EXP_VAR_SIMPLE) {
+		//
+		//
+		// 	TEMP dst = TEMP_FACTORY.getInstance().getFreshTEMP();
+		// 	TEMP src = TEMP_FACTORY.getInstance().findVarRecursive(name, myScope);
+		// 	if (src == null) {
+		// 		IR.getInstance()
+		// 			.Add_IRcommand(new IRcommand_Load_From_Var(dst, name, src_type, src_type+"*", align));
+		// 			return dst;
+		// 	}
+		// 	System.out.format("Load_From_Temp - name = %s, src_type = %s, align = %d\n",name,src_type,align);
+		// 	IR.getInstance()
+		// 		.Add_IRcommand(new IRcommand_Load_From_Temp(dst, src, src_type, src_type+"*", align));
+		// 	return dst;
+		//
+		// 	// TEMP dst = TEMP_FACTORY.getInstance()
+		// 	// 	.findVarRecursive(((AST_EXP_VAR_SIMPLE) var).name, myScope);
+		// 	// if (dst == null) {
+		// 	// 	// throw new AST_EXCEPTION(var.lineNumber);
+		// 	// 	IR.getInstance()
+		// 	// 		.Add_IRcommand(new IRcommand_Store_To_Var(((AST_EXP_VAR_SIMPLE) var).name, src, "i32", "i32*",4));
+		// 	// 		return null;
+		// 	// }
+		// 	// IR.getInstance()
+		// 	// 	.Add_IRcommand(new IRcommand_Store_To_Temp(dst, src, "i32", "i32*", 4));
+		// } else if (var instanceof AST_EXP_VAR_FIELD) {
+		//
+		// } else if (var instanceof AST_EXP_VAR_SUBSCRIPT) {
+		//
+		// } else {
+		// 	throw AST_EXCEPTION(this.lineNumber);
+		// }
+		// TEMP dst = var.IRme();
 		// IR.getInstance()
 		// 	.Add_IRcommand(new IRcommand_Store(((AST_EXP_VAR_SIMPLE) var).name, src, myScope));
 
-		return null;
+		// return null;
 	}
 
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - AST_STMT_ASSIGN (%s) -> (%s), Scope=%d\n",exp, var, myScope);
+		if (var != null) { var.Globalize(); }
+		if (exp != null) { exp.Globalize(); }
+		// AST_HELPERS.update_constants_if_needed(exp.name, exp);
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_STMT_ASSIGN (%s) -> (%s), Scope=%d\n",exp, var, myScope);
+		if (var != null) { var.InitGlobals(); }
+		if (exp != null) { exp.InitGlobals(); }
+	}
 }

@@ -31,6 +31,8 @@ public class LLVM
 	/***********************/
 	public PrintWriter fileWriter;
 
+	public Map<String, String> constToVarMap = new HashMap<String, String>();
+
 	public void finalizeFile()
 	{
 		// fileWriter.format("  ret i32 0\n");
@@ -47,19 +49,17 @@ public class LLVM
 		//EXAMPLES:
 		// define i32 @goo(i32, i32) #0 { // int
 		// define i8* @goo(i32, i32) #0 { // string / char*
-		if (func_name.equals("main")) {
-			init_global_vars();
-		}
+		// if (func_name.equals("main")) {
+		// 	init_global_vars();
+		// }
 
 		System.out.format("@@@@ LLVM - print_open_func %s(%s) -> %s \n",func_name, params_string, returnType);
 		if (params_string == null || params_string.isEmpty()) {
-			fileWriter.format("define %s @%s() #0 {\n", returnType, func_name);
+				fileWriter.format("\ndefine %s @%s() #0 {\n", returnType, func_name);
 		} else {
-				fileWriter.format("define %s @%s(%s) #0 {\n", returnType, func_name, params_string);
+				fileWriter.format("\ndefine %s @%s(%s) #0 {\n", returnType, func_name, params_string);
 		}
-		if (func_name.equals("main")) {
-			call_init_global_vars();
-		}
+		if (func_name.equals("main")) { call_init_global_vars(); }
 	}
 
 	public void print_close_func(
@@ -115,7 +115,6 @@ public class LLVM
 		}
 		int idx=ret_ptr.getSerialNumber();
 		fileWriter.format("  %%Temp_%d = call %s @%s(%s) \n", idx, return_type, func_name, params_string);
-
 	 }
 
 	public void allocate_local(TEMP t, String ptr, String ptr_init_val, int align, int scope)
@@ -158,12 +157,14 @@ public class LLVM
 
 		// fileWriter.format("  %%Temp_%d = load i32, i32* %%Temp_%d, align 4\n",idxdst, idxsrc);
 	}
-	public void store_to_var_string(String var_name,TEMP src, String value, String src_type, String dst_type, int align)
+	public void store_var_string_to_temp(String var_name,TEMP dst, String value, String src_type, String dst_type, int align)
 	{
-		int idxsrc=src.getSerialNumber();
-		System.out.format("@@@@ LLVM - store_to_var_string %s to -> %%Temp_%d\n",var_name, idxsrc);
+		int idxdst = dst.getSerialNumber();
+		System.out.format("@@@@ LLVM - store_var_string_to_temp %s to -> %%Temp_%d\n",var_name, idxdst);
 		int size = value.length()+1;
-		fileWriter.format("  store %s getelementptr inbounds ([%d x i8], [%d x i8]* @%s, i32 0, i32 0), i8** %%Temp_%d, align %d\n",src_type, size, size, var_name, idxsrc ,align);
+		// assign_global_string_var_const_value(var_name, value);
+		load_from_var(dst,var_name, "i8*", "i8**", 8);
+		// fileWriter.format("  store %s getelementptr inbounds ([%d x i8], [%d x i8]* @%s, i32 0, i32 0), i8** , align %d\n",src_type, size, size, const_name, idxdst ,align);
 	}
 	public void store_to_var(String var_name,TEMP src, String src_type, String dst_type, int align)
 	{
@@ -177,21 +178,21 @@ public class LLVM
 		fileWriter.format("  store %s %%Temp_%d, %s @%s, align %d\n",src_type, idxsrc,dst_type, var_name,align);
 	}
 
-	public void store(String var_name,TEMP src, int scope)
-	{
-		System.out.format("@@@@ LLVM - store from -> %%Temp_%d to -> %s \n", src.getSerialNumber(), var_name);
-		// global
-		int idxsrc=src.getSerialNumber();
-		TEMP t = TEMP_FACTORY.getInstance().findVarRecursive(var_name, scope);
-
-		if (scope == 0 || t == null) {
-			fileWriter.format("  store i32 %%Temp_%d, i32* @%s, align 4\n",idxsrc, var_name);
-			return;
-		}
-		// Local
-		int idxdst = t.getSerialNumber();
-		fileWriter.format("  store i32 %%Temp_%d, i32* %%Temp_%d, align 4\n",idxsrc, idxdst);
-	}
+	// public void store(String var_name,TEMP src, int scope)
+	// {
+	// 	System.out.format("@@@@ LLVM - store from -> %%Temp_%d to -> %s \n", src.getSerialNumber(), var_name);
+	// 	// global
+	// 	int idxsrc=src.getSerialNumber();
+	// 	TEMP t = TEMP_FACTORY.getInstance().findVarRecursive(var_name, scope);
+	//
+	// 	if (scope == 0 || t == null) {
+	// 		fileWriter.format("  store i32 %%Temp_%d, i32* @%s, align 4\n",idxsrc, var_name);
+	// 		return;
+	// 	}
+	// 	// Local
+	// 	int idxdst = t.getSerialNumber();
+	// 	fileWriter.format("  store i32 %%Temp_%d, i32* %%Temp_%d, align 4\n",idxsrc, idxdst);
+	// }
 
 	public void store_func_param(TEMP dst, Integer src)
 	{
@@ -210,16 +211,15 @@ public class LLVM
 		fileWriter.format("  %%zero_%d = load i32, i32* @my_zero, align 4\n",x);
 		fileWriter.format("  %%Temp_%d = add nsw i32 %%zero_%d, %d\n",idx,x++,value);
 	}
-
 	public void constify(String name, String value) {
 		value = value.replace("\"", "");
 		System.out.format("@@@@ LLVM - constify - %s = %s\n",name,value);
 		// Example:
 		// @STR.AAA = constant [4 x i8] c"AAA\00", align 1
-
 		int len = value.length()+1;
-
-		fileWriter.format("@%s = constant [%d x i8] c\"%s\\00\", align 1\n", name+".VAR",len,value);
+		String const_name = String.format("%s.%s.CONST", name, value);
+		constToVarMap.put(name, const_name);
+		fileWriter.format("@%s = constant [%d x i8] c\"%s\\00\", align 1\n",const_name,len,value);
 	}
 
 	public void stringify(String name, String value)
@@ -235,7 +235,15 @@ public class LLVM
 
 		// 3) len
 		int len = value.length()+1;
-		fileWriter.format("  store i8* getelementptr inbounds ([%d x i8], [%d x i8]* @%s, i32 0, i32 0), i8** @%s, align 8\n", len, len, name+".VAR",name );
+		fileWriter.format("  store i8* getelementptr inbounds ([%d x i8], [%d x i8]* @%s, i32 0, i32 0), i8** @%s, align 8\n", len, len, name ,name );
+	}
+
+	public void assign_global_string_var_const_value(String name, String value) {
+		value = value.replace("\"", "");
+		System.out.format("@@@@ LLVM - assign_global_string_var_const_value- %s = %s\n",name,value);
+		String const_name = String.format("%s.%s.CONST", name, value);
+		int len = value.length()+1;
+		fileWriter.format("  store i8* getelementptr inbounds ([%d x i8], [%d x i8]* @%s, i32 0, i32 0), i8** @%s, align 8\n", len, len, const_name ,name );
 	}
 
 	public void add(TEMP dst,TEMP oprnd1,TEMP oprnd2)
@@ -293,52 +301,39 @@ public class LLVM
 
 		fileWriter.format("  %%oren_%d = icmp eq i32 %%Temp_%d, %%Temp_%d\n",dstidx,i1,i2);
 		fileWriter.format("  %%Temp_%d = zext i1 %%oren_%d to i32\n",dstidx,dstidx);
-		// fileWriter.format("  %%Temp_%d = icmp eq i32 %%Temp_%d, %%Temp_%d\n",dstidx,i1,i2);
-	}
-	private void bit_code_globals(Pair<String, AST_EXP> pair) {
-		System.out.format("@@@@ LLVM - globalVarsInitCommands\n");
-		AST_EXP exp = pair.getValue();
-		if (exp instanceof AST_EXP_STRING) {
-			AST_EXP_STRING e = (AST_EXP_STRING)exp;
-			stringify(pair.getKey(), e.value);
-		} else {
-			try {
-				IR.getInstance().auto_exec_mode = true;
-				store(pair.getKey(), pair.getValue().IRme(), 0);// 0 as we are in global scope
-				IR.getInstance().auto_exec_mode = false;
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.format("!!!! ERROR LLVM - bit_code_globals\n");
-			}
-		}
-
-	}
-	private boolean is_string_exp(AST_EXP e) {
-		return (e instanceof AST_EXP_STRING);
 	}
 
-	// private void print_copy_const_str_to_var_str(Pair<String, AST_EXP> pair) {
-	// 	if (!is_string_exp(pair.getValue())) {
-	// 		return;
+	// private void bit_code_globals(Pair<String, AST_EXP> pair) {
+	// 	System.out.format("@@@@ LLVM - globalVarsInitCommands\n");
+	// 	AST_EXP exp = pair.getValue();
+	// 	if (exp instanceof AST_EXP_STRING) {
+	// 		AST_EXP_STRING e = (AST_EXP_STRING)exp;
+	// 		String name = pair.getKey();
+	// 		String value = e.value;
+	// 		assign_global_string_var_const_value(name, value);
+	// 	} else {
+	// 		try {
+	// 			IR.getInstance().auto_exec_mode = true;
+	// 			store_to_var(pair.getKey(), pair.getValue().IRme(), "i32", "i32*", 4);
+	// 			// public void store_to_var(String var_name,TEMP src, String src_type, String dst_type, int align)
+	// 			// store(pair.getKey(), pair.getValue().IRme(), 0);// 0 as we are in global scope
+	// 			IR.getInstance().auto_exec_mode = false;
+	// 		} catch (Exception e) {
+	// 			e.printStackTrace();
+	// 			System.out.format("!!!! ERROR LLVM - bit_code_globals\n");
+	// 		}
 	// 	}
-	// 	AST_EXP_STRING e = (AST_EXP_STRING)pair.getValue();
-	// 	stringify(pair.getKey(), e.value);
+	//
 	// }
 
-	private void init_global_vars() {
-			// Declare func
-		print_open_func("init_globals", "", "void");
-		// init all globals (int, string, array, class)
-		// STRINGS
-		// IR.getInstance()
-		// 	.globalVarsInitCommands
-		// 	.forEach((nameExpTuple) -> print_copy_const_str_to_var_str(nameExpTuple));
-		// REST
-		IR.getInstance()
-			.globalVarsInitCommands
-			.forEach((nameExpTuple) -> bit_code_globals(nameExpTuple));
-		print_close_func(null, "void", null, null, null, 4);
-	}
+	// private void init_global_vars() {
+	// 		// Declare func
+	// 	print_open_func("init_globals", "", "void");
+	// 	IR.getInstance()
+	// 		.globalVarsInitCommands
+	// 		.forEach((nameExpTuple) -> bit_code_globals(nameExpTuple));
+	// 	print_close_func(null, "void", null, null, null, 4);
+	// }
 
 	private void call_init_global_vars() {
 		fileWriter.format("  call void @init_globals()\n");

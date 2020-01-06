@@ -1,0 +1,8 @@
+string y := "123";
+void main()
+{
+  y := "12345";
+  PrintString(y);
+  y := "125";
+  PrintString(y);
+}

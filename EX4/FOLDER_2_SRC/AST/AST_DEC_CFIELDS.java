@@ -74,4 +74,16 @@ public class AST_DEC_CFIELDS extends AST_DEC
 		System.out.format("IRme - AST_DEC_CFIELDS\n");
 		return null;
 	}
+
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - AST_DEC_CFIELDS\n");
+		if (head != null) head.Globalize();
+		if (tail != null) tail.Globalize();
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_DEC_CFIELDS\n");
+		if (head != null) head.Globalize();
+		if (tail != null) tail.Globalize();
+	}
 }

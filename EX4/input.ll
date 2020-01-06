@@ -3,16 +3,20 @@ source_filename = "input.c"
 target datalayout = "e-m:o-i64:64-f80:128-n8:16:32:64-S128"
 target triple = "x86_64-apple-macosx10.14.0"
 
-@.str = private unnamed_addr constant [8 x i8] c"1234555\00", align 1
-@.str.1 = private unnamed_addr constant [4 x i8] c"%s\0A\00", align 1
+@.str = private unnamed_addr constant [4 x i8] c"123\00", align 1
+@y = global i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str, i32 0, i32 0), align 8
+@.str.1 = private unnamed_addr constant [6 x i8] c"12345\00", align 1
+@.str.2 = private unnamed_addr constant [4 x i8] c"%s\0A\00", align 1
+@.str.3 = private unnamed_addr constant [7 x i8] c"123456\00", align 1
 
 ; Function Attrs: noinline nounwind optnone ssp uwtable
 define i32 @main() #0 {
-  %1 = alloca i8*, align 8
-  
-  store i8* getelementptr inbounds ([8 x i8], [8 x i8]* @.str, i32 0, i32 0), i8** %1, align 8
-  %2 = load i8*, i8** %1, align 8
-  %3 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str.1, i32 0, i32 0), i8* %2)
+  store i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.str.1, i32 0, i32 0), i8** @y, align 8
+  %1 = load i8*, i8** @y, align 8
+  %2 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str.2, i32 0, i32 0), i8* %1)
+  store i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.str.3, i32 0, i32 0), i8** @y, align 8
+  %3 = load i8*, i8** @y, align 8
+  %4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str.2, i32 0, i32 0), i8* %3)
   ret i32 0
 }
 

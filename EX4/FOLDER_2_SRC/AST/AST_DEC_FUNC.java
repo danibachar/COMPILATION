@@ -163,7 +163,7 @@ public class AST_DEC_FUNC extends AST_DEC
 
 	public TEMP IRme() throws Exception
 	{
-		System.out.format("IRme - AST_DEC_FUNC(%s):%s\nScope=%d\n",name, returnTypeName, myScope);
+		System.out.format("IRme - AST_DEC_FUNC(%s):%s, Scope=%d\n",name, returnTypeName, myScope);
 		// public String returnTypeName;
 		// public Integer returnTypeNameLineNumber;
 
@@ -182,14 +182,10 @@ public class AST_DEC_FUNC extends AST_DEC
 		String params_get_string = "";
 		int counter = 0;
 
-		// int bck_counter = TEMP_FACTORY.getInstance().counter;
-		// TEMP_FACTORY.getInstance().counter = 0;
 		TEMP_FACTORY.getInstance().beginScope(myScope+1);
 
-
 		ArrayList<Integer> params_list = new ArrayList<Integer>();
-		// SYMBOL_TABEL.getInstance().beginScope();
-		// IR.getInstance().beginScope();
+
 		for (AST_TYPE_NAME_LIST it = params; it  != null; it = it.tail) {
 			if (it.head != null)  {
 				String name = String.format("%s", it.head.name);
@@ -204,7 +200,6 @@ public class AST_DEC_FUNC extends AST_DEC
 
 			}
 			params_list.add(counter++);
-			// counter++;
 		}
 		TYPE return_type = SYMBOL_TABLE.getInstance().find(returnTypeName);
 		String return_type_str = AST_HELPERS.type_to_string(return_type);
@@ -231,11 +226,8 @@ public class AST_DEC_FUNC extends AST_DEC
 		counter = 0;
 		for (AST_TYPE_NAME_LIST it = params; it  != null; it = it.tail) {
 			if (it.head == null)  { continue; }
-			// TEMP_FACTORY.getInstance().getFreshTEMP();
 			TEMP t = TEMP_FACTORY.getInstance()
 				.fetchTempFromScope(it.head.name, myScope+1, true);
-
-			// TEMP src = TEMP_FACTORY.getInstance().findVarRecursive(it.head.name, scope);
 
 			IR.getInstance()
 				.Add_IRcommand(new IRcommand_Allocate_Local(t, "i32", "0", 4, myScope+1));
@@ -246,18 +238,24 @@ public class AST_DEC_FUNC extends AST_DEC
 		// Hack for propiatery main init
 
 		TEMP tt = null;
-		System.out.format("########## BEFORE IRme - AST_DEC_FUNC return temp = %s\n",tt);
 		if (body != null) { tt = body.IRme(); };
-		System.out.format("########## AFTER IRme - AST_DEC_FUNC return temp = %s\n",tt);
 		//fetch typeeee
 		IR.getInstance()
-			.Add_IRcommand(new IRcommand_Decler_Func_Close(tt, return_type_str, return_label, return_type_str, return_type_str+"*", align));
+			.Add_IRcommand(new IRcommand_Decler_Func_Close(
+				tt, return_type_str, return_label, return_type_str, return_type_str+"*", align
+			));
 		TEMP_FACTORY.getInstance().endScope(myScope);
-		// IR.getInstance().endScope();
-		// TEMP_FACTORY.getInstance().counter = bck_counter;
-
 		return null;
 	}
 
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - AST_DEC_FUNC(%s):%s, Scope=%d\n",name, returnTypeName, myScope);
+		if (body != null) body.Globalize();
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_DEC_FUNC(%s):%s, Scope=%d\n",name, returnTypeName, myScope);
+		if (body != null) body.InitGlobals();
+	}
 
 }

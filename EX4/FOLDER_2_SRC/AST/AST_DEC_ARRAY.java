@@ -111,4 +111,14 @@ public class AST_DEC_ARRAY extends AST_DEC
 		// if (body != null) body.IRme();
 		return null;
 	}
+
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - AST_DEC_ARRAY name = %s, type = %s\nScope=%d\n",name, type,myScope);
+		throw new AST_EXCEPTION(this.lineNumber);
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_DEC_ARRAY name = %s, type = %s\nScope=%d\n",name, type,myScope);
+		throw new AST_EXCEPTION(this.lineNumber);
+	}
 }

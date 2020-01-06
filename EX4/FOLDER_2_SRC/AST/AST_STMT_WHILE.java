@@ -139,6 +139,17 @@ public class AST_STMT_WHILE extends AST_STMT
 		/* [8] return null */
 		/*******************/
 		return null;
+	}
 
+	public void Globalize() throws Exception {
+		System.out.format("IRme - AST_STMT_WHILE, Scope=%d\n",myScope);
+		if (cond != null) { cond.Globalize(); }
+		if (body != null) { body.Globalize(); }
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_STMT_WHILE, Scope=%d\n",myScope);
+		if (cond != null) { cond.InitGlobals(); }
+		if (body != null) { body.InitGlobals(); }
 	}
 }

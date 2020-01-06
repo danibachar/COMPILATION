@@ -34,9 +34,11 @@
 //   char *grr = "dfgd";
 //   return  grr;
 // }
-
+char* y = "123";
 int main() {
-  char* y = "1234555";
+  y = "12345";
+  printf("%s\n", y);
+  y = "123456";
   printf("%s\n", y);
   // printf("%s\n", x);
   // printf("%s\n", foo());

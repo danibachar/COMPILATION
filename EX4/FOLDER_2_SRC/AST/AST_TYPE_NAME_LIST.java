@@ -80,7 +80,19 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 
 	public TEMP IRme() throws Exception
 	{
-		System.out.format("IRme - UNKNOWN AST AST_TYPE_NAME_LIST NODE\nScope=%d\n",myScope);
+		System.out.format("IRme - UNKNOWN AST AST_TYPE_NAME_LIST NODE, Scope=%d\n",myScope);
 		return null;
+	}
+
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - UNKNOWN AST AST_TYPE_NAME_LIST NODE, Scope=%d\n",myScope);
+		if (head != null) { head.Globalize(); }
+		if (tail != null) { tail.Globalize(); }
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - UNKNOWN AST AST_TYPE_NAME_LIST NODE, Scope=%d\n",myScope);
+		if (head != null) { head.InitGlobals(); }
+		if (tail != null) { tail.InitGlobals(); }
 	}
 }

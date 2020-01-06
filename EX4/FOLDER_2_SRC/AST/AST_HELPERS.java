@@ -8,7 +8,8 @@ import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
 
-// AST_HELPERS.isValidTypeAssignableFromExpression
+import java.util.*;
+import javafx.util.Pair;
 
 public class AST_HELPERS
 {
@@ -160,6 +161,33 @@ public class AST_HELPERS
     throw new AST_EXCEPTION(exp.lineNumber);
   }
 
+
+  static public void update_constants_if_needed(String name, AST_EXP e) throws Exception {
+    System.out.format("update_constants_if_needed - name(%s), exp(%s)\n", name, e);
+    if (e instanceof AST_EXP_STRING) {
+      AST_EXP_STRING es = (AST_EXP_STRING)e;
+      // // Adding to context - will be needed later
+      // Pair<String, AST_EXP> p = new Pair<String, AST_EXP>(name, es);
+      // IR.getInstance().constants.add(p);
+      // actual comamand
+      IR.getInstance()
+        .Add_IRcommand(new IRcommandConstString(name, es.value));
+    } else if (e instanceof AST_EXP_INT) {
+      throw new AST_EXCEPTION(e.lineNumber);
+    // } else if (t.isClass()) {
+    //   throw new AST_EXCEPTION(this.lineNumber);
+    // } else if (t.isArray()) {
+    //   throw new AST_EXCEPTION(this.lineNumber);
+    // } else if (t == TYPE_NIL.getInstance()) {
+    //   throw new AST_EXCEPTION(this.lineNumber);
+    // } else if (t == TYPE_VOID.getInstance()) {
+    } else {
+      throw new AST_EXCEPTION(e.lineNumber);
+    }
+
+
+  }
+
   static public int type_to_align(TYPE t) {
     int align = 4;
     if (t == null) {
@@ -181,6 +209,7 @@ public class AST_HELPERS
     }
     return align;
   }
+
   static public String type_to_def_ret_val(TYPE t) {
     if (t.isClassVar()) {
       TYPE_CLASS_VAR_DEC tc = (TYPE_CLASS_VAR_DEC)t;

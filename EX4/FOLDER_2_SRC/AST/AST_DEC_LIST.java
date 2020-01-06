@@ -70,11 +70,23 @@ public class AST_DEC_LIST extends AST_Node
 
 	public TEMP IRme() throws Exception
 	{
-		System.out.format("IRme - DEC_LIST\nScope=%d\n", myScope);
+		System.out.format("IRme - DEC_LIST, Scope=%d\n", myScope);
 		if (head != null) head.IRme();
 		if (tail != null) tail.IRme();
 
 		return null;
+	}
+
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - DEC_LIST, Scope=%d\n", myScope);
+		if (head != null) head.Globalize();
+		if (tail != null) tail.Globalize();
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - DEC_LIST, Scope=%d\n", myScope);
+		if (head != null) head.InitGlobals();
+		if (tail != null) tail.InitGlobals();
 	}
 
 }

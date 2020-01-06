@@ -63,4 +63,14 @@ public class AST_STMT_CALL extends AST_STMT
 		return null;
 	}
 
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - AST_STMT_CALL\nScope=%d\n",myScope);
+		if (callExp != null) callExp.Globalize();
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_STMT_CALL\nScope=%d\n",myScope);
+		if (callExp != null) callExp.InitGlobals();
+	}
+
 }

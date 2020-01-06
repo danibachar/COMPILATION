@@ -133,4 +133,14 @@ public class AST_STMT_RETURN extends AST_STMT
 		// return t;//exp.IRme();
 		return dst;
 	}
+
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - AST_STMT_RETURN NODE\n");
+		if (exp != null) {  exp.Globalize(); }
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_STMT_RETURN NODE\n");
+		if (exp != null) {  exp.InitGlobals(); }
+	}
 }

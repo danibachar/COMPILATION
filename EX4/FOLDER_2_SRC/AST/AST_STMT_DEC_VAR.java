@@ -56,9 +56,18 @@ public class AST_STMT_DEC_VAR extends AST_STMT
 
 	public TEMP IRme() throws Exception
 	{
-
 		System.out.format("IRme - AST_STMT_DEC_VAR\nScope=%d\n",myScope);
 		return var.IRme();
+	}
+
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - AST_STMT_DEC_VAR\nScope=%d\n",myScope);
+		if (var != null) var.Globalize();
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_STMT_DEC_VAR\nScope=%d\n",myScope);
+		if (var != null) var.InitGlobals();
 	}
 
 }

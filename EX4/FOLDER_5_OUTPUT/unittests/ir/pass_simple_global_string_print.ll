@@ -61,19 +61,16 @@ declare dso_local i32 @printf(i8*, ...)
 ; GLOBAL VARIABLES ;
 ;                  ;
 ;;;;;;;;;;;;;;;;;;:;
-@str = global i8* null, align 8
-@str.VAR = constant [7 x i8] c"dasadf\00", align 1
 define void @init_globals() #0 {
-  store i8* getelementptr inbounds ([7 x i8], [7 x i8]* @str.VAR, i32 0, i32 0), i8** @str, align 8
   ret void
 }
 define void @main() #0 {
   call void @init_globals()
   %Temp_0 = load i8*, i8** @str, align 8
   call void @PrintString(i8* %Temp_0) 
-  br label %RETURN_97861
+  br label %RETURN_76837
 
-RETURN_97861:
+RETURN_76837:
 
   ret void
 }

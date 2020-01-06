@@ -10,7 +10,7 @@ import AST_EXCEPTION.*;
 
 public abstract class AST_EXP_VAR extends AST_EXP
 {
-	public String name=null;
+	// public String name=null;
 	public void PrintMe()
 	{
 		System.out.print("UNKNOWN AST_EXP_VAR");
@@ -24,8 +24,15 @@ public abstract class AST_EXP_VAR extends AST_EXP
 
 	public TEMP IRme() throws Exception
 	{
-
-		System.out.format("IRme - AST_EXP_VAR - unknown expression\nScope=%d\n",myScope);
+		System.out.format("IRme - AST_EXP_VAR - unknown expression, Scope=%d\n",myScope);
 		return null;
+	}
+
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - AST_EXP_VAR_SUBSCRIPT, Scope=%d\n",myScope);
+		// TODO - if globalize we maybe
+	}
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_EXP_VAR_SUBSCRIPT, Scope=%d\n",myScope);
 	}
 }

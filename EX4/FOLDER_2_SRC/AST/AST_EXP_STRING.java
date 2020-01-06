@@ -8,6 +8,9 @@ import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
 
+import java.util.*;
+import javafx.util.Pair;
+
 public class AST_EXP_STRING extends AST_EXP
 {
 	public String value;
@@ -47,7 +50,7 @@ public class AST_EXP_STRING extends AST_EXP
 	public TYPE SemantMe() throws Exception
 	{
 		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
-		// System.out.format("SEMANTME - AST_EXP_STRING( %s )\n",value);
+
 		return TYPE_STRING.getInstance();
 	}
 
@@ -56,16 +59,34 @@ public class AST_EXP_STRING extends AST_EXP
 		//TODO - Specail handling strings, separate needs to handle globaly
 
 		System.out.format("IRme AST_EXP_STRING(%s), Scope=%d\n",value,myScope);
-		if (myScope == 0) {
-				return null;
+		if (myScope == 0) { return null; }
+		if (name == null) {
+			System.out.format("ERROR could not find in global vars AST_EXP_STRING(%s), Scope=%d\n",value,myScope);
+			throw new AST_EXCEPTION(this.lineNumber);
 		}
-		TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
-		// public void store_to_temp(TEMP dst, TEMP src, String src_type, String dst_type, int align)
-		// IR.getInstance().Add_IRcommand(new IRcommandTempString(t,value));
-		// IR.getInstance()
-		// 	.Add_IRcommand(new IRcommand_Store_To_Temp(tt, t, type, type+"*", align));
-		return t;
-		// return null;
 
+		// TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Assign_Global_Var_Const_Value(name, value));
+			return null;
+		// return t;
+	}
+
+	public void Globalize() throws Exception {
+		System.out.format("Globalize AST_EXP_STRING(%s), Scope=%d\n",value,myScope);
+		IR.getInstance()
+			.Add_IRcommand(new IRcommandConstString(name, value));
+	}
+
+	public void InitGlobals() throws Exception {
+		// Early return for non globals
+		// This String Expression might be part of soome nested scope
+		// We want to create const for it. hence the Globalize code above
+		// But still,We dont want to init the global var with tis const value at build time, only run time!
+
+		if (myScope > 0) { return; }
+		System.out.format("InitGlobals AST_EXP_STRING(%s), Scope=%d\n",value,myScope);
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Assign_Global_Var_Const_Value(name, value));
 	}
 }

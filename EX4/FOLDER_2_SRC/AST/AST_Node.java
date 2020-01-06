@@ -16,7 +16,9 @@ public abstract class AST_Node
 
 	public int myScope;
 
-	public TYPE myType;
+	public TYPE myType = null;
+
+	public String name = null;
 
 	/***********************************************/
 	/* The default message for an unknown AST node */
@@ -34,4 +36,8 @@ public abstract class AST_Node
 		System.out.format("IRme - AST NODE UNKNOW - line = %d\n",lineNumber);
 		return null;
 	}
+
+	public void Globalize() throws Exception {}
+	public void InitGlobals() throws Exception {}
+
 }

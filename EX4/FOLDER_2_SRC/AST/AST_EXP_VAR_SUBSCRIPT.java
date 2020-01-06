@@ -105,4 +105,17 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 		System.out.format("IRme - AST_EXP_VAR_SUBSCRIPT\nScope=%d\n",myScope);
 		return null;
 	}
+
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - AST_EXP_VAR_SUBSCRIPT\nScope=%d\n",myScope);
+		if (var != null) var.Globalize();
+		if (subscript != null) subscript.Globalize();
+		// TODO - if globalize we maybe
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_EXP_VAR_SUBSCRIPT\nScope=%d\n",myScope);
+		if (var != null) var.InitGlobals();
+		if (subscript != null) subscript.InitGlobals();
+	}
 }

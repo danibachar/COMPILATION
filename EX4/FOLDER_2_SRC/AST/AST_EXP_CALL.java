@@ -255,15 +255,6 @@ public class AST_EXP_CALL extends AST_EXP
 		TEMP t=null;
 		TEMP t_var=null;
 
-		// if (var != null) { t_var = var.IRme(); } // No need to handle instance function
-		// if (params != null) {  t = params.head.IRme();  }
-
-		/*
-		Calling function is a bit of a tricky issue we need to take care of 2 cases
-		1) Global function call
-		2) Instance function call - need to fetch this address - we will not handle such case - not required
-		*/
-
 		System.out.format("IRme - AST_EXP_CALL(%s)", funcName);
 		System.out.format("IRme - ON:(%s)\n", t_var!=null ? t_var.getSerialNumber():null);
 		System.out.format("IRme - WITH:(%s)\n",t!=null ? t.getSerialNumber():null);
@@ -271,7 +262,6 @@ public class AST_EXP_CALL extends AST_EXP
 		TYPE_FUNCTION funcTypeValidated = (TYPE_FUNCTION)SYMBOL_TABLE.getInstance().find(funcName);
 		String type_string = AST_HELPERS.type_to_string(funcTypeValidated.returnType);
 		System.out.format("IRme - Return type = %s\n",type_string);
-
 
 		/*
 		 - load params
@@ -284,11 +274,8 @@ public class AST_EXP_CALL extends AST_EXP
 		int counter = 0;
 		for (AST_EXP_LIST it = params; it  != null; it = it.tail) {
 			if (it.head != null)  {
-
 				TEMP temp_param = it.head.IRme();
-
 				String name = String.format("%%Temp_%d", temp_param.getSerialNumber());
-				//type temp_x
 				String type = AST_HELPERS.type_to_string(sent_input_params.get(counter));
 				if (counter == 0) {
 					params_sent_string+=String.format("%s %s", type, name);
@@ -304,6 +291,16 @@ public class AST_EXP_CALL extends AST_EXP
 			.Add_IRcommand(new IRcommand_Call_Func(funcName, params_sent_string, type_string, tt, myScope));
 
 		return tt;
+	}
+
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - AST_EXP_CALL(%s)", funcName);
+		if (params != null) params.Globalize();
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_EXP_CALL(%s)", funcName);
+		if (params != null) params.InitGlobals();
 	}
 
 }

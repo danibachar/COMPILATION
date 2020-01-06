@@ -222,6 +222,7 @@ public class AST_EXP_BINOP extends AST_EXP
 		if (right != null) t2 = right.IRme();
 		if (t1 == null || t2 == null) {
 				System.out.format("********NULL IRme - AST_EXP_BINOP(%s) between t1=%s, t2=%s\nScope=%d\n",opSymbol(), t1 == null ? null:t1.getSerialNumber(), t2 == null ? null:t2.getSerialNumber(),myScope);
+				throw new AST_EXCEPTION(this.lineNumber);
 		}
 		System.out.format("IRme - AST_EXP_BINOP(%s) between t1=%s, t2=%s\nScope=%d\n",opSymbol(), t1 == null ? null:t1.getSerialNumber(), t2 == null ? null:t2.getSerialNumber(),myScope);
 		if (OP == 0) {
@@ -236,8 +237,15 @@ public class AST_EXP_BINOP extends AST_EXP
 			System.out.format("IRme - LG COMPARE impl is missing");
 		}
 		if (OP == 3) {
-			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Binop_Add_Integers(dst,t1,t2));
+			//TODO - handle strings concatanation
+			if (left instanceof AST_EXP_STRING) {
+				// IR.getInstance()
+				// 	.Add_IRcommand(new IRcommand_Binop_Add_Strings(dst,t1,t2));
+			} else {
+				IR.getInstance()
+					.Add_IRcommand(new IRcommand_Binop_Add_Integers(dst,t1,t2));
+			}
+
 		}
 		if (OP == 4){
 			IR.getInstance()
@@ -254,5 +262,17 @@ public class AST_EXP_BINOP extends AST_EXP
 
 		return dst;
 
+	}
+
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - AST_EXP_BINOP(%s)\n",opSymbol());
+		if (right != null) right.Globalize();
+		if (left != null) left.Globalize();
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_EXP_BINOP(%s)\n",opSymbol());
+		if (right != null) right.InitGlobals();
+		if (left != null) left.InitGlobals();
 	}
 }

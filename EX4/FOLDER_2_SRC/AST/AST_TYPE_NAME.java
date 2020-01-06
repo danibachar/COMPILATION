@@ -25,7 +25,7 @@ public class AST_TYPE_NAME extends AST_Node
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_TYPE_NAME(String type,String name,Integer lineNumber)
+	public AST_TYPE_NAME(String type, String name,Integer lineNumber)
 	{
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
@@ -82,7 +82,15 @@ public class AST_TYPE_NAME extends AST_Node
 
 	public TEMP IRme() throws Exception
 	{
-		System.out.format("IRme - AST_TYPE_NAME NODE(%s):%s\nScope=%d\n",name, type, myScope+1);
+		System.out.format("IRme - AST_TYPE_NAME NODE(%s):%s, Scope=%d\n",name, type, myScope+1);
 		return null;
+	}
+
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - AST_TYPE_NAME NODE(%s):%s, Scope=%d\n",name, type, myScope+1);
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_TYPE_NAME NODE(%s):%s, Scope=%d\n",name, type, myScope+1);
 	}
 }

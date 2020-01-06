@@ -108,4 +108,13 @@ public class AST_EXP_NEW extends AST_EXP
 		System.out.format("IRme - AST_EXP_NEW type - %s\nScope=%d\n" ,type,myScope);
 		return null;
 	}
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - AST_EXP_NEW type - %s\nScope=%d\n" ,type,myScope);
+		if (exp != null) exp.Globalize();
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_EXP_NEW type - %s\nScope=%d\n" ,type,myScope);
+		if (exp != null) exp.InitGlobals();
+	}
 }

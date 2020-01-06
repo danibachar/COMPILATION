@@ -29,4 +29,10 @@ public abstract class AST_STMT extends AST_Node
 		System.out.format("IRMe - UNKNOWN AST STATEMENT NODE\nScope=%d\n",myScope);
 		return null;
 	}
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - UNKNOWN AST STATEMENT NODE\nScope=%d\n",myScope);
+	}
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_STMT_WHILE, Scope=%d\n",myScope);
+	}
 }

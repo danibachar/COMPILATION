@@ -56,21 +56,32 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 
 	public TEMP IRme() throws Exception
 	{
+
 		TYPE t = myType;//SYMBOL_TABLE.getInstance().findField(name,false);
 		String src_type = AST_HELPERS.type_to_string(t);
 		int align = AST_HELPERS.type_to_align(t);
 
 		TEMP dst = TEMP_FACTORY.getInstance().getFreshTEMP();
 		TEMP src = TEMP_FACTORY.getInstance().findVarRecursive(name, myScope);
+		System.out.format("IRme - AST_EXP_VAR_SIMPLE name = %s, src_type = %s, align = %d\n",name,src_type,align);
+		System.out.format("IRme - AST_EXP_VAR_SIMPLE dst = %s, src = %s\n",dst,src);
+		// This is a hack, it is better to explicit about var vs temp!
 		if (src == null) {
 			IR.getInstance()
 				.Add_IRcommand(new IRcommand_Load_From_Var(dst, name, src_type, src_type+"*", align));
 				return dst;
 		}
-		System.out.format("Load_From_Temp - name = %s, src_type = %s, align = %d\n",name,src_type,align);
 		IR.getInstance()
 			.Add_IRcommand(new IRcommand_Load_From_Temp(dst, src, src_type, src_type+"*", align));
-		return dst;
+		return src;
+	}
+
+	public void Globalize() throws Exception {
+		System.out.format("Globalize - AST_EXP_VAR_SIMPLE name = %s\n",name);
+	}
+
+	public void InitGlobals() throws Exception {
+		System.out.format("InitGlobals - AST_EXP_VAR_SIMPLE name = %s\n",name);
 	}
 
 }
