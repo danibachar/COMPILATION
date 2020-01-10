@@ -7,6 +7,10 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
+import LocalVarCounter.*;
+import LLVM.*;
+import javafx.util.Pair;
+import java.util.*;
 
 public class AST_STMT_RETURN extends AST_STMT
 {
@@ -14,7 +18,7 @@ public class AST_STMT_RETURN extends AST_STMT
 	/* DATA MEMBERS */
 	/****************/
 	public AST_EXP exp;
-
+	public TYPE expectedRetType;
 	/*******************/
 	/*  CONSTRUCTOR(S) */
 	/*******************/
@@ -24,6 +28,17 @@ public class AST_STMT_RETURN extends AST_STMT
 
 		this.lineNumber = lineNumber;
 		this.exp = exp;
+	}
+
+	public void setReturnType(TYPE retType) throws Exception
+	{
+		if (expectedRetType != null)
+		{
+			System.out.format("Return type can not be defined twice\n");
+			throw new AST_EXCEPTION(this.lineNumber);
+		}
+		expectedRetType = retType;
+
 	}
 
 	/************************************************************/
@@ -69,7 +84,7 @@ public class AST_STMT_RETURN extends AST_STMT
 		/****************************/
 		TYPE exp_type = null;
 		if (exp != null) exp_type = exp.SemantMe();
-
+		myType = exp_type;
 		if (exp_type == null) {
 			if (func.returnType == null) {
 				return null;
@@ -98,6 +113,7 @@ public class AST_STMT_RETURN extends AST_STMT
 			// Check if it is class var dec
 			if (exp_type.isClassVar()) {
 					TYPE_CLASS_VAR_DEC exp_class_var_type = (TYPE_CLASS_VAR_DEC)exp_type;
+					myType = exp_class_var_type.t;
 					if (exp_class_var_type.t.getClass() == func.returnType.getClass()) {
 						return null;
 					}
@@ -114,24 +130,24 @@ public class AST_STMT_RETURN extends AST_STMT
 
 	public TEMP IRme() throws Exception
 	{
-		TEMP dst = TEMP_FACTORY.getInstance().fetch_shared_return_temp();
-		TEMP src = null;
-		if (exp != null) { src = exp.IRme(); }
+		TEMP retVal = null;
+		if (exp != null) retVal= exp.IRme();
+		if (retVal !=null)
+		{
+			System.out.printf("REtval type %s %s\n", retVal.getType(), myType);
 
-		System.out.format("IRme - AST_STMT_RETURN NODE - SRC:(%s), DST:(%s), Scope=%d\n",src, dst, myScope);
-
-		if (src != null) {
-			if (dst != null) {
-				IR.getInstance()
-					.Add_IRcommand(new IRcommand_Store_To_Temp(dst, src, "i32", "i32*", 4));
+			if (retVal.isaddr){
+				TEMP val = TEMP_FACTORY.getInstance().getFreshTEMP();
+				val.setType(myType);
+				val.checkInit = retVal.checkInit;
+				IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(val, retVal));
+				retVal = val;
 			}
 		}
-		String return_label = TEMP_FACTORY.getInstance().fetch_shared_return_label();
 
-		IR.getInstance()
-			.Add_IRcommand(new IRcommand_Jump_Label(return_label));
-		// return t;//exp.IRme();
-		return dst;
+		IR.getInstance().Add_IRcommand(new IRcommand_Return(retVal));
+		// TODO: prepare ret value and use IRCommand for ret'ing it
+		return null;
 	}
 
 	public void Globalize() throws Exception {

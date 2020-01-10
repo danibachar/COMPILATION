@@ -7,11 +7,16 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
+import LocalVarCounter.*;
+import LLVM.*;
+import javafx.util.Pair;
+import java.util.*;
 
 public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 {
 	public AST_EXP_VAR var;
 	public AST_EXP subscript;
+	TYPE arrayType;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -82,6 +87,7 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 			if (varType.isArray()) {
 				TYPE_ARRAY arr = (TYPE_ARRAY)varType;
 				// System.out.format("@@@@@ 1 SEMANTME - AST_EXP_VAR_SUBSCRIPT TYPE =  %s, name = %s\n", arr.type, arr.name);
+				this.arrayType = arr.type;
 				return arr.type;
 			}
 			// Check for class var
@@ -90,6 +96,7 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 				if (varTypeClass.t.isArray()) {
 					TYPE_ARRAY arr = (TYPE_ARRAY)varTypeClass.t;
 					// System.out.format("@@@@@ 2 SEMANTME - AST_EXP_VAR_SUBSCRIPT TYPE = %s, name = %2\n", arr.type, arr.name);
+					this.arrayType = arr.type;
 					return arr.type;
 				}
 			}
@@ -102,8 +109,47 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 
 	public TEMP IRme() throws Exception
 	{
-		System.out.format("IRme - AST_EXP_VAR_SUBSCRIPT\nScope=%d\n",myScope);
-		return null;
+		// System.out.format("IRme - AST_EXP_VAR_SUBSCRIPT\nScope=%d\n",myScope);
+		TEMP arr = var.IRme();
+		if (arr.isaddr)
+		{
+			TEMP arr1 = TEMP_FACTORY.getInstance().getFreshTEMP();
+			arr1.setType(arr.getType());
+			arr1.checkInit = arr.checkInit;
+			IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(arr1, arr));
+			arr = arr1;
+		}
+		IR.getInstance().Add_IRcommand(new IRcommand_Check_Null(arr));
+
+		//	TEMP size = TEMP_FACTORY.getInstance().getFreshTEMP();
+		//	size.setType(TYPE_INT.getInstance());
+		TEMP subscript = this.subscript.IRme();
+		if (subscript.isaddr)
+		{
+			TEMP subscript1 = TEMP_FACTORY.getInstance().getFreshTEMP();
+			subscript1.setType(subscript.getType());
+			subscript1.checkInit = subscript.checkInit;
+			IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(subscript1, subscript));
+			subscript = subscript1;
+		}
+
+		IR.getInstance().Add_IRcommand(new IRcommand_Check_Subscript(arr, subscript));
+
+		// Now size is the actual size of the array
+		//IR.getInstance().Add_IRcommand(new IRcommand_Get_Element_Int(size, arr, TYPE_INT.getInstance(), 0));
+		TEMP newOffset = TEMP_FACTORY.getInstance().getFreshTEMP();
+		newOffset.setType(TYPE_INT.getInstance());
+		IR.getInstance().Add_IRcommand(new IRcommand_Add_Int(newOffset,subscript,1));
+
+		TEMP elementAddress = TEMP_FACTORY.getInstance().getFreshTEMP();
+		elementAddress.setType(arrayType);
+		System.out.format("Getting subscript %s, %s, %s\n", elementAddress.getSerialNumber(), arr.getSerialNumber(), arr.getType());
+		//Todo: check boundaries
+		IR.getInstance().Add_IRcommand(new IRcommand_Get_Element_Temp(elementAddress, arr, arrayType, newOffset));
+
+		elementAddress.setType(arrayType);
+		elementAddress.isaddr = true;
+		return elementAddress;
 	}
 
 	public void Globalize() throws Exception {

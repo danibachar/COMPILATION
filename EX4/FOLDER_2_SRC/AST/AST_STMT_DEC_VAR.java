@@ -7,6 +7,10 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
+import LocalVarCounter.*;
+import LLVM.*;
+import javafx.util.Pair;
+import java.util.*;
 
 public class AST_STMT_DEC_VAR extends AST_STMT
 {
@@ -56,7 +60,7 @@ public class AST_STMT_DEC_VAR extends AST_STMT
 
 	public TEMP IRme() throws Exception
 	{
-		System.out.format("IRme - AST_STMT_DEC_VAR\nScope=%d\n",myScope);
+		// System.out.format("IRme - AST_STMT_DEC_VAR\nScope=%d\n",myScope);
 		return var.IRme();
 	}
 

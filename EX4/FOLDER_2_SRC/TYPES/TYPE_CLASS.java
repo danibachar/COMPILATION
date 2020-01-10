@@ -2,6 +2,8 @@ package TYPES;
 
 import java.util.Map;
 
+import AST.*;
+
 public class TYPE_CLASS extends TYPE
 {
 	/*********************************************************************/
@@ -17,6 +19,8 @@ public class TYPE_CLASS extends TYPE
 	public TYPE_CLASS_VAR_DEC_LIST data_members;
 	public TYPE_CLASS_FUNC_DEC_LIST methods;
 
+	public int membersCount;
+
 	/****************/
 	/* CTROR(S) ... */
 	/****************/
@@ -30,19 +34,10 @@ public class TYPE_CLASS extends TYPE
 		this.father = father;
 		this.data_members = data_members;
 		this.methods = methods;
-		// if (data_members != null) {
-		// 	System.out.format("TYPE_CLASS = %s has data_members\n",name);
-		// } else {
-		// 	System.out.format("TYPE_CLASS `%s` was initialized without datamembers\n this must mean pre-declaration or no data members at all\n",name);
-		// }
-
-
-		// if (methods != null) {
-		// 	System.out.format("TYPE_CLASS = %s has methods\n",name);
-		// } else {
-		// 	System.out.format("TYPE_CLASS `%s` was initialized without methods\n this must mean pre-declaration or no methods at all\n",name);
-		// }
-
+		this.membersCount = 0;
+		for (TYPE_CLASS_VAR_DEC_LIST it=this.data_members;it != null;it=it.tail) {
+			this.membersCount+=1;
+		}
 
 	}
 
@@ -109,5 +104,29 @@ public class TYPE_CLASS extends TYPE
 				return father.queryMethodsReqursivly(method_name);
 		}
 		return null;
+	}
+
+
+	public boolean equals(Object otherType)
+	{
+		System.out.format("Comparing classes! (%s)\n", name);
+		if (otherType instanceof TYPE_NIL)
+		{
+			return true;
+		}
+		else if (otherType instanceof TYPE_CLASS)
+		{
+			TYPE_CLASS classType = (TYPE_CLASS)otherType;
+			if (name.equals(classType.name))
+			{
+				return true;
+			}
+			if (classType.father != null)
+			{
+				return equals(classType.father);
+			}
+			return false;
+		}
+		return false;
 	}
 }

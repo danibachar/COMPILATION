@@ -2,5 +2,105 @@
 string_access_violation: .asciiz "Access Violation"
 string_illegal_div_by_0: .asciiz "Illegal Division By Zero"
 string_invalid_ptr_dref: .asciiz "Invalid Pointer Dereference"
+.data
+	global_i: .word 721
+.data
+	global_j: .word 721
+.data
+	global_p: .word 721
+.data
+	global_start: .word 721
+.data
+	global_end: .word 721
+.data
+	global_isPrime: .word 721
+	li Temp_0,2
+	li Temp_1,2
+	li Temp_2,100
+	j Label_2_while.cond
+Label_2_while.cond:
+	li Temp_7,1
+	add Temp_5,Temp_6,Temp_7
+	blt Temp_4,Temp_8,Label_16_AssignOne
+	bge Temp_4,Temp_8,Label_17_AssignZero
+Label_16_AssignOne:
+	li Temp_3,1
+	j Label_15_end
+Label_17_AssignZero:
+	li Temp_3,0
+	j Label_15_end
+Label_15_end:
+	beq Temp_9,$zero,Label_0_while.end
+	li Temp_10,2
+	li Temp_11,2
+	li Temp_12,1
+	j Label_5_while.cond
+Label_5_while.cond:
+	blt Temp_14,Temp_15,Label_19_AssignOne
+	bge Temp_14,Temp_15,Label_20_AssignZero
+Label_19_AssignOne:
+	li Temp_13,1
+	j Label_18_end
+Label_20_AssignZero:
+	li Temp_13,0
+	j Label_18_end
+Label_18_end:
+	beq Temp_16,$zero,Label_3_while.end
+	li Temp_17,2
+	j Label_8_while.cond
+Label_8_while.cond:
+	blt Temp_19,Temp_20,Label_22_AssignOne
+	bge Temp_19,Temp_20,Label_23_AssignZero
+Label_22_AssignOne:
+	li Temp_18,1
+	j Label_21_end
+Label_23_AssignZero:
+	li Temp_18,0
+	j Label_21_end
+Label_21_end:
+	beq Temp_21,$zero,Label_6_while.end
+	j Label_9_if.cond
+Label_9_if.cond:
+	mul Temp_23,Temp_24,Temp_25
+	beq Temp_26,Temp_27,Label_25_AssignOne
+	bne Temp_26,Temp_27,Label_26_AssignZero
+Label_25_AssignOne:
+	li Temp_22,1
+	j Label_24_end
+Label_26_AssignZero:
+	li Temp_22,0
+	j Label_24_end
+Label_24_end:
+	beq Temp_28,$zero,Label_11_if.exit
+	li Temp_29,0
+	j Label_11_if.exit
+Label_11_if.exit:
+	li Temp_32,1
+	add Temp_30,Temp_31,Temp_32
+	j Label_8_while.cond
+Label_6_while.end:
+	li Temp_36,1
+	add Temp_34,Temp_35,Temp_36
+	j Label_5_while.cond
+Label_3_while.end:
+	j Label_12_if.cond
+Label_12_if.cond:
+	li Temp_40,1
+	beq Temp_39,Temp_40,Label_28_AssignOne
+	bne Temp_39,Temp_40,Label_29_AssignZero
+Label_28_AssignOne:
+	li Temp_38,1
+	j Label_27_end
+Label_29_AssignZero:
+	li Temp_38,0
+	j Label_27_end
+Label_27_end:
+	beq Temp_41,$zero,Label_14_if.exit
+	j Label_14_if.exit
+Label_14_if.exit:
+	li Temp_45,1
+	add Temp_43,Temp_44,Temp_45
+	j Label_2_while.cond
+Label_0_while.end:
 	li $v0,10
 	syscall

@@ -1,5 +1,7 @@
 package TYPES;
 
+import AST.*;
+
 public class TYPE_CLASS_VAR_DEC_LIST extends TYPE
 {
 	public TYPE_CLASS_VAR_DEC head;

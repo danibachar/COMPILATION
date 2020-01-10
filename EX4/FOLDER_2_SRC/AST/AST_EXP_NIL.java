@@ -7,6 +7,14 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
+import LocalVarCounter.*;
+import LLVM.*;
+import java.util.ArrayList;
+import javafx.util.Pair;
+import java.util.Iterator;
+import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Set;
 
 public class AST_EXP_NIL extends AST_EXP
 {
@@ -52,9 +60,14 @@ public class AST_EXP_NIL extends AST_EXP
 
 	public TEMP IRme() throws Exception
 	{
-		System.out.format("IRme AST_EXP_NIL\nScope=%d\n",myScope);
-		return null;
+		// System.out.format("IRme AST_EXP_NIL\nScope=%d\n",myScope);
+		TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
+		t.setType( TYPE_NIL.getInstance());
+		IR.getInstance().Add_IRcommand(new IRcommandNull(t));
+		t.isaddr = false;
+		return t;
 	}
+
 	public void Globalize() throws Exception {
 		System.out.format("Globalize AST_EXP_NIL\nScope=%d\n",myScope);
 	}

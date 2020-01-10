@@ -7,7 +7,14 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
+import LocalVarCounter.*;
+import LLVM.*;
 import java.util.ArrayList;
+import javafx.util.Pair;
+import java.util.Iterator;
+import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Set;
 import java.util.Collections;
 
 public class AST_EXP_CALL extends AST_EXP
@@ -19,6 +26,9 @@ public class AST_EXP_CALL extends AST_EXP
 	public AST_EXP_LIST params;
 	public AST_EXP_VAR var;
 
+
+	public TYPE_CLASS classType;
+	public TYPE returnType;
 	private ArrayList<TYPE> sent_input_params = new ArrayList<TYPE>();
 
 	/******************/
@@ -124,6 +134,8 @@ public class AST_EXP_CALL extends AST_EXP
 
 				}
 				myType = funcDec.returnType;
+				this.classType = varClass;
+				this.returnType = funcDec.returnType;
 				return funcDec.returnType;
 		} else {
 			// Global/Global in scope function call!!!
@@ -176,6 +188,7 @@ public class AST_EXP_CALL extends AST_EXP
 
 			}
 			myType = funcTypeValidated.returnType;
+			this.returnType = funcTypeValidated.returnType;
 			return funcTypeValidated.returnType;
 		}
 
@@ -255,43 +268,124 @@ public class AST_EXP_CALL extends AST_EXP
 		TEMP t=null;
 		TEMP t_var=null;
 
-		System.out.format("IRme - AST_EXP_CALL(%s)", funcName);
-		System.out.format("IRme - ON:(%s)\n", t_var!=null ? t_var.getSerialNumber():null);
-		System.out.format("IRme - WITH:(%s)\n",t!=null ? t.getSerialNumber():null);
-		System.out.format("IRme - Scope=%d\n",myScope);
-		TYPE_FUNCTION funcTypeValidated = (TYPE_FUNCTION)SYMBOL_TABLE.getInstance().find(funcName);
-		String type_string = AST_HELPERS.type_to_string(funcTypeValidated.returnType);
-		System.out.format("IRme - Return type = %s\n",type_string);
+		// System.out.format("IRme - AST_EXP_CALL(%s)", funcName);
+		// System.out.format("IRme - ON:(%s)\n", t_var!=null ? t_var.getSerialNumber():null);
+		// System.out.format("IRme - WITH:(%s)\n",t!=null ? t.getSerialNumber():null);
+		// System.out.format("IRme - Scope=%d\n",myScope);
+		if (this.var == null) { // global or global in scope
+			return IRmeScopeOrGlobalFunc();
+		} else { // funciton call on field/class
+			return IRmeVar();
+		}
+	}
 
-		/*
-		 - load params
-		 %3 = load i32, i32* %1, align 4
-		 %4 = load i32, i32* %2, align 4
-		 fileWriter.format("  %%Temp_%d = load i32, i32* @%s, align 4\n",idxdst, var_name);
-		 if (params != null) {  t = params.head.IRme();  }
-		*/
-		String params_sent_string = "";
-		int counter = 0;
-		for (AST_EXP_LIST it = params; it  != null; it = it.tail) {
-			if (it.head != null)  {
-				TEMP temp_param = it.head.IRme();
-				String name = String.format("%%Temp_%d", temp_param.getSerialNumber());
-				String type = AST_HELPERS.type_to_string(sent_input_params.get(counter));
-				if (counter == 0) {
-					params_sent_string+=String.format("%s %s", type, name);
-				} else {
-					params_sent_string+=String.format(",  %s %s",  type, name);
-				}
-			}
-			counter++;
+	public TEMP IRmeVar() throws Exception {
+		TYPE_FUNCTION functionType = (TYPE_FUNCTION)SYMBOL_TABLE.getInstance().find(funcName);
+		TEMP varTemp = this.var.IRme();
+		if (varTemp.isaddr)
+		{
+			TEMP arr1 = TEMP_FACTORY.getInstance().getFreshTEMP();
+			arr1.setType(varTemp.getType());
+			arr1.checkInit = varTemp.checkInit;
+			IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(arr1, varTemp));
+			varTemp = arr1;
+		}
+		IR.getInstance().Add_IRcommand(new IRcommand_Check_Null(varTemp));
+		System.out.format("IRing method call with var %d\n", varTemp.getSerialNumber());
+		TEMP_LIST t = new TEMP_LIST(varTemp, null);
+		// AST_EXP_LIST params = args;
+		if (params != null) {
+			 t.tail = (TEMP_LIST)params.IRme();
 		}
 
-		TEMP tt = TEMP_FACTORY.getInstance().getFreshTEMP();
-		IR.getInstance()
-			.Add_IRcommand(new IRcommand_Call_Func(funcName, params_sent_string, type_string, tt, myScope));
+		TEMP_LIST temps=t;
+		while (temps != null && params != null)
+		{
+			if (temps.head.isaddr){
+				//ir return address and not value
+				TEMP newtemp = TEMP_FACTORY.getInstance().getFreshTEMP();
+				newtemp.setType(temps.head.getType());
+				newtemp.checkInit = temps.head.checkInit;
+				IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(newtemp, temps.head));
+				temps.head = newtemp;
+			}
+			temps = temps.tail;
+			params = params.tail;
+		}
+		System.out.format("Calling method with class %s and class %s\n", classType.name, ((TYPE_CLASS)varTemp.getType()).name);
+		String fullName = classType.queryDataMembersReqursivly(name).typeClass.name + "_" + name;
+		TYPE_LIST newParams = new TYPE_LIST(classType, functionType.params);
+		if (functionType.returnType == TYPE_VOID.getInstance()){
+			IR.getInstance()
+				.Add_IRcommand(new IRcommand_Call_Func_Void(fullName, functionType.returnType, t, newParams));
+			return null;
+		}
 
-		return tt;
+		TEMP dst = TEMP_FACTORY.getInstance().getFreshTEMP();
+		dst.setType(functionType.returnType);
+		IR.getInstance().Add_IRcommand(new IRcommand_Call_Func(dst, fullName, functionType.returnType, t, newParams));
+		return dst;
 	}
+
+	public TEMP IRmeScopeOrGlobalFunc() throws Exception {
+		TYPE_FUNCTION definedType = (TYPE_FUNCTION)SYMBOL_TABLE.getInstance().find(funcName);
+		// TODO: simply call the function by name (what about name-colision?)
+		String name = this.funcName;
+		if (definedType.origClass != null)
+		{
+			name = definedType.origClass.name+"_" +  this.funcName;
+		}
+		System.out.format("IRing function call %s\n", name);
+		TEMP_LIST t=null;
+		// AST_EXP_LIST params = params;
+		if (params != null) { t = (TEMP_LIST)params.IRme(); }
+		if (params != null)
+		{
+			TEMP_LIST temps=t;
+			TYPE_LIST types = definedType.params;
+
+			while (temps != null && params != null)
+			{
+
+			if (temps.head.isaddr){
+				// String llvmType1 = LLVM.getInstance().typeToString(temps.head.getType());
+				// String llvmType2 = LLVM.getInstance().typeToString(types.head);
+				// if (llvmType1.endsWith("*") && llvmType1.equals(llvmType2))
+				// {
+				// 	TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
+				// 	pointerTemp.setType(temps.head.getType());
+				// 	System.out.format("Creating pointerTemp of index %d %s\n", pointerTemp.getSerialNumber(), pointerTemp.getType());
+				// 	IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_Pointer(pointerTemp, temps.head));
+				// 	temps.head = pointerTemp;
+				// }
+				//ir return address and not value
+				TEMP newtemp = TEMP_FACTORY.getInstance().getFreshTEMP();
+				newtemp.setType(types.head);
+				newtemp.checkInit = temps.head.checkInit;
+				System.out.format("Loading in call func %s\n", newtemp.getSerialNumber());
+				IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(newtemp, temps.head));
+				temps.head = newtemp;
+			}
+			temps = temps.tail;
+			params = params.tail;
+			types = types.tail;
+		}
+		}
+
+		if (returnType == TYPE_VOID.getInstance()){
+			System.out.format("###### Calling method with named %s\n", funcName);
+			IR.getInstance()
+				.Add_IRcommand(new IRcommand_Call_Func_Void(funcName, returnType, t, definedType.params));
+			return null;
+		}
+
+		TEMP dst = TEMP_FACTORY.getInstance().getFreshTEMP();
+		dst.setType(returnType);
+		dst.isaddr = false;
+		IR.getInstance().Add_IRcommand(new IRcommand_Call_Func(dst, name, returnType, t,definedType.params));
+		return dst;
+	}
+
 
 	public void Globalize() throws Exception {
 		System.out.format("Globalize - AST_EXP_CALL(%s)", funcName);

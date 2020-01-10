@@ -6,6 +6,14 @@ import IR.*;
 import MIPS.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
+import LocalVarCounter.*;
+import LLVM.*;
+import java.util.ArrayList;
+import javafx.util.Pair;
+import java.util.Iterator;
+import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Set;
 
 public class AST_EXP_BINOP extends AST_EXP
 {
@@ -214,54 +222,169 @@ public class AST_EXP_BINOP extends AST_EXP
 
 	public TEMP IRme() throws Exception
 	{
+		// TODO: add support for operations 1, 5, 6 (need to create matching IRCommands)
 		TEMP t1 = null;
 		TEMP t2 = null;
 		TEMP dst = TEMP_FACTORY.getInstance().getFreshTEMP();
+		TEMP leftTemp = left.IRme();
+		TEMP rightTemp = right.IRme();
 
-		if (left  != null) t1 = left.IRme();
-		if (right != null) t2 = right.IRme();
-		if (t1 == null || t2 == null) {
-				System.out.format("********NULL IRme - AST_EXP_BINOP(%s) between t1=%s, t2=%s\nScope=%d\n",opSymbol(), t1 == null ? null:t1.getSerialNumber(), t2 == null ? null:t2.getSerialNumber(),myScope);
-				throw new AST_EXCEPTION(this.lineNumber);
+		boolean shouldCastToInt = false;
+		boolean shouldCheckOverflow = false;
+		// WE need integers
+			if (rightTemp!=null && rightTemp.isaddr)
+			{
+				//ir return address and not value
+				t2 = TEMP_FACTORY.getInstance().getFreshTEMP();
+
+				t2.setType(rightTemp.getType());
+				t2.checkInit = rightTemp.checkInit;
+				IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(t2, rightTemp));
+			}
+			if (leftTemp != null && leftTemp.isaddr){
+				//ir return address and not value
+				t1 = TEMP_FACTORY.getInstance().getFreshTEMP();
+				;
+				t1.setType(leftTemp.getType());
+				t1.checkInit = leftTemp.checkInit;
+
+				IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(t1, leftTemp));
+			}
+		if (t1 == null)
+		{
+			t1 = leftTemp;
 		}
-		System.out.format("IRme - AST_EXP_BINOP(%s) between t1=%s, t2=%s\nScope=%d\n",opSymbol(), t1 == null ? null:t1.getSerialNumber(), t2 == null ? null:t2.getSerialNumber(),myScope);
-		if (OP == 0) {
-			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Binop_EQ_Integers(dst,t1,t2));
+		if (t2 == null)
+		{
+			t2 = rightTemp;
 		}
-		if (OP == 1) {
-			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Binop_LT_Integers(dst,t1,t2));
+
+		if (OP == 3)
+		{
+			System.out.format("Adding %s %s\n", t1.getType(), t2.getType());
+			if (t1.getType() instanceof TYPE_STRING)
+			{
+				dst.setType(TYPE_STRING.getInstance());
+				IR.
+				getInstance().
+				Add_IRcommand(new IRcommand_Binop_Add_Strings(dst,t1,t2));
+			}
+			else{
+				dst.setType(TYPE_INT.getInstance());
+				IR.
+				getInstance().
+				Add_IRcommand(new IRcommand_Binop_Add_Integers(dst,t1,t2));
+				shouldCheckOverflow = true;
+
+			}
 		}
-		if (OP == 2){
-			System.out.format("IRme - LG COMPARE impl is missing");
+
+		if (OP == 4)
+		{
+			dst.setType(TYPE_INT.getInstance());
+				IR.
+				getInstance().
+				Add_IRcommand(new IRcommand_Binop_Dec_Integers(dst,t1,t2));
+			shouldCheckOverflow = true;
 		}
-		if (OP == 3) {
-			//TODO - handle strings concatanation
-			if (left instanceof AST_EXP_STRING) {
-				// IR.getInstance()
-				// 	.Add_IRcommand(new IRcommand_Binop_Add_Strings(dst,t1,t2));
-			} else {
-				IR.getInstance()
-					.Add_IRcommand(new IRcommand_Binop_Add_Integers(dst,t1,t2));
+		if (OP == 1)
+		{
+			shouldCastToInt = true;
+			IR.
+			getInstance().
+			Add_IRcommand(new IRcommand_Binop_LT_Integers(dst,t1,t2));
+		}
+
+		if (OP == 2)
+		{
+			shouldCastToInt = true;
+			IR.
+			getInstance().
+			Add_IRcommand(new IRcommand_Binop_LT_Integers(dst,t2,t1));
+		}
+
+		if (OP == 0)
+		{
+			shouldCastToInt = true;
+			boolean oneIsNull = false;
+			if (t1.getType() instanceof TYPE_NIL)
+			{
+				TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
+			pointerTemp.setType(t2.getType());
+			pointerTemp.checkInit = t2.checkInit;
+			System.out.format("Creating pointer null Temp of index %d and type %s\n", pointerTemp.getSerialNumber(),pointerTemp.getType());
+			IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_To_Null(pointerTemp, t2));
+			t2 = pointerTemp;
+			oneIsNull = true;
+			}
+			if (t2.getType() instanceof TYPE_NIL)
+			{
+				TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
+			pointerTemp.setType(t1.getType());
+			pointerTemp.checkInit = t1.checkInit;
+			System.out.format("Creating pointer  null Temp of index %d and type %s\n", pointerTemp.getSerialNumber(),pointerTemp.getType());
+			IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_To_Null(pointerTemp, t1));
+			t1 = pointerTemp;
+			oneIsNull = true;
+			}
+			if (oneIsNull)
+			{
+				t1.setType(TYPE_NIL.getInstance());
+				t2.setType(TYPE_NIL.getInstance());
+			}
+			if (!oneIsNull &&  (t1.getType() instanceof TYPE_STRING || t2.getType() instanceof TYPE_STRING))
+			{
+				IR.
+				getInstance().
+				Add_IRcommand(new IRcommand_Binop_EQ_Strings(dst,t1,t2));
+			}
+			else
+			{
+				IR.
+				getInstance().
+				Add_IRcommand(new IRcommand_Binop_EQ_Integers(dst,t1,t2));
 			}
 
 		}
-		if (OP == 4){
-			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Binop_Sub_Integers(dst,t1,t2));
+
+		if (OP == 5)
+		{
+			dst.setType(TYPE_INT.getInstance());
+
+			IR.
+			getInstance().
+			Add_IRcommand(new IRcommand_Binop_Mul_Integers(dst,t1,t2));
+			shouldCheckOverflow = true;
 		}
-		if (OP == 5){
-			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Binop_Mul_Integers(dst,t1,t2));
+		if (OP == 6)
+		{
+			dst.setType(TYPE_INT.getInstance());
+
+			IR.
+			getInstance().
+			Add_IRcommand(new IRcommand_Binop_Div_Integers(dst,t1,t2));
+			shouldCheckOverflow = true;
 		}
-		if (OP == 6){
-			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Binop_Div_Integers(dst,t1,t2));
+		if (shouldCastToInt)
+		{
+			t2 = TEMP_FACTORY.getInstance().getFreshTEMP();
+			t2.setType(TYPE_INT.getInstance());
+			IR.
+			getInstance().
+			Add_IRcommand(new IRcommand_Zext(t2,dst));
+			dst = t2;
 		}
 
+		if (shouldCheckOverflow)
+		{
+			TEMP newDst = TEMP_FACTORY.getInstance().getFreshTEMP();
+			newDst.setType(dst.getType());
+			IR.
+			getInstance().
+			Add_IRcommand(new IRcommand_Binop_Overflow(newDst,dst));
+			dst = newDst;
+		}
 		return dst;
-
 	}
 
 	public void Globalize() throws Exception {

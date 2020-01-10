@@ -7,6 +7,14 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
+import LocalVarCounter.*;
+import LLVM.*;
+import java.util.ArrayList;
+import javafx.util.Pair;
+import java.util.Iterator;
+import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Set;
 
 public class AST_EXP_LIST extends AST_Node
 {
@@ -85,9 +93,17 @@ public class AST_EXP_LIST extends AST_Node
 		// We are handling this outside of this node!
 		// The onle other node that is actually using this AST is AST_EXP_CALL
 		// Which needs to hold the list of params
-		System.out.format("IRme - AST_EXP_LIST\nnScope=%d\n",myScope);
-		throw new AST_EXCEPTION(0);
-		// return null;//head.IRme();
+		// System.out.format("IRme - AST_EXP_LIST\nnScope=%d\n",myScope);
+		TEMP_LIST result = new TEMP_LIST();
+
+		if (head != null) {
+				result.head = head.IRme();
+		}
+		if (tail != null) {
+			result.tail = (TEMP_LIST) tail.IRme();
+		}
+
+		return result;
 	}
 
 	public void Globalize() throws Exception {

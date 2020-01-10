@@ -162,32 +162,6 @@ public class AST_HELPERS
   }
 
 
-  static public void update_constants_if_needed(String name, AST_EXP e) throws Exception {
-    System.out.format("update_constants_if_needed - name(%s), exp(%s)\n", name, e);
-    if (e instanceof AST_EXP_STRING) {
-      AST_EXP_STRING es = (AST_EXP_STRING)e;
-      // // Adding to context - will be needed later
-      // Pair<String, AST_EXP> p = new Pair<String, AST_EXP>(name, es);
-      // IR.getInstance().constants.add(p);
-      // actual comamand
-      IR.getInstance()
-        .Add_IRcommand(new IRcommandConstString(name, es.value));
-    } else if (e instanceof AST_EXP_INT) {
-      throw new AST_EXCEPTION(e.lineNumber);
-    // } else if (t.isClass()) {
-    //   throw new AST_EXCEPTION(this.lineNumber);
-    // } else if (t.isArray()) {
-    //   throw new AST_EXCEPTION(this.lineNumber);
-    // } else if (t == TYPE_NIL.getInstance()) {
-    //   throw new AST_EXCEPTION(this.lineNumber);
-    // } else if (t == TYPE_VOID.getInstance()) {
-    } else {
-      throw new AST_EXCEPTION(e.lineNumber);
-    }
-
-
-  }
-
   static public int type_to_align(TYPE t) {
     int align = 4;
     if (t == null) {
@@ -228,33 +202,33 @@ public class AST_HELPERS
     return def_ret_val;
   }
   static public String type_to_string(TYPE t) {
-    String type = "void";
     if (t == null) {
-      System.out.format("ERROR type to string\n");
-      return type;
+      return "i1";
     }
+
     if (t.isClassVar()) {
       TYPE_CLASS_VAR_DEC tc = (TYPE_CLASS_VAR_DEC)t;
       t = tc.t;
     }
-    if (t == null || t == TYPE_VOID.getInstance()) {
-      return type;
+
+    if (t == null) {
+      return "i1";
+    }
+    if (t == TYPE_VOID.getInstance()) {
+      return "void";
+    }
+    if (t == TYPE_NIL.getInstance()) {
+      return "i32*";
     }
     if (t == TYPE_INT.getInstance()) {
-      type = "i32";
+      return "i32";
     }
-    // String type_val = "0";
-    // int align = 4;
     if (t.isArray()) {
-      type = "i32*";
-      // type_val = "null";
-      // align = 8;
+
+      String typeString = AST_HELPERS.type_to_string(((TYPE_ARRAY)t).type) + "*";
+			return typeString;
     }
-    if (t.isClass() || t == TYPE_STRING.getInstance()) {
-      type = "i8*";
-      // type_val = "null";
-      // align = 8;
-    }
-    return type;
+
+    return "i8*";
   }
 }

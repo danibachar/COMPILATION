@@ -128,6 +128,35 @@ public class SYMBOL_TABLE
 		return null;
 	}
 
+	protected SYMBOL_TABLE_ENTRY findEntry(String name)
+	{
+		SYMBOL_TABLE_ENTRY e;
+
+		for (e = table[hash(name)]; e != null; e = e.next)
+		{
+			if (name.equals(e.name))
+			{
+				return e;
+			}
+		}
+
+		return null;
+	}
+
+	public TYPE findVarType(String name)
+	{
+		TYPE t = find(name);
+		if (t == null)
+		{
+			return null;
+		}
+		if (t.isClassVar()) {
+			TYPE_CLASS_VAR_DEC tt = (TYPE_CLASS_VAR_DEC)t;
+			return tt.t;
+		}
+		return t;
+	}
+
 	public TYPE findInCurrentScope(String name)
 	{
 		// System.out.format("######### - Search in Scope = %d\n", scopeCount);
@@ -180,6 +209,36 @@ public class SYMBOL_TABLE
 
 		// Last just look for enything, please!!!
 		return find(name);
+	}
+
+	public boolean isInFunc(String name)
+	{
+		SYMBOL_TABLE_ENTRY e = this.top;
+		SYMBOL_TABLE_ENTRY entry = findEntry(name);
+		if(entry == null){
+			System.out.format("Couldnt find name %s\n", name);
+			return false;
+		}
+
+		for (e = this.top; e != null; e = e.prevtop)
+		{
+			//we are in global scope, so not in function
+			if(e.scope_number == 0)
+			{
+				return false;
+			}
+
+			if (e.type instanceof TYPE_FOR_SCOPE_BOUNDARIES)
+			{
+				if(e.prevtop.type instanceof TYPE_FUNCTION)
+				{
+					return entry.scope_number >= e.scope_number;
+				}
+
+			}
+		}
+
+		return false;
 	}
 
 	/***************************************************************************/

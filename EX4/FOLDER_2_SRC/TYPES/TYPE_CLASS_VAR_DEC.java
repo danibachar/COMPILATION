@@ -1,9 +1,18 @@
 package TYPES;
 
+import AST.*;
+
 public class TYPE_CLASS_VAR_DEC extends TYPE
 {
 	public TYPE t;
 	public String name;
+
+
+	public int index;
+	public TYPE_CLASS typeClass;
+	public AST_EXP exp;
+	public boolean initialized = false;
+
 
 	public boolean isClassVar(){ return true;}
 

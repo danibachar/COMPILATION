@@ -6,16 +6,10 @@ package IR;
 /*******************/
 /* GENERAL IMPORTS */
 /*******************/
-import java.io.*;
-import java.io.PrintWriter;
-import java.util.*;
-import javafx.util.Pair;
+
 /*******************/
 /* PROJECT IMPORTS */
 /*******************/
-import TEMP.*;
-import AST_EXCEPTION.*;
-import AST.*;
 
 public class IR
 {
@@ -23,34 +17,20 @@ public class IR
 	private IRcommandList tail=null;
 
 	/******************/
-	/* 	IT Scoping 		*/
-	/******************/
-	public boolean auto_exec_mode = false;
-
-
-	/******************/
 	/* Add IR command */
 	/******************/
-	public void Add_IRcommand(IRcommand cmd) {
-		if (auto_exec_mode) {
-			cmd.LLVM_bitcode_me();
-			return;
-		}
-
-
+	public void Add_IRcommand(IRcommand cmd)
+	{
 		if ((head == null) && (tail == null))
 		{
-			// new , first head
 			this.head = cmd;
 		}
 		else if ((head != null) && (tail == null))
 		{
-			// we have haed, init tail!
 			this.tail = new IRcommandList(cmd,null);
 		}
 		else
 		{
-			//appened to tail
 			IRcommandList it = tail;
 			while ((it != null) && (it.tail != null))
 			{
@@ -68,7 +48,7 @@ public class IR
 		if (head != null) head.LLVM_bitcode_me();
 		if (tail != null) tail.LLVM_bitcode_me();
 	}
-
+	
 	/***************/
 	/* MIPS me !!! */
 	/***************/

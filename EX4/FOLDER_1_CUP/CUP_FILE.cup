@@ -174,10 +174,6 @@ funcDec								::= ID:ret ID:name LPAREN RPAREN LBRACE stmtList:body RBRACE
 												{: RESULT = new AST_DEC_FUNC(ret,retleft+1,name,nameleft+1,null,null,body,bodyleft+1); :}
 											| ID:ret ID:name LPAREN typeNameTuplesComma:tnl RPAREN LBRACE stmtList:body RBRACE
 												{: RESULT = new AST_DEC_FUNC(ret,retleft+1,name,nameleft+1,tnl,tnlleft+1,body,bodyleft+1); :}
-//											| ID:ret ID:name LPAREN typeNameTuplesComma:tnl RPAREN LBRACE RBRACE
-//												{: RESULT = new AST_DEC_FUNC(ret,retleft+1,namenameleft+1,,tnl,tnlleft+1,null,lexer.getLine()); :}
-//											| ID:ret ID:name LPAREN RPAREN LBRACE RBRACE
-//												{: RESULT = new AST_DEC_FUNC(ret,name,null,null,lexer.getLine()); :}
 											;
 
 classDec							::= CLASS ID:name EXTENDS ID:parent	LBRACE cFields:body RBRACE

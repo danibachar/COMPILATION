@@ -7,9 +7,10 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
-
-import java.util.*;
+import LocalVarCounter.*;
+import LLVM.*;
 import javafx.util.Pair;
+import java.util.*;
 
 public class AST_EXP_STRING extends AST_EXP
 {
@@ -54,39 +55,13 @@ public class AST_EXP_STRING extends AST_EXP
 		return TYPE_STRING.getInstance();
 	}
 
-	public TEMP IRme() throws Exception
+	public TEMP IRme()
 	{
-		//TODO - Specail handling strings, separate needs to handle globaly
-
-		System.out.format("IRme AST_EXP_STRING(%s), Scope=%d\n",value,myScope);
-		if (myScope == 0) { return null; }
-		if (name == null) {
-			System.out.format("ERROR could not find in global vars AST_EXP_STRING(%s), Scope=%d\n",value,myScope);
-			throw new AST_EXCEPTION(this.lineNumber);
-		}
-
-		// TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
-		IR.getInstance()
-			.Add_IRcommand(new IRcommand_Assign_Global_Var_Const_Value(name, value));
-			return null;
-		// return t;
-	}
-
-	public void Globalize() throws Exception {
-		System.out.format("Globalize AST_EXP_STRING(%s), Scope=%d\n",value,myScope);
-		IR.getInstance()
-			.Add_IRcommand(new IRcommandConstString(name, value));
-	}
-
-	public void InitGlobals() throws Exception {
-		// Early return for non globals
-		// This String Expression might be part of soome nested scope
-		// We want to create const for it. hence the Globalize code above
-		// But still,We dont want to init the global var with tis const value at build time, only run time!
-
-		if (myScope > 0) { return; }
-		System.out.format("InitGlobals AST_EXP_STRING(%s), Scope=%d\n",value,myScope);
-		IR.getInstance()
-			.Add_IRcommand(new IRcommand_Assign_Global_Var_Const_Value(name, value));
+		// TODO: String is not a fixed-size length (addition of 2 string for example can create any-sized string)
+		// We probably want some variable-length allocation here, maybe allocate on HEAP somehow?
+		TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
+		t.setType(TYPE_STRING.getInstance());
+		IR.getInstance().Add_IRcommand(new IRcommandConstString(t,value));
+		return t;
 	}
 }

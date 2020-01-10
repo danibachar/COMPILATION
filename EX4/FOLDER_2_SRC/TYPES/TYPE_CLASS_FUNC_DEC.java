@@ -1,5 +1,7 @@
 package TYPES;
 
+import AST.*;
+
 public class TYPE_CLASS_FUNC_DEC extends TYPE
 {
 	public TYPE returnType;

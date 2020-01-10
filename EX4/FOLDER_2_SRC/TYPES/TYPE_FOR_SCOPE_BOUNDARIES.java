@@ -1,5 +1,8 @@
 package TYPES;
 
+import AST.*;
+
+
 public class TYPE_FOR_SCOPE_BOUNDARIES extends TYPE
 {
 	/****************/

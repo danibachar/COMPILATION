@@ -7,6 +7,14 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
+import LocalVarCounter.*;
+import LLVM.*;
+import java.util.ArrayList;
+import javafx.util.Pair;
+import java.util.Iterator;
+import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Set;
 
 public class AST_EXP_NEW extends AST_EXP
 {
@@ -98,16 +106,115 @@ public class AST_EXP_NEW extends AST_EXP
 			// return new TYPE_ARRAY(null,TYPE_INT.getInstance());
 		}
 		// Validate Expression
-
+		this.myType = t;
 		return t;
 	}
 
 	public TEMP IRme() throws Exception
 	{
-		// This is done only for arrays or classes
-		System.out.format("IRme - AST_EXP_NEW type - %s\nScope=%d\n" ,type,myScope);
-		return null;
+		TEMP newObj = TEMP_FACTORY.getInstance().getFreshTEMP();
+
+		//array
+		if (exp != null)
+		{
+			System.out.format("Creating array %s\n", name);
+			newObj.setType(new TYPE_ARRAY(name,myType));
+			TEMP size = exp.IRme();
+			TEMP actualSize = TEMP_FACTORY.getInstance().getFreshTEMP();
+			IR.getInstance().Add_IRcommand(new IRcommand_Add_Int(actualSize, size, 1));
+			// if (exp.isVar)
+			// {
+			// 	IR.getInstance().Add_IRcommand(new IRcommand_lw(size, size, 0));
+			// }
+			TEMP four = TEMP_FACTORY.getInstance().getFreshTEMP();
+			four.setType(TYPE_INT.getInstance());
+			IR.getInstance().Add_IRcommand(new IRcommandConstInt(four, 8));
+			TEMP sizeInBytes = TEMP_FACTORY.getInstance().getFreshTEMP();
+			sizeInBytes.setType(TYPE_INT.getInstance());
+			IR.getInstance().Add_IRcommand(new IRcommand_Binop_Mul_Integers(sizeInBytes, actualSize, four));
+
+			TEMP allocated = TEMP_FACTORY.getInstance().getFreshTEMP();
+			allocated.setType(newObj.getType());
+			IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Array(allocated, sizeInBytes, myType));
+
+			IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_Malloc(newObj, allocated));
+
+			TEMP firstElement = TEMP_FACTORY.getInstance().getFreshTEMP();
+			firstElement.setType(TYPE_INT.getInstance());
+			IR.getInstance().Add_IRcommand(new IRcommand_Get_Element_Int(firstElement, allocated, TYPE_INT.getInstance(), 0));
+			IR.getInstance().Add_IRcommand(new IRcommand_Store_Temp(firstElement, size));
+
+
+
+			return newObj;
+		}
+		// class
+		else {
+			newObj.setType(myType);
+			TYPE_CLASS classType = ((TYPE_CLASS)myType);
+			int numberofMembers = classType.membersCount;
+			System.out.format("IRing class %s of type %d with %d members\n", myType.name, myType.typeOfType, numberofMembers);
+
+			TEMP sizeInBytes = TEMP_FACTORY.getInstance().getFreshTEMP();
+			sizeInBytes.setType(TYPE_INT.getInstance());
+			IR.getInstance().Add_IRcommand(new IRcommandConstInt(sizeInBytes, numberofMembers));
+
+			TEMP allocated = TEMP_FACTORY.getInstance().getFreshTEMP();
+			allocated.setType(myType);
+			IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Array(allocated, sizeInBytes, myType));
+
+			IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_Malloc(newObj, allocated));
+
+			TYPE_CLASS fatherClass = classType;
+			while (fatherClass != null)
+			{
+				TYPE_CLASS_VAR_DEC_LIST currPos = fatherClass.data_members;
+				fatherClass = fatherClass.father;
+				while (currPos != null)
+				{
+					TYPE_CLASS_VAR_DEC cur = currPos.head;
+					System.out.format("New class with var %s %s %s\n", cur.name, cur.exp, cur.t);
+					currPos = currPos.tail;
+					if (cur.t  instanceof TYPE_FUNCTION )
+					{
+						continue;
+					}
+					if (cur.exp == null)
+					{
+						continue;
+					}
+					int varIndex = cur.index;
+
+					TEMP newOffset = TEMP_FACTORY.getInstance().getFreshTEMP();
+					newOffset.setType(TYPE_INT.getInstance());
+					IR.getInstance().Add_IRcommand(new IRcommandConstInt(newOffset,varIndex));
+
+					TEMP elementAddress = TEMP_FACTORY.getInstance().getFreshTEMP();
+					elementAddress.setType(classType);
+					//Todo: check boundaries
+				//	TEMP elementInt = TEMP_FACTORY.getInstance().getFreshTEMP();
+					//elementInt.setType(TYPE_INT.getInstance());
+					IR.getInstance().Add_IRcommand(new IRcommand_Get_Element_Temp(elementAddress, newObj, TYPE_INT.getInstance(), newOffset));
+						TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
+						pointerTemp.setType(cur.t);
+						System.out.format("Creating pointer Temp of index %d and type %s\n", pointerTemp.getSerialNumber(),pointerTemp.getType());
+						IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_Pointer(pointerTemp, elementAddress));
+						elementAddress = pointerTemp;
+					elementAddress.isaddr = true;
+
+					TEMP src = cur.exp.IRme();
+					elementAddress.checkInit = true;
+					IR.getInstance().
+						Add_IRcommand(new IRcommand_Store_Temp(elementAddress,src));
+
+				}
+			}
+
+			return newObj;
+
+		}
 	}
+
 	public void Globalize() throws Exception {
 		System.out.format("Globalize - AST_EXP_NEW type - %s\nScope=%d\n" ,type,myScope);
 		if (exp != null) exp.Globalize();

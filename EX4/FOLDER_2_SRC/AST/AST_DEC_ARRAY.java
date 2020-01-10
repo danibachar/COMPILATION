@@ -6,7 +6,14 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
+import LocalVarCounter.*;
+import LLVM.*;
 import java.util.ArrayList;
+import javafx.util.Pair;
+import java.util.Iterator;
+import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Set;
 
 public class AST_DEC_ARRAY extends AST_DEC
 {
@@ -106,7 +113,7 @@ public class AST_DEC_ARRAY extends AST_DEC
 	public TEMP IRme() throws Exception
 	{
 
-		System.out.format("IRme - AST_DEC_ARRAY name = %s, type = %s\nScope=%d\n",name, type,myScope);
+		// System.out.format("IRme - AST_DEC_ARRAY name = %s, type = %s\nScope=%d\n",name, type,myScope);
 		// IR.getInstance().Add_IRcommand(new IRcommand_Label("main"));
 		// if (body != null) body.IRme();
 		return null;

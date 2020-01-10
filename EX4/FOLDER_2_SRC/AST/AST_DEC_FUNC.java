@@ -1,13 +1,20 @@
 package AST;
 
-import java.util.ArrayList;
-
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import TEMP.*;
 import IR.*;
 import MIPS.*;
 import AST_EXCEPTION.*;
+import LocalVarCounter.*;
+
+import LLVM.*;
+import java.util.ArrayList;
+import javafx.util.Pair;
+import java.util.Iterator;
+import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Set;
 
 public class AST_DEC_FUNC extends AST_DEC
 {
@@ -21,6 +28,12 @@ public class AST_DEC_FUNC extends AST_DEC
 	public Integer paramsLineNumber;
 	public AST_STMT_LIST body;
 	public Integer bodyLineNumber;
+
+	// Extra
+	TYPE returnValType;
+	boolean foundRet;
+	TYPE_FUNCTION typeFunction;
+	ArrayList<Pair<TYPE, Integer>> localVarInfo;
 
 	public boolean isFuncDec() { return true;}
 	/******************/
@@ -50,6 +63,8 @@ public class AST_DEC_FUNC extends AST_DEC
 		this.paramsLineNumber = paramsLineNumber;
 		this.body = body;
 		this.bodyLineNumber = bodyLineNumber;
+
+		this.foundRet = false;
 	}
 
 	/************************************************************/
@@ -97,6 +112,7 @@ public class AST_DEC_FUNC extends AST_DEC
 			System.out.format(">> ERROR [%d] non existing return type %s\n",this.lineNumber,returnTypeName);
 			throw new AST_EXCEPTION(returnTypeNameLineNumber);
 		}
+		this.returnValType = returnType;
 
 		// MAKE Sure there is no same function with same name in the current scope?
 		TYPE temp = SYMBOL_TABLE.getInstance().findInCurrentScope(name);
@@ -111,6 +127,8 @@ public class AST_DEC_FUNC extends AST_DEC
 		/****************************/
 		SYMBOL_TABLE.getInstance().beginScope();
 
+		// For IRme
+		LocalVarCounter.getInstance().initiateCount();
 		/***************************/
 		/* [2] Semant Input Params */
 		/***************************/
@@ -140,18 +158,42 @@ public class AST_DEC_FUNC extends AST_DEC
 		/* Note that we allow empty body of function */
 		/*********************************************/
 		TYPE actualReturnType = null;
-		if (body != null) { actualReturnType = body.SemantMe(); }
+
+
+		if (body != null) {
+			for (AST_STMT_LIST it = body ; it != null ; it = it.tail)
+			{
+				if (it.head instanceof AST_STMT_RETURN)
+				{
+					((AST_STMT_RETURN)it.head).setReturnType(this.returnValType);
+					this.foundRet = true;
+				}
+				else if (it.head instanceof AST_STMT_IF)
+				{
+					((AST_STMT_IF)it.head).propegateRetVal(this.returnValType);
+				}
+				else if (it.head instanceof AST_STMT_WHILE)
+				{
+					((AST_STMT_WHILE)it.head).propegateRetVal(this.returnValType);
+				}
+			}
+
+			actualReturnType = body.SemantMe();
+		}
 		/*****************/
 		/* [4] End Scope */
 		/*****************/
 		SYMBOL_TABLE.getInstance().endScope();
 
+		// For IRme
+		localVarInfo = new ArrayList<>();
+		localVarInfo = LocalVarCounter.getInstance().getLocalMap();
 		/***************************************************/
 		/* [5] Enter the Function Type to the Symbol Table */
 		/***************************************************/
 		SYMBOL_TABLE.getInstance().enter(name,f);
 		myType = returnType;
-
+		typeFunction = f;
 		/*********************************************************/
 		/* [6] Return value is irrelevant for class declarations */
 		/*********************************************************/
@@ -161,90 +203,116 @@ public class AST_DEC_FUNC extends AST_DEC
 		return returnType;
 	}
 
+	public void initGlobals() throws Exception
+	{
+		IR.getInstance().
+			Add_IRcommand(new IRcommand_Define_Func("init_globals", TYPE_VOID.getInstance(), null));
+		for (HashMap.Entry<String, AST_EXP> entry : LLVM.globals.entrySet()) {
+			String key = entry.getKey();
+			AST_EXP value = entry.getValue();
+			TEMP tmp = value.IRme();
+			if (tmp.isaddr) {
+				TEMP expTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
+				expTemp.setType(tmp.getType());
+				expTemp.checkInit = tmp.checkInit;
+				IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(expTemp, tmp));
+				tmp = expTemp;
+			}
+			IR.getInstance().Add_IRcommand(new IRcommand_Store_Global(key,tmp));
+
+		}
+		IR.getInstance().Add_IRcommand(new IRcommand_Return(null));
+		IR.getInstance().
+			Add_IRcommand(new IRcommand_Define_Func_end("init_globals", TYPE_VOID.getInstance(), null));
+	}
+
 	public TEMP IRme() throws Exception
 	{
-		System.out.format("IRme - AST_DEC_FUNC(%s):%s, Scope=%d\n",name, returnTypeName, myScope);
-		// public String returnTypeName;
-		// public Integer returnTypeNameLineNumber;
+		// System.out.format("IRme - AST_DEC_FUNC(%s):%s, Scope=%d\n",name, returnTypeName, myScope);
 
-		// public AST_TYPE_NAME_LIST params;
-		// public Integer paramsLineNumber;
 
-		// define void @foo(i32, i32) #0 {
-		//   %3 = alloca i32, align 4
-		//   %4 = alloca i32, align 4
-		//   store i32 %0, i32* %3, align 4
-		//   store i32 %1, i32* %4, align 4
-		//   ret void
-		// }
-
-		String params_sent_string = "";
-		String params_get_string = "";
-		int counter = 0;
-
-		TEMP_FACTORY.getInstance().beginScope(myScope+1);
-
-		ArrayList<Integer> params_list = new ArrayList<Integer>();
-
-		for (AST_TYPE_NAME_LIST it = params; it  != null; it = it.tail) {
-			if (it.head != null)  {
-				String name = String.format("%s", it.head.name);
-				String type = "i32";
-				if (counter == 0) {
-					params_get_string+=String.format("%s", type);
-					params_sent_string+=String.format("%s %s", type, name);
-				} else {
-					params_get_string+=String.format(", %s", type);
-					params_sent_string+=String.format(",  %s %s",  type, name);
-				}
-
-			}
-			params_list.add(counter++);
+		if (name.equals("main"))
+		{
+			initGlobals();
 		}
-		TYPE return_type = SYMBOL_TABLE.getInstance().find(returnTypeName);
-		String return_type_str = AST_HELPERS.type_to_string(return_type);
-		int align = AST_HELPERS.type_to_align(return_type);
-		String def_ret_val = AST_HELPERS.type_to_def_ret_val(return_type);
-		// check void
-		// check pointer
-		IR.getInstance()
-			.Add_IRcommand(new IRcommand_Decler_Func_Open(
-				name,
-				params_get_string,
-				return_type_str,
-				myScope
-			));
 
-			String return_label = TEMP_FACTORY.getInstance().create_shared_return_label();
-			if (return_type_str != "void") {
-				// Alloc for return value
-				TEMP return_temp = TEMP_FACTORY.getInstance().create_shared_return_temp();
-				IR.getInstance()
-					.Add_IRcommand(new IRcommand_Allocate_Local(return_temp, return_type_str, def_ret_val, align, myScope+1));
+		TYPE_LIST semantedArgs = null;
+		String fullName = null;
+		if (typeFunction.origClass != null){
+			fullName = typeFunction.origClass.name + "_" + this.name;
+		} else {
+			fullName = name;
+		}
+
+		TYPE_LIST fullArgs = null;
+		if (params != null) semantedArgs = params.GetTypes();
+
+		if (typeFunction.origClass != null){
+			fullArgs = new TYPE_LIST(typeFunction.origClass, semantedArgs);
+			// fullArgs.head = typeFunction.origClass;
+			// fullArgs.tail = semantedArgs;
+		}
+		else {
+			fullArgs = semantedArgs;
+		}
+		IR.getInstance().
+			Add_IRcommand(new IRcommand_Define_Func(fullName, this.returnValType, fullArgs));
+
+		AST_TYPE_NAME_LIST argList = null;
+		if (typeFunction.origClass != null){
+			AST_TYPE_NAME thisType = new AST_TYPE_NAME(typeFunction.origClass.name, "this",this.lineNumber);
+			this.params = new AST_TYPE_NAME_LIST(thisType, this.params, this.lineNumber);
+		}
+
+		argList = this.params;
+
+		TYPE_LIST semantedArgsIter = fullArgs;
+		while(argList != null && argList.head != null){
+			System.out.format("Allocating param %s %s \n",argList.head.name,  semantedArgsIter.head );
+			IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Param(argList.head.name, semantedArgsIter.head));
+			argList = argList.tail;
+			semantedArgsIter = semantedArgsIter.tail;
+		}
+		System.out.format("Iring function %s with %d locals\n", name, localVarInfo.size());
+		for (int i=0;i<localVarInfo.size();i++) {
+			Pair<TYPE, Integer> info = localVarInfo.get(i);
+			IR.getInstance()
+				.Add_IRcommand(new IRcommand_Allocate_Local(info.getValue().toString(), info.getKey()));
+		}
+
+		argList = this.params;
+		semantedArgsIter = fullArgs;
+		int index = 0;
+		while(argList != null && argList.head != null){
+			IR.getInstance()
+				.Add_IRcommand(new IRcommand_Store_Parameter(
+					argList.head.name, semantedArgsIter.head, index)
+				);
+			index++;
+			argList = argList.tail;
+			semantedArgsIter = semantedArgsIter.tail;
+		}
+
+		if (name.equals("main"))
+		{
+			IR.getInstance().
+				Add_IRcommand(new IRcommand_Call_Func_Void("init_globals", TYPE_VOID.getInstance(), null, null));
+		}
+
+		if (body != null) body.IRme();
+
+		if (!foundRet) {
+			if (TYPE_VOID.getInstance() != returnValType) {
+				IR.getInstance().Add_IRcommand(new IRcommand_Call_Func_Void("ExecutionFalls", TYPE_VOID.getInstance(), null,null));
+				IR.getInstance().Add_IRcommand(new IRcommand_DummyReturn(returnValType));
+			} else {
+				IR.getInstance().Add_IRcommand(new IRcommand_Return(null));
 			}
 
-		counter = 0;
-		for (AST_TYPE_NAME_LIST it = params; it  != null; it = it.tail) {
-			if (it.head == null)  { continue; }
-			TEMP t = TEMP_FACTORY.getInstance()
-				.fetchTempFromScope(it.head.name, myScope+1, true);
-
-			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Allocate_Local(t, "i32", "0", 4, myScope+1));
-			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Store_Func_Param(t, params_list.get(counter++)));
-
 		}
-		// Hack for propiatery main init
 
-		TEMP tt = null;
-		if (body != null) { tt = body.IRme(); };
-		//fetch typeeee
-		IR.getInstance()
-			.Add_IRcommand(new IRcommand_Decler_Func_Close(
-				tt, return_type_str, return_label, return_type_str, return_type_str+"*", align
-			));
-		TEMP_FACTORY.getInstance().endScope(myScope);
+		IR.getInstance().
+			Add_IRcommand(new IRcommand_Define_Func_end(fullName, this.returnValType, fullArgs));
 		return null;
 	}
 

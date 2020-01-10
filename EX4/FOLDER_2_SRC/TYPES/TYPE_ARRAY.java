@@ -1,5 +1,7 @@
 package TYPES;
 
+import AST.*;
+
 public class TYPE_ARRAY extends TYPE {
 
     public TYPE type;
@@ -9,14 +11,15 @@ public class TYPE_ARRAY extends TYPE {
         this.type = type;
     }
 
-    @Override
     public boolean isArray() { return true; }
 
-    public boolean equals(Object obj)
+    public boolean equals(Object otherType)
     {
-      boolean isEqual = obj instanceof TYPE_ARRAY && ((TYPE_ARRAY) obj).name.equals(name) && ((TYPE_ARRAY) obj).type.equals(type);
-      // System.out.format("TYPE_ARRAY - isEqual 2 = %s\n", isEqual);
-      return isEqual;
+      if (otherType instanceof TYPE_NIL)
+      {
+        return true;
+      }
+      return super.equals(otherType);
     }
 
     public boolean isAssignableFrom(TYPE t)

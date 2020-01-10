@@ -1,5 +1,7 @@
 package TYPES;
 
+import AST.*;
+
 public class TYPE_INT extends TYPE
 {
 	/**************************************/

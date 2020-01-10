@@ -6,8 +6,14 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
-import java.util.*;
+import LocalVarCounter.*;
+import LLVM.*;
+import java.util.ArrayList;
 import javafx.util.Pair;
+import java.util.Iterator;
+import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Set;
 
 public class AST_DEC_VAR extends AST_DEC
 {
@@ -23,6 +29,9 @@ public class AST_DEC_VAR extends AST_DEC
 	/* PRIMITIVE AD-HOC COUNTER FOR LOCAL VARIABLES */
 	/************************************************/
 	public static int localVariablesCounter = 0;
+	public boolean isGlobal;
+  public boolean isInClass;
+  public int varIndex;
 
 
 	public boolean isVarDec() { return true;}
@@ -49,6 +58,8 @@ public class AST_DEC_VAR extends AST_DEC
 		this.typeLineNumber = typeLineNumber;
 		this.initialValue = initialValue;
 		this.initialValueLineNumber = initialValueLineNumber;
+		this.isInClass = false;
+		this.isGlobal = false;
 	}
 
 	/********************************************************/
@@ -87,13 +98,13 @@ public class AST_DEC_VAR extends AST_DEC
 	{
 		TYPE t;
 		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
-		initialValue.name = name;
+
 		// if (initialValue != null) System.out.format("SEMANTME - VAR-DEC(%s):%s := initialValue\n",name,type);
 		// if (initialValue == null) System.out.format("SEMANTME - VAR-DEC(%s):%s                \n",name,type);
 		/****************************/
 		/* [1] Check If Type exists */
 		/****************************/
-
+		System.out.format("DEC_VAR: Looking to find type %s for name %s\n", type, name);
 		t = SYMBOL_TABLE.getInstance().find(type);
 		if (t == null)
 		{
@@ -111,10 +122,18 @@ public class AST_DEC_VAR extends AST_DEC
 			System.out.format(">> ERROR [%d] variable `%s` already exists in scope, found `%s`\n",this.lineNumber,name, temp.name);
 			throw new AST_EXCEPTION(nameLineNumber);
 		}
-
+		boolean isInFunc = myScope > 0;
+		this.isGlobal = !isInClass && !isInFunc;//!SYMBOL_TABLE.getInstance().isInFunc(name);
+		
 		// validate that the initialValue is the same type as the var type, and that it exists!
 		if (initialValue != null) {
 			AST_HELPERS.isValidTypeAssignableFromExpression(t, initialValue);
+			// Hack for replacing names
+			// initialValue.name = name;
+			// if (!isInClass && !isInFunc) {
+			// 	initialValue.name = name;
+			// }
+
 		}
 		/***************************************************/
 		/* [3] Enter the Function Type to the Symbol Table */
@@ -124,177 +143,73 @@ public class AST_DEC_VAR extends AST_DEC
 		/*********************************************************/
 		/* [4] Return value is irrelevant for class declarations */
 		/*********************************************************/
-		// String type = AST_HELPERS.type_to_string(t);
-		// int align = AST_HELPERS.type_to_align(t);
-		// String type_val = AST_HELPERS.type_to_def_ret_val(t);
-		// if (myScope == 0) {
-		// 	// Alloc
-		// 	IR.getInstance()
-		// 		.Add_IRcommand(new IRcommand_Allocate_Global(name, type, type_val, align, myScope));
-		// 	if (initialValue != null) {
-		//
-		// 		Pair<String, AST_EXP> p = new Pair<String, AST_EXP>(name, initialValue);
-		// 		IR.getInstance()
-		// 			.globalVarsInitCommands
-		// 			.add(p);
-		// 	}
-		// }
-
-		// if (t == TYPE_STRING.getInstance()) {
-		// 	// TEMP tt = TEMP_FACTORY.getInstance().fetchTempFromScope(name, myScope, true);
-		// 	if (initialValue != null) {
-		// 		AST_HELPERS.update_constants_if_needed(name, initialValue);
-				// AST_EXP_STRING e = (AST_EXP_STRING)initialValue;
-				// // Adding to context - will be needed later
-				// Pair<String, AST_EXP> p = new Pair<String, AST_EXP>(name, initialValue);
-				// IR.getInstance().constants.add(p);
-				// // actual comamand
-				// IR.getInstance()
-				// 	.Add_IRcommand(new IRcommandConstString(name, e.value));
-		// 	}
-		//
-		// } else if (t == TYPE_INT.getInstance()) {
-		// 	if (myScope == 0) {
-		// 		return null; //global handeled in sesmantme
-		// 	}
-		// 	TEMP tt = TEMP_FACTORY.getInstance().fetchTempFromScope(name, myScope, true);
-		// 	IR.getInstance()
-		// 		.Add_IRcommand(new IRcommand_Allocate_Local(tt, type, type_val, align, myScope));
-		// 	if (initialValue != null) {
-		// 		System.out.format("2@@@@@initialValue\n");
-		// 		IR.getInstance()
-		// 			.Add_IRcommand(new IRcommand_Store_To_Temp(tt, initialValue.IRme(), type, type+"*", align));
-		// 	}
-		//
-		// } else if (t.isClass()) {
-		// 	throw new AST_EXCEPTION(this.lineNumber);
-		// } else if (t.isArray()) {
-		// 	throw new AST_EXCEPTION(this.lineNumber);
-		// } else if (t == TYPE_NIL.getInstance()) {
-		// 	throw new AST_EXCEPTION(this.lineNumber);
-		// } else if (t == TYPE_VOID.getInstance()) {
-		// } else {
-		// 	throw new AST_EXCEPTION(this.lineNumber);
-		// 	// IR.getInstance()
-		// 	// 	.Add_IRcommand(new IRcommand_Store_To_Temp(tt, initialValue.IRme(), type, type+"*", align));
-		// }
-		// Constant declarations
-		// if (initialValue != null && t == TYPE_STRING.getInstance()){
-		// 	AST_EXP_STRING e = (AST_EXP_STRING)initialValue;
-		// 	IR.getInstance()
-		// 		.Add_IRcommand(new IRcommandConstString(name, e.value));
-		// 		// name = name+".VAR1"
-		// 		if (myScope == 0) {
-		// 			Pair<String, AST_EXP> p = new Pair<String, AST_EXP>(name, initialValue);
-		// 			IR.getInstance()
-		// 				.globalVarsInitCommands
-		// 				.add(p);
-		// 		}
-		//
-		//
-		// } else {
-		// 	System.out.format("###### ONLY STRING IRme - VAR-DEC(%s):%s GLOBAL Scope=%d\n",name,type,myScope);
-		// }
+		// this.isInClass = SYMBOL_TABLE.getInstance().current_class != null;
 
 
+		this.myType = t;
+		System.out.format("######### isGlobal = %s, isInClass = %s, isInFunc = %s \n", isGlobal, isInClass, isInFunc);
+		if (!isGlobal && !isInClass)
+    {
+        varIndex = LocalVarCounter.getInstance().declareLocal(name, myType);
+        System.out.format("Declaring for var %s f type %s and got index %d\n", name, myType, varIndex);
+    }
 
-		// return null;
-		myType = t;
+
 		return t;
 	}
 
 	public TEMP IRme() throws Exception
 	{
 
-		if (initialValue != null) System.out.format("IRme - VAR-DEC(%s):%s := initialValue, Scope=%d\n",name,type,myScope);
-		if (initialValue == null) System.out.format("IRme - VAR-DEC(%s):%s                , Scope=%d\n",name,type,myScope);
-		if (myScope == 0) {
-			// Global Scope Handled in SemantMe
-			return null;
-		}
+		// if (initialValue != null) System.out.format("IRme - VAR-DEC(%s):%s := initialValue, Scope=%d\n",name,type,myScope);
+		// if (initialValue == null) System.out.format("IRme - VAR-DEC(%s):%s                , Scope=%d\n",name,type,myScope);
+		if (isGlobal || !isInClass)
+		{
+			System.out.format("@@@@@@@@ isGlobal || !isInClass = %s\n", name);
+      TEMP src = null;
+      if (initialValue != null && !isGlobal) {
+          src = initialValue.IRme();
+          if (src.isaddr) {
+              //ir return address and not value
+              TEMP expTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
+              expTemp.setType(src.getType());
+              expTemp.checkInit = src.checkInit;
+							System.out.format("@@@@@@@@ IRcommand_Load_Temp = %s\n", name);
+              IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(expTemp, src));
+              src = expTemp;
+          }
+      }
 
-		// Move this to separate class to hold the type logice over there
-		String type = AST_HELPERS.type_to_string(myType);
-		int align = AST_HELPERS.type_to_align(myType);
-		String type_val = AST_HELPERS.type_to_def_ret_val(myType);
-		// Allocate or fetches the temp
-		TEMP dst = TEMP_FACTORY.getInstance().fetchTempFromScope(name, myScope, true);
-		// Actually Memory allocation
-		IR.getInstance()
-			.Add_IRcommand(new IRcommand_Allocate_Local(dst, type, type_val, align, myScope));
-		// Handling the value
-		if (initialValue != null) {
-			TEMP src = initialValue.IRme();
-			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Store_To_Temp(dst, src, type, type+"*", align));
-		}
+      if (isGlobal)
+      {
+					System.out.format("@@@@@@@@ isGlobal = %s\n", name);
+          System.out.format("IRing global var %s\n", name);
+          IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Global(name, myType));
+          if (initialValue != null)
+          {
+              LLVM.addGlobal(name, initialValue);
+          }
+      } else if (!isInClass){
+					System.out.format("@@@@@@@@ !isGlobal && !isInClass = %s\n", name);
+          if (src != null) {
+	          System.out.format("Stroring local var %s %d with TEMP_%d\n", name, varIndex, src.getSerialNumber());
+	          if (src.getType() instanceof TYPE_NIL) {
+								TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
+								pointerTemp.setType(src.getType());
+								System.out.format("Creating pointer  null Temp of index %d and type %s\n", pointerTemp.getSerialNumber(),pointerTemp.getType());
+								IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_local(pointerTemp,varIndex,myType));
+								IR.getInstance().
+									Add_IRcommand(new IRcommand_Store_Temp(pointerTemp,src));
+	          } else {
+							IR.getInstance().Add_IRcommand(new IRcommand_Store_Local(varIndex,src));
+
+	          }
+      	}
+      }
+    }
+
 		return null;
-		//
-		// if (t == TYPE_STRING.getInstance()) {
-		// 	if (myScope == 0) {
-		// 		System.out.format("@@@@@EARLY RETURN\n");
-		// 		return null; //global handeled in sesmantme
-		// 	}
-		// 	TEMP dst = TEMP_FACTORY.getInstance().fetchTempFromScope(name, myScope, true);
-		// 	IR.getInstance()
-		// 		.Add_IRcommand(new IRcommand_Allocate_Local(dst, type, type_val, align, myScope));
-		// 	if (initialValue != null) {
-		// 		AST_EXP_STRING e = (AST_EXP_STRING)initialValue;
-		// 		TEMP src = e.IRme();
-		// 		IR.getInstance()
-		// 			.Add_IRcommand(new IRcommand_Store_To_Temp(dst, src, type, type+"*", align));
-		// 		// IR.getInstance()
-		// 		// 	.Add_IRcommand(new IRcommand_Store_String_Var_To_Temp(name+".VAR", tt, e.value, type, type+"*", align));
-		// 	}
-		//
-		// } else if (t == TYPE_INT.getInstance()) {
-		// 	if (myScope == 0) {
-		// 		System.out.format("@@@@@EARLY RETURN\n");
-		// 		return null; //global handeled in sesmantme
-		// 	}
-		// 	TEMP tt = TEMP_FACTORY.getInstance().fetchTempFromScope(name, myScope, true);
-		// 	IR.getInstance()
-		// 		.Add_IRcommand(new IRcommand_Allocate_Local(tt, type, type_val, align, myScope));
-		// 	if (initialValue != null) {
-		// 		System.out.format("2@@@@@initialValue\n");
-		// 		IR.getInstance()
-		// 			.Add_IRcommand(new IRcommand_Store_To_Temp(tt, initialValue.IRme(), type, type+"*", align));
-		// 	}
-		//
-		// } else if (t.isClass()) {
-		// 	throw new AST_EXCEPTION(this.lineNumber);
-		// } else if (t.isArray()) {
-		// 	throw new AST_EXCEPTION(this.lineNumber);
-		// } else if (t == TYPE_NIL.getInstance()) {
-		// 	throw new AST_EXCEPTION(this.lineNumber);
-		// } else if (t == TYPE_VOID.getInstance()) {
-		// } else {
-		// 	throw new AST_EXCEPTION(this.lineNumber);
-		// 	// IR.getInstance()
-		// 	// 	.Add_IRcommand(new IRcommand_Store_To_Temp(tt, initialValue.IRme(), type, type+"*", align));
-		// }
 
-		// return null;
-	}
-
-	public void Globalize() throws Exception {
-		System.out.format("Globalize - VAR-DEC(%s):%s, Scope=%d\n",name,type,myScope);
-		if (initialValue != null) { initialValue.Globalize(); }
-		if (myScope > 0) {
-			return;
-		}
-		// If the var is declared in scope=0 e.g Global we need to alloc according to class
-		// support int, string, class, array
-		String type = AST_HELPERS.type_to_string(myType);
-		int align = AST_HELPERS.type_to_align(myType);
-		String type_val = AST_HELPERS.type_to_def_ret_val(myType);
-		IR.getInstance()
-			.Add_IRcommand(new IRcommand_Allocate_Global(name, type, type_val, align, myScope));
-	}
-
-	public void InitGlobals() throws Exception {
-		System.out.format("InitGlobals - VAR-DEC(%s):%s, Scope=%d\n",name,type,myScope);
-		if (initialValue != null) initialValue.InitGlobals();
 	}
 
 }

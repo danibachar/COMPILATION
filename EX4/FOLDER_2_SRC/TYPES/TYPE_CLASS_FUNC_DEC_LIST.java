@@ -1,5 +1,7 @@
 package TYPES;
 
+import AST.*;
+
 public class TYPE_CLASS_FUNC_DEC_LIST extends TYPE
 {
 	public TYPE_FUNCTION head;

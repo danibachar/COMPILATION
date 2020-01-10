@@ -1,0 +1,12 @@
+int isPrime := 1;
+int i := 1;
+int j := 2;
+int p := 3;
+
+void main() {
+    if ( i*j = p )
+    {
+        isPrime := 0;
+    }
+    PrintInt(isPrime);
+}

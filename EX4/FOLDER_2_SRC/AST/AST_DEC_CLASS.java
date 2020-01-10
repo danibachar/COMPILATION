@@ -6,7 +6,16 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
+import LocalVarCounter.*;
+import LLVM.*;
 import java.util.ArrayList;
+import javafx.util.Pair;
+import java.util.Iterator;
+import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Set;
+
+
 
 public class AST_DEC_CLASS extends AST_DEC
 {
@@ -136,6 +145,7 @@ public class AST_DEC_CLASS extends AST_DEC
 					func_decs.add(f);
 				} else if (it.head.isVarDec() ){
 					AST_DEC_VAR v = (AST_DEC_VAR)it.head;
+					v.isInClass = true;
 					var_decs.add(v);
 				} else {
 					System.out.format(">> ERROR [%d] Class %s has unknown data_member/method %s\n",this.lineNumber,it.head);
@@ -155,6 +165,7 @@ public class AST_DEC_CLASS extends AST_DEC
 				throw new AST_EXCEPTION(v.initialValueLineNumber);
 			}
 			TYPE_CLASS_VAR_DEC fd = new TYPE_CLASS_VAR_DEC(v.SemantMe(),v.name);
+			fd.exp = v.initialValue;
 			t.data_members = new TYPE_CLASS_VAR_DEC_LIST(fd ,t.data_members);
 			// Validating data memebers shadowing
 			if (father != null) {
@@ -234,11 +245,25 @@ public class AST_DEC_CLASS extends AST_DEC
 	public TEMP IRme() throws Exception
 	{
 
-		System.out.format("IRme - AST_DEC_CLASS name = %s, parent = %s, Scope=%d\n",name, parent,myScope);
+		// System.out.format("IRme - AST_DEC_CLASS name = %s, parent = %s, Scope=%d\n",name, parent,myScope);
+		for (AST_DEC_CFIELDS it=body;it != null;it=it.tail)
+		{
+				if (it.head == null) { continue; }
+				if (it.head.isFuncDec()) {
+					AST_DEC_FUNC f = (AST_DEC_FUNC)it.head;
+					// Not handling funcs yet
+				} else if (it.head.isVarDec() ){
+					AST_DEC_VAR v = (AST_DEC_VAR)it.head;
+					v.IRme();
+				} else {
+					System.out.format(">> ERROR [%d] Class %s has unknown data_member/method %s\n",this.lineNumber,it.head);
+					throw new AST_EXCEPTION(it.head.nameLineNumber);
+				}
+		}
 		// IR.getInstance().Add_IRcommand(new IRcommand_Label("main"));
-		TEMP_FACTORY.getInstance().beginScope(myScope+1);
-		if (body != null) body.IRme();
-		TEMP_FACTORY.getInstance().endScope(myScope+1);
+		// TEMP_FACTORY.getInstance().beginScope(myScope+1);
+		// if (body != null) body.IRme();
+		// TEMP_FACTORY.getInstance().endScope(myScope+1);
 		return null;
 	}
 

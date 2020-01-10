@@ -6,6 +6,14 @@ import IR.*;
 import MIPS.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
+import LocalVarCounter.*;
+import LLVM.*;
+import java.util.ArrayList;
+import javafx.util.Pair;
+import java.util.Iterator;
+import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Set;
 
 public class AST_EXP_INT extends AST_EXP
 {
@@ -59,8 +67,9 @@ public class AST_EXP_INT extends AST_EXP
 
 	public TEMP IRme() throws Exception
 	{
-		System.out.format("IRme - AST_EXP_INT( %d ), Scope=%d\n",value,myScope);
+		// System.out.format("IRme - AST_EXP_INT( %d ), Scope=%d\n",value,myScope);
 		TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
+		t.setType(TYPE_INT.getInstance());
 		IR.getInstance().Add_IRcommand(new IRcommandConstInt(t,value));
 		return t;
 	}

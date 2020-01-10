@@ -11,23 +11,25 @@ package IR;
 /* PROJECT IMPORTS */
 /*******************/
 import TEMP.*;
+import TYPES.*;
 import LLVM.*;
 import MIPS.*;
 
 public class IRcommand_Call_Func extends IRcommand
 {
 	String funcName;
-	String params_string;
-	String return_type;
-	TEMP ret_ptr;
-	// int scope;
-
-	public IRcommand_Call_Func(String funcName, String params_string, String return_type, TEMP ret_ptr, int scope)
+	TYPE returnType;
+	TEMP_LIST args;
+	TEMP dst;
+	TYPE_LIST types;
+	
+	public IRcommand_Call_Func(TEMP dst, String funcName,TYPE returnType, TEMP_LIST args, TYPE_LIST types)
 	{
-		this.funcName 				 = funcName;
-		this.params_string 		 = params_string;
-		this.return_type 			 = return_type;
-		this.ret_ptr 					 = ret_ptr;
+		this.funcName      = funcName;
+		this.returnType = returnType;
+		this.args = args;
+		this.dst = dst;
+		this.types = types;
 	}
 
 	/*******************/
@@ -35,15 +37,14 @@ public class IRcommand_Call_Func extends IRcommand
 	/*******************/
 	public void LLVM_bitcode_me()
 	{
-		LLVM.getInstance().call_func(funcName, params_string, return_type, ret_ptr, scope);
+		LLVM.getInstance().call_func(dst, funcName, returnType, args, types);
 	}
-
+	
 	/***************/
 	/* MIPS me !!! */
 	/***************/
 	public void MIPSme()
 	{
-		// TODO - change! copied from IRcommand_Allocate
-		// sir_MIPS_a_lot.getInstance().allocate(var_name);
+		//sir_MIPS_a_lot.getInstance().store(var_name,src);
 	}
 }

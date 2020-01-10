@@ -7,6 +7,10 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
+import LocalVarCounter.*;
+import LLVM.*;
+import javafx.util.Pair;
+import java.util.*;
 
 public abstract class AST_EXP extends AST_Node
 {

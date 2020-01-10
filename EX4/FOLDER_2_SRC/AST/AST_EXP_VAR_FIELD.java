@@ -7,11 +7,16 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
+import LocalVarCounter.*;
+import LLVM.*;
+import javafx.util.Pair;
+import java.util.*;
 
 public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 {
 	public AST_EXP_VAR var;
 	public String fieldName;
+	TYPE_CLASS semantedClass;
 
 	/******************/
 	/* CONSTRUCTOR(S) */
@@ -86,6 +91,7 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 			}
 		} else {
 			tc = (TYPE_CLASS) t;
+			this.semantedClass = tc;
 		}
 
 		/************************************/
@@ -108,8 +114,39 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 
 	public TEMP IRme() throws Exception
 	{
-		System.out.format("IRme AST_EXP_VAR_FIELD\n(___.%s)\nScope=%d\n",fieldName,myScope);
-		return null;
+		TEMP obj = var.IRme();
+		if (obj.isaddr) {
+			TEMP obj1 = TEMP_FACTORY.getInstance().getFreshTEMP();
+			obj1.setType(obj.getType());
+			obj1.checkInit = obj.checkInit;
+			IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(obj1, obj));
+			obj = obj1;
+		}
+		IR.getInstance().Add_IRcommand(new IRcommand_Check_Null(obj));
+
+		TYPE_CLASS_VAR_DEC varDec = semantedClass.queryDataMembersReqursivly(fieldName);
+		int varIndex = varDec.index;
+
+		TEMP newOffset = TEMP_FACTORY.getInstance().getFreshTEMP();
+		newOffset.setType(TYPE_INT.getInstance());
+		IR.getInstance().Add_IRcommand(new IRcommandConstInt(newOffset,varIndex));
+
+		TEMP elementAddress = TEMP_FACTORY.getInstance().getFreshTEMP();
+		elementAddress.setType(semantedClass);
+		//Todo: check boundaries
+	//	TEMP elementInt = TEMP_FACTORY.getInstance().getFreshTEMP();
+		//elementInt.setType(TYPE_INT.getInstance());
+
+		IR.getInstance().Add_IRcommand(new IRcommand_Get_Element_Temp(elementAddress, obj, TYPE_INT.getInstance(), newOffset));
+			TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
+			pointerTemp.setType(varDec.t);
+			IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_Pointer(pointerTemp, elementAddress));
+			elementAddress = pointerTemp;
+		elementAddress.isaddr = true;
+		elementAddress.checkInit = true;
+
+
+		return elementAddress;
 	}
 
 	public void Globalize() throws Exception {

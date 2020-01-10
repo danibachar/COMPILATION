@@ -7,6 +7,10 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
+import LocalVarCounter.*;
+import LLVM.*;
+import javafx.util.Pair;
+import java.util.*;
 
 public class AST_STMT_LIST extends AST_Node
 {
@@ -79,11 +83,11 @@ public class AST_STMT_LIST extends AST_Node
 	public TEMP IRme() throws Exception
 	{
 		TEMP t = null;
-		System.out.format("IRme - AST_STMT_LIST\nScope=%d\n",myScope);
+		// System.out.format("IRme - AST_STMT_LIST\nScope=%d\n",myScope);
 		if (head != null) {  t = head.IRme(); }
 		if (tail != null) {  t = tail.IRme(); }
 
-		return t;
+		return null;
 	}
 
 	public void Globalize() throws Exception {

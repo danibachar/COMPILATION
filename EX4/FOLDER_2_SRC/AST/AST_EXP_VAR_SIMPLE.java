@@ -7,6 +7,10 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
+import LocalVarCounter.*;
+import LLVM.*;
+import javafx.util.Pair;
+import java.util.*;
 
 public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 {
@@ -14,7 +18,9 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 	/* simple variable name */
 	/************************/
 	// public String name;
-
+	TYPE_CLASS typeClass;
+	boolean isInFunc;
+	public int varIndex;
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
@@ -51,29 +57,49 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// System.out.format("SEMANTME - AST_EXP_VAR_SIMPLE( %s )\n",name);
 		myType = SYMBOL_TABLE.getInstance().findField(name,false);
+		typeClass = SYMBOL_TABLE.getInstance().current_class;
+		isInFunc = myScope > 0;//SYMBOL_TABLE.getInstance().isInFunc(name);
+		//SYMBOL_TABLE.getInstance().current_function != null;
+		varIndex = LocalVarCounter.getInstance().getIndex(name, myType);
+		System.out.format("Looked for car %s with result %s %s\n", name, varIndex, myType);
 		return myType;
 	}
 
 	public TEMP IRme() throws Exception
 	{
+		TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
+		t.setType(myType);
 
-		TYPE t = myType;//SYMBOL_TABLE.getInstance().findField(name,false);
-		String src_type = AST_HELPERS.type_to_string(t);
-		int align = AST_HELPERS.type_to_align(t);
-
-		TEMP dst = TEMP_FACTORY.getInstance().getFreshTEMP();
-		TEMP src = TEMP_FACTORY.getInstance().findVarRecursive(name, myScope);
-		System.out.format("IRme - AST_EXP_VAR_SIMPLE name = %s, src_type = %s, align = %d\n",name,src_type,align);
-		System.out.format("IRme - AST_EXP_VAR_SIMPLE dst = %s, src = %s\n",dst,src);
-		// This is a hack, it is better to explicit about var vs temp!
-		if (src == null) {
-			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Load_From_Var(dst, name, src_type, src_type+"*", align));
-				return dst;
+		if (isInFunc)  {
+			t.isaddr = false;
+			if (varIndex == -1) {
+				System.out.format("@@@ IRcommand_Load - dst = %s, name = %s\n", t, name);
+				IR.getInstance().Add_IRcommand(new IRcommand_Load(t,name));
+			} else {
+				System.out.format("@@@ IRcommand_Load_Local - dst = %s, varIndex = %s\n", t, varIndex);
+				IR.getInstance().Add_IRcommand(new IRcommand_Load_Local(t,varIndex));
+			}
 		}
-		IR.getInstance()
-			.Add_IRcommand(new IRcommand_Load_From_Temp(dst, src, src_type, src_type+"*", align));
-		return src;
+		else if (typeClass!=null && (typeClass.queryDataMembersReqursivly(name) != null)){
+			System.out.format("Looking for %s\n", name);
+			int varIndex = typeClass.queryDataMembersReqursivly(name).index;
+			t.setType(typeClass);
+			IR.getInstance()
+				.Add_IRcommand(new IRcommand_Get_Member(t, TYPE_INT.getInstance(), varIndex));
+			TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
+			pointerTemp.setType(myType);
+			pointerTemp.isaddr = t.isaddr;
+			IR.getInstance()
+			.Add_IRcommand(new IRcommand_Bitcast_Pointer(pointerTemp, t));
+			t = pointerTemp;
+
+			t.isaddr = true;
+		} else {
+			IR.getInstance().Add_IRcommand(new IRcommand_Load_Global(t,name));
+			t.isaddr = false;
+		}
+
+		return t;
 	}
 
 	public void Globalize() throws Exception {

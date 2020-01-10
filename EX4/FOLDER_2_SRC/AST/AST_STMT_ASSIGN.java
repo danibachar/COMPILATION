@@ -7,9 +7,10 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
-
-import java.util.*;
+import LocalVarCounter.*;
+import LLVM.*;
 import javafx.util.Pair;
+import java.util.*;
 
 public class AST_STMT_ASSIGN extends AST_STMT
 {
@@ -153,71 +154,103 @@ public class AST_STMT_ASSIGN extends AST_STMT
 
 	public TEMP IRme()  throws Exception
 	{
-		if (myScope == 0) {
-			// Global Scope Assignemnts are handled else where - TODO
-			return null;
+
+		if (exp instanceof AST_EXP_NEW) {
+			return IRmeClassOrArray();
+		} else {
+			return IRmePrimitive();
+		}
+	}
+
+	public TEMP IRmeClassOrArray()  throws Exception {
+		return null;
+	}
+
+	public TEMP IRmePrimitive()  throws Exception {
+		// TODO: what aobut naming for inner-scope variables? should they receive the same name too? (probably not)
+		if (var instanceof AST_EXP_VAR_SIMPLE) {
+			TEMP src = exp.IRme();
+
+			if (src.isaddr){
+				//ir return address and not value
+				TEMP expTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
+				expTemp.setType(src.getType());
+				expTemp.checkInit = src.checkInit;
+				IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(expTemp, src));
+				src = expTemp;
+			}
+			AST_EXP_VAR_SIMPLE simpleVar = (AST_EXP_VAR_SIMPLE)var;
+			if (simpleVar.isInFunc){
+				System.out.format("Storing into local %s\n", simpleVar.name);
+				if (((AST_EXP_VAR_SIMPLE) var).varIndex > -1)
+				{
+					if (src.getType() instanceof TYPE_NIL)
+					{
+						TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
+						pointerTemp.setType(src.getType());
+						System.out.format("Creating pointer  null Temp of index %d and type %s\n", pointerTemp.getSerialNumber(),pointerTemp.getType());
+						IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_local(pointerTemp,((AST_EXP_VAR_SIMPLE) var).varIndex,((AST_EXP_VAR_SIMPLE) var).myType));
+						IR.getInstance().
+							Add_IRcommand(new IRcommand_Store_Temp(pointerTemp,src));
+					}
+					else
+					{
+						IR.getInstance().
+							Add_IRcommand(new IRcommand_Store_Local(((AST_EXP_VAR_SIMPLE) var).varIndex,src));
+					}
+
+
+				}
+				else
+				{
+					IR.getInstance().
+						Add_IRcommand(new IRcommand_Store_Param(((AST_EXP_VAR_SIMPLE) var).name,src));
+				}
+
+				return null;
+			} else if (simpleVar.typeClass == null || simpleVar.typeClass.queryDataMembersReqursivly(((AST_EXP_VAR_SIMPLE) var).name) == null)
+			{
+				IR.getInstance().
+					Add_IRcommand(new IRcommand_Store_Global(((AST_EXP_VAR_SIMPLE) var).name,src));
+				return null;
+			}
 		}
 
-		System.out.format("IRme - AST_STMT_ASSIGN (%s) -> (%s), myType=(%s) ,Scope=%d\n",exp, var, myType, myScope);
-
-		TYPE t = myType;
-		String src_type = AST_HELPERS.type_to_string(t);
-		int align = AST_HELPERS.type_to_align(t);
-
-		TEMP src = exp.IRme();
 		TEMP dst = var.IRme();
-		// This is a hack, it is better to explicit about var vs temp!
-		// if (src == null) {
-		// 	String n = exp.name;
-		// 	if (n == null) {
-		// 			n = var.name;
-		// 	}
-		// 	IR.getInstance()
-		// 		.Add_IRcommand(new IRcommand_Load_From_Var(dst, n, src_type, src_type+"*", align));
-		// 		return null;
+		TEMP src = exp.IRme();
+		if (src.getType() instanceof TYPE_NIL)
+		{
+			TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
+			pointerTemp.setType(src.getType());
+			pointerTemp.checkInit = dst.checkInit;
+			System.out.format("Creating pointer  null Temp of index %d and type %s\n", pointerTemp.getSerialNumber(),pointerTemp.getType());
+			IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_Pointer(pointerTemp, dst));
+			dst = pointerTemp;
+		}
+		else if (src.isaddr){
+			//ir return address and not value
+			TEMP expTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
+			expTemp.setType(src.getType());
+			expTemp.checkInit = src.checkInit;
+			IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(expTemp, src));
+			src = expTemp;
+		}
+		System.out.format("dst is %d %s and src is %s\n",dst.getSerialNumber() ,LLVM.getInstance().typeToString(dst.getType()), LLVM.getInstance().typeToString(src.getType()));
+
+		// String llvmType1 = LLVM.getInstance().typeToString(dst.getType());
+		// String llvmType2 = LLVM.getInstance().typeToString(src.getType());
+		// if (llvmType1.endsWith("*") && llvmType1.equals(llvmType2))
+		// {
+		// 	TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
+		// 	pointerTemp.setType(dst.getType());
+		// 	System.out.format("Creating pointerTemp of index %d %s\n", pointerTemp.getSerialNumber(), pointerTemp.getType());
+		// 	IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_Pointer(pointerTemp, dst));
+		// 	dst = pointerTemp;
 		// }
-		// IR.getInstance()
-		// 	.Add_IRcommand(new IRcommand_Load_From_Temp(dst, src, src_type, src_type+"*", align));
+		IR.getInstance().
+			Add_IRcommand(new IRcommand_Store_Temp(dst,src));
 
 		return null;
-
-		// if (var instanceof AST_EXP_VAR_SIMPLE) {
-		//
-		//
-		// 	TEMP dst = TEMP_FACTORY.getInstance().getFreshTEMP();
-		// 	TEMP src = TEMP_FACTORY.getInstance().findVarRecursive(name, myScope);
-		// 	if (src == null) {
-		// 		IR.getInstance()
-		// 			.Add_IRcommand(new IRcommand_Load_From_Var(dst, name, src_type, src_type+"*", align));
-		// 			return dst;
-		// 	}
-		// 	System.out.format("Load_From_Temp - name = %s, src_type = %s, align = %d\n",name,src_type,align);
-		// 	IR.getInstance()
-		// 		.Add_IRcommand(new IRcommand_Load_From_Temp(dst, src, src_type, src_type+"*", align));
-		// 	return dst;
-		//
-		// 	// TEMP dst = TEMP_FACTORY.getInstance()
-		// 	// 	.findVarRecursive(((AST_EXP_VAR_SIMPLE) var).name, myScope);
-		// 	// if (dst == null) {
-		// 	// 	// throw new AST_EXCEPTION(var.lineNumber);
-		// 	// 	IR.getInstance()
-		// 	// 		.Add_IRcommand(new IRcommand_Store_To_Var(((AST_EXP_VAR_SIMPLE) var).name, src, "i32", "i32*",4));
-		// 	// 		return null;
-		// 	// }
-		// 	// IR.getInstance()
-		// 	// 	.Add_IRcommand(new IRcommand_Store_To_Temp(dst, src, "i32", "i32*", 4));
-		// } else if (var instanceof AST_EXP_VAR_FIELD) {
-		//
-		// } else if (var instanceof AST_EXP_VAR_SUBSCRIPT) {
-		//
-		// } else {
-		// 	throw AST_EXCEPTION(this.lineNumber);
-		// }
-		// TEMP dst = var.IRme();
-		// IR.getInstance()
-		// 	.Add_IRcommand(new IRcommand_Store(((AST_EXP_VAR_SIMPLE) var).name, src, myScope));
-
-		// return null;
 	}
 
 	public void Globalize() throws Exception {

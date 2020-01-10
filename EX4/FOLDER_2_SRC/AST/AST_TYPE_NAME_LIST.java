@@ -7,6 +7,10 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
+import LocalVarCounter.*;
+import LLVM.*;
+import javafx.util.Pair;
+import java.util.*;
 
 public class AST_TYPE_NAME_LIST extends AST_Node
 {
@@ -19,7 +23,7 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 	/******************/
 	/* CONSTRUCTOR(S) */
 	/******************/
-	public AST_TYPE_NAME_LIST(AST_TYPE_NAME head,AST_TYPE_NAME_LIST tail,Integer lineNumber)
+	public AST_TYPE_NAME_LIST(AST_TYPE_NAME head, AST_TYPE_NAME_LIST tail, Integer lineNumber)
 	{
 		SerialNumber = AST_Node_Serial_Number.getFresh();
 
@@ -75,6 +79,25 @@ public class AST_TYPE_NAME_LIST extends AST_Node
 				throw new AST_EXCEPTION(this.lineNumber);
 			}
 
+		}
+	}
+
+	public TYPE_LIST GetTypes() throws Exception
+	{
+		TYPE t = SYMBOL_TABLE.getInstance().findVarType(head.type);
+		if (t == null)
+		{
+			System.out.format("Type %s is not supported", head.type);
+			throw new AST_EXCEPTION(this.lineNumber);
+		}
+
+		if (tail == null)
+		{
+			return new TYPE_LIST(t,null);
+		}
+		else
+		{
+			return new TYPE_LIST(t, tail.GetTypes());
 		}
 	}
 

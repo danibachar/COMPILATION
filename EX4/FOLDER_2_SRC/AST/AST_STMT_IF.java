@@ -7,6 +7,10 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
+import LocalVarCounter.*;
+import LLVM.*;
+import javafx.util.Pair;
+import java.util.*;
 
 public class AST_STMT_IF extends AST_STMT
 {
@@ -93,7 +97,7 @@ public class AST_STMT_IF extends AST_STMT
 	public TEMP IRme() throws Exception
 	{
 
-		System.out.format("IRme - AST_STMT_IF\nScope=%d\n",myScope);
+		// System.out.format("IRme - AST_STMT_IF\nScope=%d\n",myScope);
 		/*******************************/
 		/* [1] Allocate 2 fresh labels */
 		/*******************************/
@@ -114,7 +118,7 @@ public class AST_STMT_IF extends AST_STMT
 		/********************/
 
 		TEMP cond_temp = cond.IRme();
-
+		System.out.format("IR'ed cond, %b, %d\n", cond_temp == null, cond_temp.getSerialNumber());
 		/************************************/
 		/* [4] Jump conditionally to if end */
 		/************************************/
@@ -124,9 +128,9 @@ public class AST_STMT_IF extends AST_STMT
 		/*******************/
 		/* [5] body.IRme() */
 		/*******************/
-		TEMP_FACTORY.getInstance().beginScope(myScope);
-		TEMP t = body.IRme();
-		TEMP_FACTORY.getInstance().endScope(myScope);
+		// TEMP_FACTORY.getInstance().beginScope(myScope);
+		body.IRme();
+		// TEMP_FACTORY.getInstance().endScope(myScope);
 
 		/***************************/
 		/* [6] Jump to the if exit */
@@ -143,7 +147,27 @@ public class AST_STMT_IF extends AST_STMT
 		/*******************/
 		/* [8] return null */
 		/*******************/
-		return t;
+		return null;
+		// return t;
+	}
+
+	public void propegateRetVal(TYPE retType) throws Exception
+	{
+		for (AST_STMT_LIST it = body ; it != null ; it = it.tail)
+		{
+			if (it.head instanceof AST_STMT_RETURN)
+			{
+				((AST_STMT_RETURN)it.head).setReturnType(retType);
+			}
+			else if (it.head instanceof AST_STMT_IF)
+			{
+				((AST_STMT_IF)it.head).propegateRetVal(retType);
+			}
+			else if (it.head instanceof AST_STMT_WHILE)
+			{
+				((AST_STMT_WHILE)it.head).propegateRetVal(retType);
+			}
+		}
 	}
 
 	public void Globalize() throws Exception {

@@ -16,13 +16,13 @@ import MIPS.*;
 
 public class IRcommandConstString extends IRcommand
 {
-	String name;
+	TEMP t;
 	String value;
-
-	public IRcommandConstString(String name, String value)
+	
+	public IRcommandConstString(TEMP t,String value)
 	{
+		this.t = t;
 		this.value = value;
-		this.name = name;
 	}
 
 	/*******************/
@@ -30,14 +30,14 @@ public class IRcommandConstString extends IRcommand
 	/*******************/
 	public void LLVM_bitcode_me()
 	{
-		LLVM.getInstance().constify(name, value);
+		LLVM.getInstance().ls(t,value);
 	}
-
+	
 	/***************/
 	/* MIPS me !!! */
 	/***************/
 	public void MIPSme()
 	{
-		// sir_MIPS_a_lot.getInstance().li(t,value);
+		//sir_MIPS_a_lot.getInstance().li(t,value);
 	}
 }
