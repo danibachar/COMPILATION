@@ -122,9 +122,10 @@ public class AST_DEC_VAR extends AST_DEC
 			System.out.format(">> ERROR [%d] variable `%s` already exists in scope, found `%s`\n",this.lineNumber,name, temp.name);
 			throw new AST_EXCEPTION(nameLineNumber);
 		}
-		boolean isInFunc = myScope > 0;
+		boolean isInFunc = SYMBOL_TABLE.getInstance().isInFunc(name);
+		//myScope > 0 && !isInClass;
 		this.isGlobal = !isInClass && !isInFunc;//!SYMBOL_TABLE.getInstance().isInFunc(name);
-		
+
 		// validate that the initialValue is the same type as the var type, and that it exists!
 		if (initialValue != null) {
 			AST_HELPERS.isValidTypeAssignableFromExpression(t, initialValue);

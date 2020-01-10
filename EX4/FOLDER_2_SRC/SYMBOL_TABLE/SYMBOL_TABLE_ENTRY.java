@@ -60,5 +60,12 @@ public class SYMBOL_TABLE_ENTRY
 		this.prevtop = prevtop;
 		this.prevtop_index = prevtop_index;
 		this.scope_number = scope_number;
+
+		if(prevtop != null) this.scope_number = prevtop.scope_number;
+
+		if(this.name.contains("SCOPE-BOUNDARY")){
+			this.scope_number++;
+		}
+
 	}
 }

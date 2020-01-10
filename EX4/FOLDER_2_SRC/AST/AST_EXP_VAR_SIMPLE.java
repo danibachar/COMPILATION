@@ -58,7 +58,8 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 		// System.out.format("SEMANTME - AST_EXP_VAR_SIMPLE( %s )\n",name);
 		myType = SYMBOL_TABLE.getInstance().findField(name,false);
 		typeClass = SYMBOL_TABLE.getInstance().current_class;
-		isInFunc = myScope > 0;//SYMBOL_TABLE.getInstance().isInFunc(name);
+		isInFunc = SYMBOL_TABLE.getInstance().isInFunc(name);
+		//SYMBOL_TABLE.getInstance().findInCurrentScope(name) != null;
 		//SYMBOL_TABLE.getInstance().current_function != null;
 		varIndex = LocalVarCounter.getInstance().getIndex(name, myType);
 		System.out.format("Looked for car %s with result %s %s\n", name, varIndex, myType);

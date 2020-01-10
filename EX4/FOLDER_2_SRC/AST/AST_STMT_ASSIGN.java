@@ -180,6 +180,7 @@ public class AST_STMT_ASSIGN extends AST_STMT
 				src = expTemp;
 			}
 			AST_EXP_VAR_SIMPLE simpleVar = (AST_EXP_VAR_SIMPLE)var;
+			System.out.format("@@@ simpleVar.isInFunc ? %s\n", simpleVar.isInFunc);
 			if (simpleVar.isInFunc){
 				System.out.format("Storing into local %s\n", simpleVar.name);
 				if (((AST_EXP_VAR_SIMPLE) var).varIndex > -1)
