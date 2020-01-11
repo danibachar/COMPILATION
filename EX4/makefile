@@ -245,25 +245,12 @@ everything:
 	dot -Tjpeg -o${OUTPUT_DIR}/CFG.jpeg .main.dot
 	eog ${OUTPUT_DIR}/CFG.jpeg &
 run-old:
-	# Will create the *.ll file from source code
 	java -jar COMPILER ${INPUT_DIR}/$(INPUT_FILE).txt ${OUTPUT_DIR}/$(OUTPUT_FILE).ll
-	# Will convert the *.ll file to *.bc file
 	llvm-as ${OUTPUT_DIR}/$(OUTPUT_FILE).ll
-	# PROGRAM = ${BASEDIR}/${OUTPUT_DIR}/$(OUTPUT_FILE)
-	# Will compile the actual program with the name of the output file
-	# clang -Wno-override-module ${OUTPUT_DIR}/LLVM_bitcode.bc -o ${BASEDIR}/program
-
 	clang -Wno-override-module ${OUTPUT_DIR}/$(OUTPUT_FILE).bc -o ${BASEDIR}/program
-	# Will run the program and create an output file to compare with the expected
 	${BASEDIR}/program > ${OUTPUT_DIR}/$(OUTPUT_FILE).txt
-	# ${BASEDIR}/${OUTPUT_DIR}/program > ${EXP_OUTPUT_DIR}/$(OUTPUT_FILE)_EXPECTED_OUTPUT.txt
 run:
-	# Will create the *.ll file from source code
 	java -jar COMPILER $(INPUT_FILE) $(OUTPUT_FILE).ll
-	# Will convert the *.ll file to *.bc file
 	llvm-as $(OUTPUT_FILE).ll
-	# Will compile the actual program with the name of the output file
 	clang -Wno-override-module $(OUTPUT_FILE).bc -o $(OUTPUT_FILE).prog
-	# Will run the program and create an output file to compare with the expected
 	$(OUTPUT_FILE).prog > $(OUTPUT_FILE)
-	# ${BASEDIR}/${OUTPUT_DIR}/program > ${EXP_OUTPUT_DIR}/$(OUTPUT_FILE)_EXPECTED_OUTPUT.txt

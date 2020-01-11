@@ -30,7 +30,7 @@ public class TYPE_FUNCTION extends TYPE
 
 	public boolean compareSignature(TYPE_FUNCTION func)
 	{
-		System.out.format("Comparing signatures for function %s\n", name);
+		// System.out.format("Comparing signatures for function %s\n", name);
 		if (!returnType.name.equals(func.returnType.name))
 		{
 			return false;

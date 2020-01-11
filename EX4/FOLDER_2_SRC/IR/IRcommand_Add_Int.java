@@ -19,7 +19,7 @@ public class IRcommand_Add_Int extends IRcommand
 	public TEMP dst;
 	public TEMP t1;
 	public int value;
-	
+
 	public IRcommand_Add_Int(TEMP dst,TEMP t1,int value)
 	{
 		this.dst = dst;
