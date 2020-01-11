@@ -1,0 +1,42 @@
+digraph "CFG for 'main' function" {
+	label="CFG for 'main' function";
+
+	Node0x7ffdab50bb60 [shape=record,label="{entry:\l  %retval = alloca i32, align 4\l  %argc.addr = alloca i32, align 4\l  %argv.addr = alloca i8**, align 8\l  store i32 0, i32* %retval, align 4\l  store i32 %argc, i32* %argc.addr, align 4\l  store i8** %argv, i8*** %argv.addr, align 8\l  br label %main_body\l}"];
+	Node0x7ffdab50bb60 -> Node0x7ffdab50bec0;
+	Node0x7ffdab50bec0 [shape=record,label="{main_body:                                        \l  %zero_0 = load i32, i32* @my_zero, align 4\l  %Temp_0 = add nsw i32 %zero_0, 2\l  store i32 %Temp_0, i32* @p, align 4\l  %zero_1 = load i32, i32* @my_zero, align 4\l  %Temp_1 = add nsw i32 %zero_1, 2\l  store i32 %Temp_1, i32* @start, align 4\l  %zero_2 = load i32, i32* @my_zero, align 4\l  %Temp_2 = add nsw i32 %zero_2, 100\l  store i32 %Temp_2, i32* @end, align 4\l  br label %Label_2_while.cond\l}"];
+	Node0x7ffdab50bec0 -> Node0x7ffdab50bf00;
+	Node0x7ffdab50bf00 [shape=record,label="{Label_2_while.cond:                               \l  %Temp_4 = load i32, i32* @p, align 4\l  %Temp_6 = load i32, i32* @end, align 4\l  %zero_3 = load i32, i32* @my_zero, align 4\l  %Temp_7 = add nsw i32 %zero_3, 1\l  %Temp_5 = add nsw i32 %Temp_6, %Temp_7\l  %Temp_3 = icmp slt i32 %Temp_4, %Temp_5\l  %equal_zero_4 = icmp eq i1 %Temp_3, false\l  br i1 %equal_zero_4, label %Label_0_while.end, label %Label_1_while.body\l|{<s0>T|<s1>F}}"];
+	Node0x7ffdab50bf00:s0 -> Node0x7ffdab50c6b0;
+	Node0x7ffdab50bf00:s1 -> Node0x7ffdab50bf40;
+	Node0x7ffdab50bf40 [shape=record,label="{Label_1_while.body:                               \l  %zero_5 = load i32, i32* @my_zero, align 4\l  %Temp_8 = add nsw i32 %zero_5, 2\l  store i32 %Temp_8, i32* @i, align 4\l  %zero_6 = load i32, i32* @my_zero, align 4\l  %Temp_9 = add nsw i32 %zero_6, 2\l  store i32 %Temp_9, i32* @j, align 4\l  %zero_7 = load i32, i32* @my_zero, align 4\l  %Temp_10 = add nsw i32 %zero_7, 1\l  store i32 %Temp_10, i32* @isPrime, align 4\l  br label %Label_5_while.cond\l}"];
+	Node0x7ffdab50bf40 -> Node0x7ffdab50bf80;
+	Node0x7ffdab50bf80 [shape=record,label="{Label_5_while.cond:                               \l  %Temp_12 = load i32, i32* @i, align 4\l  %Temp_13 = load i32, i32* @p, align 4\l  %Temp_11 = icmp slt i32 %Temp_12, %Temp_13\l  %equal_zero_8 = icmp eq i1 %Temp_11, false\l  br i1 %equal_zero_8, label %Label_3_while.end, label %Label_4_while.body\l|{<s0>T|<s1>F}}"];
+	Node0x7ffdab50bf80:s0 -> Node0x7ffdab50c5b0;
+	Node0x7ffdab50bf80:s1 -> Node0x7ffdab50c3f0;
+	Node0x7ffdab50c3f0 [shape=record,label="{Label_4_while.body:                               \l  %zero_9 = load i32, i32* @my_zero, align 4\l  %Temp_14 = add nsw i32 %zero_9, 2\l  store i32 %Temp_14, i32* @j, align 4\l  br label %Label_8_while.cond\l}"];
+	Node0x7ffdab50c3f0 -> Node0x7ffdab50c430;
+	Node0x7ffdab50c430 [shape=record,label="{Label_8_while.cond:                               \l  %Temp_16 = load i32, i32* @j, align 4\l  %Temp_17 = load i32, i32* @p, align 4\l  %Temp_15 = icmp slt i32 %Temp_16, %Temp_17\l  %equal_zero_10 = icmp eq i1 %Temp_15, false\l  br i1 %equal_zero_10, label %Label_6_while.end, label %Label_7_while.body\l|{<s0>T|<s1>F}}"];
+	Node0x7ffdab50c430:s0 -> Node0x7ffdab50c570;
+	Node0x7ffdab50c430:s1 -> Node0x7ffdab50c470;
+	Node0x7ffdab50c470 [shape=record,label="{Label_7_while.body:                               \l  br label %Label_9_if.cond\l}"];
+	Node0x7ffdab50c470 -> Node0x7ffdab50c4b0;
+	Node0x7ffdab50c4b0 [shape=record,label="{Label_9_if.cond:                                  \l  %Temp_20 = load i32, i32* @i, align 4\l  %Temp_21 = load i32, i32* @j, align 4\l  %Temp_19 = mul nsw i32 %Temp_20, %Temp_21\l  %Temp_22 = load i32, i32* @p, align 4\l  %Temp_18 = icmp eq i32 %Temp_19, %Temp_22\l  %equal_zero_11 = icmp eq i1 %Temp_18, false\l  br i1 %equal_zero_11, label %Label_11_if.exit, label %Label_10_if.body\l|{<s0>T|<s1>F}}"];
+	Node0x7ffdab50c4b0:s0 -> Node0x7ffdab50c530;
+	Node0x7ffdab50c4b0:s1 -> Node0x7ffdab50c4f0;
+	Node0x7ffdab50c4f0 [shape=record,label="{Label_10_if.body:                                 \l  %zero_12 = load i32, i32* @my_zero, align 4\l  %Temp_23 = add nsw i32 %zero_12, 0\l  store i32 %Temp_23, i32* @isPrime, align 4\l  br label %Label_11_if.exit\l}"];
+	Node0x7ffdab50c4f0 -> Node0x7ffdab50c530;
+	Node0x7ffdab50c530 [shape=record,label="{Label_11_if.exit:                                 \l  %Temp_25 = load i32, i32* @j, align 4\l  %zero_13 = load i32, i32* @my_zero, align 4\l  %Temp_26 = add nsw i32 %zero_13, 1\l  %Temp_24 = add nsw i32 %Temp_25, %Temp_26\l  store i32 %Temp_24, i32* @j, align 4\l  br label %Label_8_while.cond\l}"];
+	Node0x7ffdab50c530 -> Node0x7ffdab50c430;
+	Node0x7ffdab50c570 [shape=record,label="{Label_6_while.end:                                \l  %Temp_28 = load i32, i32* @i, align 4\l  %zero_14 = load i32, i32* @my_zero, align 4\l  %Temp_29 = add nsw i32 %zero_14, 1\l  %Temp_27 = add nsw i32 %Temp_28, %Temp_29\l  store i32 %Temp_27, i32* @i, align 4\l  br label %Label_5_while.cond\l}"];
+	Node0x7ffdab50c570 -> Node0x7ffdab50bf80;
+	Node0x7ffdab50c5b0 [shape=record,label="{Label_3_while.end:                                \l  br label %Label_12_if.cond\l}"];
+	Node0x7ffdab50c5b0 -> Node0x7ffdab50c5f0;
+	Node0x7ffdab50c5f0 [shape=record,label="{Label_12_if.cond:                                 \l  %Temp_31 = load i32, i32* @isPrime, align 4\l  %zero_15 = load i32, i32* @my_zero, align 4\l  %Temp_32 = add nsw i32 %zero_15, 1\l  %Temp_30 = icmp eq i32 %Temp_31, %Temp_32\l  %equal_zero_16 = icmp eq i1 %Temp_30, false\l  br i1 %equal_zero_16, label %Label_14_if.exit, label %Label_13_if.body\l|{<s0>T|<s1>F}}"];
+	Node0x7ffdab50c5f0:s0 -> Node0x7ffdab50c670;
+	Node0x7ffdab50c5f0:s1 -> Node0x7ffdab50c630;
+	Node0x7ffdab50c630 [shape=record,label="{Label_13_if.body:                                 \l  %Temp_33 = load i32, i32* @p, align 4\l  call void @PrintInt(i32 %Temp_33)\l  br label %Label_14_if.exit\l}"];
+	Node0x7ffdab50c630 -> Node0x7ffdab50c670;
+	Node0x7ffdab50c670 [shape=record,label="{Label_14_if.exit:                                 \l  %Temp_35 = load i32, i32* @p, align 4\l  %zero_17 = load i32, i32* @my_zero, align 4\l  %Temp_36 = add nsw i32 %zero_17, 1\l  %Temp_34 = add nsw i32 %Temp_35, %Temp_36\l  store i32 %Temp_34, i32* @p, align 4\l  br label %Label_2_while.cond\l}"];
+	Node0x7ffdab50c670 -> Node0x7ffdab50bf00;
+	Node0x7ffdab50c6b0 [shape=record,label="{Label_0_while.end:                                \l  ret i32 0\l}"];
+}

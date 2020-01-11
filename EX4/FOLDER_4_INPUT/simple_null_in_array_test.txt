@@ -1,0 +1,7 @@
+class Person { int age; }
+array PersonArray = Person[]
+void main()
+{
+    PersonArray IDC := new Person[100];
+    IDC[26].age := 29;
+}

@@ -1,0 +1,9 @@
+
+
+void main()
+{
+  int i1 := 10;
+  int i2 := 10;
+  int res := i1 + i2;
+  PrintInt(res);
+}

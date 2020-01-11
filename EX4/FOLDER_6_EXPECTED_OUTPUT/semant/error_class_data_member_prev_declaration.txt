@@ -1,0 +1,10 @@
+class Edges
+{
+  Vertex v1;
+  Vertex v2;
+}
+
+class Vertex
+{
+  int weight;
+}

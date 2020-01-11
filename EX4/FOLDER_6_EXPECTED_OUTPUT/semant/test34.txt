@@ -1,0 +1,5 @@
+int salary := 7800;
+void foo()
+{
+    string salary := "six";
+}

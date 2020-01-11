@@ -1,0 +1,10 @@
+string foo()
+{
+  return "asdfsdf";
+}
+
+void main()
+{
+  int i;
+  i := foo();
+}

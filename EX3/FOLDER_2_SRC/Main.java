@@ -9,9 +9,9 @@ public class Main
 {
 	static public void main(String argv[])
 	{
-		Lexer l = null;;
-		Parser p = null;;;
-		Symbol s = null;;;
+		Lexer l = null;
+		Parser p = null;
+		Symbol s = null;
 		AST_DEC_LIST AST;
 		FileReader file_reader = null;;
 		PrintWriter file_writer = null;;

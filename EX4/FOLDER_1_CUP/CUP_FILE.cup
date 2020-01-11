@@ -1,0 +1,259 @@
+/*************/
+/* IMPORT(S) */
+/*************/
+import java_cup.runtime.*;
+import java.lang.*;
+import java.io.PrintWriter;
+import AST.*;
+
+parser code
+{:
+	public Lexer lexer;
+	public PrintWriter file_writer;
+	public int line;
+	public Parser(Lexer lexer, PrintWriter file_writer)
+	{
+		super(lexer);
+		this.lexer = lexer;
+		this.file_writer = file_writer;
+	}
+
+	public void report_error(String message, Object info)
+	{
+		//System.out.print(message);
+		//System.out.print("\n");
+		//System.out.print(info);
+		//System.out.print("\n");
+		//System.out.print("ERROR");
+		//System.out.print("(");
+		//System.out.print(lexer.getLine());
+		//System.out.print(":");
+		//System.out.print(lexer.getCharPos());
+		//System.out.print(")\n");
+
+		file_writer.print("ERROR");
+		file_writer.print("(");
+		file_writer.print(lexer.getLine());
+		file_writer.print(")");
+		file_writer.close();
+		System.exit(0);
+	}
+:}
+
+/************************/
+/* CUSTOMIZE CUP PARSER */
+/************************/
+scan with
+{:
+	Symbol s;
+	s = lexer.next_token();
+	//System.out.print(s.sym);
+	//System.out.print("[");
+	//System.out.print(lexer.getLine());
+	//System.out.print(":");
+	//System.out.print(lexer.getCharPos());
+	//System.out.print("]");
+	//System.out.print(TokenNames.terminalNames[s.sym]);
+	if (s.value != null)
+	{
+		//System.out.print("( ");
+		//System.out.print(s.value);
+		//System.out.print(" )");
+	}
+	//System.out.print("\n");
+	return s;
+:};
+
+
+
+/*************/
+/* TERMINALS */
+/*************/
+terminal IF;
+terminal LT;
+terminal GT;
+terminal EQ;
+terminal DOT;
+terminal PLUS;
+terminal MINUS;
+terminal TIMES;
+terminal CLASS;
+terminal EXTENDS;
+terminal ARRAY;
+terminal NEW;
+terminal COMMA;
+terminal WHILE;
+terminal RETURN;
+terminal DIVIDE;
+terminal LPAREN;
+terminal RPAREN;
+terminal LBRACK;
+terminal RBRACK;
+terminal LBRACE;
+terminal RBRACE;
+terminal ASSIGN;
+terminal SEMICOLON;
+terminal NIL;
+
+/*************/
+/* TERMINALS */
+/*************/
+terminal Integer INT;
+terminal String ID;
+terminal String STRING;
+
+/*****************/
+/* NON TERMINALS */
+/*****************/
+non terminal AST_EXP exp;
+non terminal AST_EXP_NEW newExp;
+non terminal AST_EXP_LIST	expListComma;
+non terminal AST_EXP_CALL callBaseExp;
+non terminal AST_EXP_VAR var;
+
+non terminal AST_TYPE_NAME typeNameTuple;
+non terminal AST_TYPE_NAME_LIST	typeNameTuplesComma;
+non terminal AST_TYPE_NAME_LIST	typeNameListSemicolon;
+
+
+non terminal AST_STMT stmt;
+non terminal AST_STMT_LIST stmtList;
+
+non terminal AST_DEC cField;
+non terminal AST_DEC_CFIELDS cFields;
+
+non terminal AST_DEC_LIST decList;
+non terminal AST_DEC dec;
+non terminal AST_DEC_ARRAY arrayDec;
+non terminal AST_DEC_CLASS classDec;
+non terminal AST_DEC_FUNC funcDec;
+non terminal AST_DEC_VAR varDec;
+
+/***********************/
+/* OPERATOR PRECEDENCE */
+/***********************/
+precedence nonassoc ASSIGN;
+precedence left EQ;
+precedence left LT, GT;
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE;
+precedence nonassoc LBRACK, RBRACK;
+precedence nonassoc LPAREN, RPAREN;
+precedence left DOT;
+
+
+/************************/
+/* START WITH: stmtList */
+/************************/
+start with decList;
+
+/********************/
+/* DERIVATION RULES */
+/********************/
+
+/*
+I got a lot of help from - https://github.com/gmh33/Java-CUP-jLex-Example/blob/master/example.cup
+													 https://www.cs.princeton.edu/~appel/modern/java/CUP/manual.html
+*/
+decList								::=	dec:d decList:l	{: RESULT = new AST_DEC_LIST(d,l); :}
+											| dec:d	{: RESULT = new AST_DEC_LIST(d,null); :}
+											;
+
+dec										::= funcDec:d	 {: RESULT = d; :}
+											| classDec:d {: RESULT = d; :}
+											| arrayDec:d {: RESULT = d; :}
+											| varDec:d {: RESULT = d; :}
+											;
+
+varDec								::= ID:type ID:var SEMICOLON {: RESULT = new AST_DEC_VAR(type,typeleft+1,var,varleft+1,null,null); :}
+											| ID:type ID:var ASSIGN exp:e SEMICOLON {: RESULT = new AST_DEC_VAR(type,typeleft+1,var,varleft+1,e,eleft+1); :}
+											| ID:type ID:var ASSIGN newExp:e SEMICOLON {: RESULT = new AST_DEC_VAR(type,typeleft+1,var,varleft+1,e,eleft+1); :}
+											;
+
+funcDec								::= ID:ret ID:name LPAREN RPAREN LBRACE stmtList:body RBRACE
+												{: RESULT = new AST_DEC_FUNC(ret,retleft+1,name,nameleft+1,null,null,body,bodyleft+1); :}
+											| ID:ret ID:name LPAREN typeNameTuplesComma:tnl RPAREN LBRACE stmtList:body RBRACE
+												{: RESULT = new AST_DEC_FUNC(ret,retleft+1,name,nameleft+1,tnl,tnlleft+1,body,bodyleft+1); :}
+											;
+
+classDec							::= CLASS ID:name EXTENDS ID:parent	LBRACE cFields:body RBRACE
+												{: RESULT = new AST_DEC_CLASS(name,nameleft+1,parent,parentleft+1,body,bodyleft+1); :}//lexer.getLine()
+											| CLASS ID:name	LBRACE cFields:body RBRACE
+												{: RESULT = new AST_DEC_CLASS(name,nameleft+1,null,null,body,bodyleft+1); :}//lexer.getLine()
+											;
+
+arrayDec							::= ARRAY ID:name EQ ID:type LBRACK RBRACK
+												{: RESULT = new AST_DEC_ARRAY(name,nameleft+1,type,typeleft+1); :};
+
+stmtList							::= stmt:s	stmtList:l {: RESULT = new AST_STMT_LIST(s,l,lexer.getLine()); :}
+											| stmt:s {: RESULT = new AST_STMT_LIST(s,null,lexer.getLine()); :}
+											;
+
+stmt									::=	varDec:v {: RESULT = new AST_STMT_DEC_VAR(v,lexer.getLine()); :}
+											| var:v ASSIGN exp:e SEMICOLON {: RESULT = new AST_STMT_ASSIGN(v,e,lexer.getLine()); :}
+											| var:v ASSIGN newExp:e SEMICOLON {: RESULT = new AST_STMT_ASSIGN(v,e,lexer.getLine()); :}
+											| RETURN exp:e SEMICOLON {: RESULT = new AST_STMT_RETURN(e,eleft+1); :}
+											| RETURN SEMICOLON {: RESULT = new AST_STMT_RETURN(null,lexer.getLine()); :}
+											| IF LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE
+												{: RESULT = new AST_STMT_IF(cond,body,lexer.getLine()); :}
+											| WHILE LPAREN exp:cond RPAREN LBRACE stmtList:body RBRACE
+												{: RESULT = new AST_STMT_WHILE(cond,body,lexer.getLine()); :}
+											| callBaseExp:e SEMICOLON {: RESULT = new AST_STMT_CALL(e,lexer.getLine()); :}
+											;
+
+var										::= ID:name {: RESULT = new AST_EXP_VAR_SIMPLE(name,lexer.getLine());       :}
+											| var:v DOT ID:fieldName {: RESULT = new AST_EXP_VAR_FIELD(v,fieldName,lexer.getLine()); :}
+											| var:v LBRACK exp:e RBRACK {: RESULT = new AST_EXP_VAR_SUBSCRIPT(v,e,lexer.getLine());     :}
+											;
+
+exp										::= var:v {: RESULT = v; :}
+											| LPAREN exp:e RPAREN {: RESULT = e; :}
+											| exp:e1 EQ  exp:e2 {: RESULT = new AST_EXP_BINOP(e1,e1left+1,e2,e2left+1,0);:}
+											| exp:e1 LT exp:e2 {: RESULT = new AST_EXP_BINOP(e1,e1left+1,e2,e2left+1,1);:}
+											| exp:e1 GT exp:e2 {: RESULT = new AST_EXP_BINOP(e1,e1left+1,e2,e2left+1,2);:}
+											| exp:e1 PLUS exp:e2 {: RESULT = new AST_EXP_BINOP(e1,e1left+1,e2,e2left+1,3);:}
+											| exp:e1 MINUS exp:e2 {: RESULT = new AST_EXP_BINOP(e1,e1left+1,e2,e2left+1,4);:}
+											| exp:e1 TIMES exp:e2 {: RESULT = new AST_EXP_BINOP(e1,e1left+1,e2,e2left+1,5);:}
+											| exp:e1 DIVIDE exp:e2 {: RESULT = new AST_EXP_BINOP(e1,e1left+1,e2,e2left+1,6);:}
+											| callBaseExp:e {: RESULT = e; :}
+											| MINUS INT:i {: RESULT = new AST_EXP_INT(i,false,lexer.getLine()); :}
+											| INT:i {: RESULT = new AST_EXP_INT(i,lexer.getLine()); :}
+											| NIL {: RESULT = new AST_EXP_NIL(lexer.getLine()); :}
+											| STRING:s {: RESULT = new AST_EXP_STRING(s,lexer.getLine()); :}
+											;
+
+newExp 								::= NEW ID:type {: RESULT = new AST_EXP_NEW(type,null,lexer.getLine()); :}
+											| NEW ID:type LBRACK exp:e RBRACK  {: RESULT = new AST_EXP_NEW(type,e,lexer.getLine()); :}
+											;
+
+callBaseExp						::= ID:funcName LPAREN RPAREN	{: RESULT = new AST_EXP_CALL(funcName,null,null,lexer.getLine()); :}
+											| ID:funcName LPAREN expListComma:el RPAREN
+												{: RESULT = new AST_EXP_CALL(funcName,el,null,lexer.getLine()); :}
+											| var:v DOT ID:funcName LPAREN RPAREN
+												{: RESULT = new AST_EXP_CALL(funcName,null,v,lexer.getLine()); :}
+											| var:v DOT ID:funcName LPAREN expListComma:el RPAREN
+												{: RESULT = new AST_EXP_CALL(funcName,el,v,lexer.getLine()); :}
+											;
+
+expListComma					::= exp:e COMMA expListComma:el	{: RESULT = new AST_EXP_LIST(e,el,lexer.getLine()); :}
+											| exp:e {: RESULT = new AST_EXP_LIST(e,null,lexer.getLine()); :}
+											;
+
+typeNameTuple					::= ID:type ID:name {: RESULT = new AST_TYPE_NAME(type,name,lexer.getLine());:};
+
+typeNameTuplesComma		::= typeNameTuple:tn COMMA typeNameTuplesComma:tnl
+												{: RESULT = new AST_TYPE_NAME_LIST(tn,tnl,lexer.getLine());:}
+											| typeNameTuple:tn {: RESULT = new AST_TYPE_NAME_LIST(tn,null,lexer.getLine());:}
+											;
+typeNameListSemicolon	::= typeNameTuple:tn SEMICOLON typeNameListSemicolon:tnl
+												{: RESULT = new AST_TYPE_NAME_LIST(tn,tnl,lexer.getLine());  :}
+											| typeNameTuple:tn SEMICOLON {: RESULT = new AST_TYPE_NAME_LIST(tn,null,lexer.getLine()); :}
+											;
+
+cFields ::= cField:f cFields:fl {: RESULT = new AST_DEC_CFIELDS(f,fleft+1,fl,flleft+1); :}
+				| cField:f {: RESULT = new AST_DEC_CFIELDS(f,fleft+1,null,null); :}
+				;
+
+cField ::= funcDec:d	 {: RESULT = d; :}
+					| varDec:d {: RESULT = d; :}
+					;

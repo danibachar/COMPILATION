@@ -1,0 +1,9 @@
+void foo()
+{
+  return;
+}
+
+void main()
+{
+  int i := foo();
+}

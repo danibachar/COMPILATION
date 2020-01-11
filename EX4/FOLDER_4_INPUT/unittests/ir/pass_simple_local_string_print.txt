@@ -1,0 +1,6 @@
+
+void main()
+{
+  string str := "dasadf123";
+  PrintString(str);
+}

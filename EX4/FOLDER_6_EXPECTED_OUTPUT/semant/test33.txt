@@ -1,0 +1,10 @@
+class Father
+{
+    int foo(){if(5){return 8;}}
+}
+
+int foo(Father f)
+{
+    return 80;
+    return 22;
+}

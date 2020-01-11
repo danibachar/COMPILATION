@@ -1,0 +1,5 @@
+class Edges
+{
+  void bar() { PrintInt(i); }
+  int i;
+}

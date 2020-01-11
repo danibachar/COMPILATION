@@ -1,0 +1,12 @@
+class Tree
+{
+	int value;
+	Tree left;
+	Tree right;
+	void Print()
+	{ 
+		left.Print();
+		right.Print();
+		PrintInt(value);
+	}
+}

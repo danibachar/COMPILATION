@@ -1,0 +1,6 @@
+int i := 101;
+
+void main()
+{
+  PrintInt(i);
+}

@@ -1,0 +1,27 @@
+class Grandfather
+{
+	int x := 6;
+}
+
+class Father extends Grandfather
+{
+	int y := 7;
+	int z := 8;
+}
+class Son extends Father
+{
+	int w := 9;
+}
+
+void main()
+{
+	Grandfather g := new Grandfather;
+	Father      f := new Father;
+	Son         s := new Son;
+	PrintInt(g.x + f.y + f.z + s.w);
+	s.x := 100;
+	s.y := 200;
+	s.z := 300;
+	s.w := 400;
+	PrintInt(s.x + s.y + s.z + s.w);
+}
