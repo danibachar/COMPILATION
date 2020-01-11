@@ -211,44 +211,6 @@ public class SYMBOL_TABLE
 		return find(name);
 	}
 
-	public boolean isInFunc(String name)
-	{
-		SYMBOL_TABLE_ENTRY e = this.top;
-		SYMBOL_TABLE_ENTRY entry = findEntry(name);
-		if(entry == null){
-			// System.out.format("Couldnt find name %s\n", name);
-			// System.out.format("1 RET SYMBOL_TABLE - isInFunc - false\n");
-			return false;
-		}
-		// System.out.format("BEFORE LOOP SYMBOL_TABLE - isInFunc = %s\n", entry);
-		// System.out.format("BEFORE LOOP SYMBOL_TABLE - isInFunc = %s\n", entry.type);
-		// System.out.format("BEFORE LOOP SYMBOL_TABLE - isInFunc = %s\n", entry.scope_number);
-		for (e = this.top; e != null; e = e.prevtop)
-		{
-			//we are in global scope, so not in function
-			// System.out.format("LOOP SYMBOL_TABLE - isInFunc = %s\n", e);
-			// System.out.format("LOOP SYMBOL_TABLE - isInFunc = %s\n", e.type);
-			// System.out.format("LOOP SYMBOL_TABLE - isInFunc = %s\n", e.scope_number);
-			if(e.scope_number == 0)
-			{
-				// System.out.format("2 RET SYMBOL_TABLE - isInFunc - false\n");
-				return false;
-			}
-
-			if (e.type instanceof TYPE_FOR_SCOPE_BOUNDARIES)
-			{
-				if(e.prevtop.type instanceof TYPE_FUNCTION)
-				{
-					// System.out.format("3 RET SYMBOL_TABLE - isInFunc - %s\n",entry.scope_number >= e.scope_number);
-					return entry.scope_number >= e.scope_number;
-				}
-
-			}
-		}
-		// System.out.format("4 RET SYMBOL_TABLE - isInFunc - false\n");
-		return false;
-	}
-
 	/***************************************************************************/
 	/* begine scope = Enter the <SCOPE-BOUNDARY> element to the data structure */
 	/***************************************************************************/

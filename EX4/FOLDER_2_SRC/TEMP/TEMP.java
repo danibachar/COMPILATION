@@ -39,6 +39,10 @@ public class TEMP
 
 	public TYPE getType()
 	{
+		if (this.type.isClassVar()) {
+			TYPE_CLASS_VAR_DEC tt = (TYPE_CLASS_VAR_DEC)this.type;
+			return tt.t;
+		}
 		return this.type;
 	}
 

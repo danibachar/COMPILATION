@@ -1,0 +1,9 @@
+class Crack { int price; }
+
+void main()
+{
+	PrintString("CrackMe");
+	Crack t;
+	t.price := 1000; // should throw me out
+	PrintInt(1000); // should not exec
+}

@@ -63,12 +63,13 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 			throw new AST_EXCEPTION(this.lineNumber);
 		}
 		typeClass = SYMBOL_TABLE.getInstance().current_class;
+		SYMBOL_TABLE_ENTRY es = SYMBOL_TABLE.getInstance().findEntry(name);
+		if (es != null) {
+			isInFunc = es.scope_number > 0;
+		} else {
 
-		isInFunc = SYMBOL_TABLE.getInstance().findEntry(name).scope_number > 0;
-		//SYMBOL_TABLE.getInstance().findInCurrentScope(name) != null;
-		//SYMBOL_TABLE.getInstance().isInFunc(name);
-		//SYMBOL_TABLE.getInstance().findInCurrentScope(name) != null;
-		//SYMBOL_TABLE.getInstance().current_function != null;
+		}
+
 		varIndex = LocalVarCounter.getInstance().getIndex(name, myType);
 		// System.out.format("Looked for car %s with result %s %s\n", name, varIndex, myType);
 		return myType;

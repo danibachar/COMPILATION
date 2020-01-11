@@ -354,12 +354,11 @@ public class LLVM
 
 		fileWriter.format("null_deref_%d:\n",a);
 
-		if (var.getType().isClass())
+		if (var.getType().isClass() || var.getType().isArray())
 		{
 			fileWriter.format("call void @InvalidPointer()\n");
-		}
-		else{
-		fileWriter.format("call void @AccessViolation()\n");
+		} else{
+			fileWriter.format("call void @AccessViolation()\n");
 		}
 		fileWriter.format("br label %%continue_%d\n",a);
 

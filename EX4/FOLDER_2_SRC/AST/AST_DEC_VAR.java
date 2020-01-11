@@ -139,9 +139,9 @@ public class AST_DEC_VAR extends AST_DEC
 
 		//myScope > 0 && !isInClass;
 		boolean isInFunc =  myScope > 0 && !isInClass;
-		//SYMBOL_TABLE.getInstance().findInCurrentScope(name) != null;
-		//SYMBOL_TABLE.getInstance().current_function != null;
-		this.isGlobal = !isInClass && !isInFunc;//!SYMBOL_TABLE.getInstance().isInFunc(name);//!SYMBOL_TABLE.getInstance().isInFunc(name);
+		
+		this.isGlobal = !isInClass && !isInFunc;
+
 		this.myType = t;
 		// System.out.format("######### isGlobal = %s, isInClass = %s, isInFunc = %s \n", this.isGlobal, isInClass, isInFunc);
 		if (!isGlobal && !isInClass)
