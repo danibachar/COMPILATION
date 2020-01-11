@@ -268,12 +268,12 @@ public class AST_DEC_FUNC extends AST_DEC
 
 		TYPE_LIST semantedArgsIter = fullArgs;
 		while(argList != null && argList.head != null){
-			System.out.format("Allocating param %s %s \n",argList.head.name,  semantedArgsIter.head );
+			// System.out.format("Allocating param %s %s \n",argList.head.name,  semantedArgsIter.head );
 			IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Param(argList.head.name, semantedArgsIter.head));
 			argList = argList.tail;
 			semantedArgsIter = semantedArgsIter.tail;
 		}
-		System.out.format("Iring function %s with %d locals\n", name, localVarInfo.size());
+		// System.out.format("Iring function %s with %d locals\n", name, localVarInfo.size());
 		for (int i=0;i<localVarInfo.size();i++) {
 			Pair<TYPE, Integer> info = localVarInfo.get(i);
 			IR.getInstance()

@@ -51,7 +51,7 @@ public class AST_EXP_STRING extends AST_EXP
 	public TYPE SemantMe() throws Exception
 	{
 		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
-		System.out.format("AST_EXP_STRING( %s )\n",value);
+		// System.out.format("AST_EXP_STRING( %s )\n",value);
 		LLVM.addString(value);
 		return TYPE_STRING.getInstance();
 	}

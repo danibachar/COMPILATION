@@ -118,7 +118,7 @@ public class AST_EXP_NEW extends AST_EXP
 		String name = this.type;
 		if (exp != null)
 		{
-			System.out.format("Creating array %s\n", name);
+			// System.out.format("Creating array %s\n", name);
 			newObj.setType(new TYPE_ARRAY(name,myType));
 			TEMP size = exp.IRme();
 			TEMP actualSize = TEMP_FACTORY.getInstance().getFreshTEMP();
@@ -155,7 +155,7 @@ public class AST_EXP_NEW extends AST_EXP
 			newObj.setType(myType);
 			TYPE_CLASS classType = ((TYPE_CLASS)myType);
 			int numberofMembers = classType.membersCount;
-			System.out.format("IRing class %s of type %d with %d members\n", myType.name, myType.typeOfType, numberofMembers);
+			// System.out.format("IRing class %s of type %d with %d members\n", myType.name, myType.typeOfType, numberofMembers);
 
 			TEMP sizeInBytes = TEMP_FACTORY.getInstance().getFreshTEMP();
 			sizeInBytes.setType(TYPE_INT.getInstance());
@@ -176,7 +176,7 @@ public class AST_EXP_NEW extends AST_EXP
 				while (currPos != null)
 				{
 					TYPE_CLASS_VAR_DEC cur = currPos.head;
-					System.out.format("New class with var %s %s %s\n", cur.name, cur.exp, cur.t);
+					// System.out.format("New class with var %s %s %s\n", cur.name, cur.exp, cur.t);
 					currPos = currPos.tail;
 					if (cur.t  instanceof TYPE_FUNCTION )
 					{
@@ -201,7 +201,7 @@ public class AST_EXP_NEW extends AST_EXP
 					IR.getInstance().Add_IRcommand(new IRcommand_Get_Element_Temp(elementAddress, newObj, TYPE_INT.getInstance(), newOffset));
 						TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
 						pointerTemp.setType(cur.t);
-						System.out.format("Creating pointer Temp of index %d and type %s\n", pointerTemp.getSerialNumber(),pointerTemp.getType());
+						// System.out.format("Creating pointer Temp of index %d and type %s\n", pointerTemp.getSerialNumber(),pointerTemp.getType());
 						IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_Pointer(pointerTemp, elementAddress));
 						elementAddress = pointerTemp;
 					elementAddress.isaddr = true;

@@ -293,7 +293,7 @@ public class AST_EXP_CALL extends AST_EXP
 			varTemp = arr1;
 		}
 		IR.getInstance().Add_IRcommand(new IRcommand_Check_Null(varTemp));
-		System.out.format("IRing method call with var %d\n", varTemp.getSerialNumber());
+		// System.out.format("IRing method call with var %d\n", varTemp.getSerialNumber());
 		TEMP_LIST t = new TEMP_LIST(varTemp, null);
 		// AST_EXP_LIST params = args;
 		if (params != null) {
@@ -314,10 +314,8 @@ public class AST_EXP_CALL extends AST_EXP
 			temps = temps.tail;
 			params = params.tail;
 		}
-		System.out.format("2 #### Calling method with class %s and class %s\n", classType.name, ((TYPE_CLASS)varTemp.getType()).name);
-		System.out.format("Searching data member - %s in line number = %d\n", var.name, this.lineNumber);
-		TYPE_CLASS_VAR_DEC tc = classType.queryDataMembersReqursivly(var.name);
-		System.out.format("tc = %s\n", tc);
+		// System.out.format("2 #### Calling method with class %s and class %s\n", classType.name, ((TYPE_CLASS)varTemp.getType()).name);
+		// System.out.format("Searching data member - %s in line number = %d\n", var.name, this.lineNumber);
 		String fullName = classType.queryDataMembersReqursivly(var.name).typeClass.name + "_" + var.name;
 		TYPE_LIST newParams = new TYPE_LIST(classType, functionType.params);
 		if (functionType.returnType == TYPE_VOID.getInstance()){
@@ -340,7 +338,7 @@ public class AST_EXP_CALL extends AST_EXP
 		{
 			name = definedType.origClass.name+"_" +  this.funcName;
 		}
-		System.out.format("IRing function call %s\n", name);
+		// System.out.format("IRing function call %s\n", name);
 		TEMP_LIST t=null;
 		// AST_EXP_LIST params = params;
 		if (params != null) { t = (TEMP_LIST)params.IRme(); }
@@ -367,7 +365,7 @@ public class AST_EXP_CALL extends AST_EXP
 				TEMP newtemp = TEMP_FACTORY.getInstance().getFreshTEMP();
 				newtemp.setType(types.head);
 				newtemp.checkInit = temps.head.checkInit;
-				System.out.format("Loading in call func %s %b\n", newtemp.getSerialNumber(), types.head == temps.head.getType());
+				// System.out.format("Loading in call func %s %b\n", newtemp.getSerialNumber(), types.head == temps.head.getType());
 				IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(newtemp, temps.head));
 				temps.head = newtemp;
 			}
@@ -378,7 +376,7 @@ public class AST_EXP_CALL extends AST_EXP
 		}
 
 		if (returnType == TYPE_VOID.getInstance()){
-			System.out.format("###### Calling method with named %s\n", funcName);
+			// System.out.format("###### Calling method with named %s\n", funcName);
 			IR.getInstance()
 				.Add_IRcommand(new IRcommand_Call_Func_Void(funcName, returnType, t, definedType.params));
 			return null;

@@ -180,16 +180,16 @@ public class AST_STMT_ASSIGN extends AST_STMT
 				src = expTemp;
 			}
 			AST_EXP_VAR_SIMPLE simpleVar = (AST_EXP_VAR_SIMPLE)var;
-			System.out.format("@@@ simpleVar.isInFunc ? %s\n", simpleVar.isInFunc);
+			// System.out.format("@@@ simpleVar.isInFunc ? %s\n", simpleVar.isInFunc);
 			if (simpleVar.isInFunc){
-				System.out.format("Storing into local %s\n", simpleVar.name);
+				// System.out.format("Storing into local %s\n", simpleVar.name);
 				if (((AST_EXP_VAR_SIMPLE) var).varIndex > -1)
 				{
 					if (src.getType() instanceof TYPE_NIL)
 					{
 						TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
 						pointerTemp.setType(src.getType());
-						System.out.format("Creating pointer  null Temp of index %d and type %s\n", pointerTemp.getSerialNumber(),pointerTemp.getType());
+						// System.out.format("Creating pointer  null Temp of index %d and type %s\n", pointerTemp.getSerialNumber(),pointerTemp.getType());
 						IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_local(pointerTemp,((AST_EXP_VAR_SIMPLE) var).varIndex,((AST_EXP_VAR_SIMPLE) var).myType));
 						IR.getInstance().
 							Add_IRcommand(new IRcommand_Store_Temp(pointerTemp,src));
@@ -222,7 +222,7 @@ public class AST_STMT_ASSIGN extends AST_STMT
 			TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
 			pointerTemp.setType(src.getType());
 			pointerTemp.checkInit = dst.checkInit;
-			System.out.format("Creating pointer  null Temp of index %d and type %s\n", pointerTemp.getSerialNumber(),pointerTemp.getType());
+			// System.out.format("Creating pointer  null Temp of index %d and type %s\n", pointerTemp.getSerialNumber(),pointerTemp.getType());
 			IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_Pointer(pointerTemp, dst));
 			dst = pointerTemp;
 		}
@@ -234,18 +234,6 @@ public class AST_STMT_ASSIGN extends AST_STMT
 			IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(expTemp, src));
 			src = expTemp;
 		}
-		System.out.format("dst is %d %s and src is %s\n",dst.getSerialNumber() ,LLVM.getInstance().typeToString(dst.getType()), LLVM.getInstance().typeToString(src.getType()));
-
-		// String llvmType1 = LLVM.getInstance().typeToString(dst.getType());
-		// String llvmType2 = LLVM.getInstance().typeToString(src.getType());
-		// if (llvmType1.endsWith("*") && llvmType1.equals(llvmType2))
-		// {
-		// 	TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
-		// 	pointerTemp.setType(dst.getType());
-		// 	System.out.format("Creating pointerTemp of index %d %s\n", pointerTemp.getSerialNumber(), pointerTemp.getType());
-		// 	IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_Pointer(pointerTemp, dst));
-		// 	dst = pointerTemp;
-		// }
 		IR.getInstance().
 			Add_IRcommand(new IRcommand_Store_Temp(dst,src));
 

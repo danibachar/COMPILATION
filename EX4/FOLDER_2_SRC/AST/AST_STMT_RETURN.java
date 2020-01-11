@@ -134,7 +134,6 @@ public class AST_STMT_RETURN extends AST_STMT
 		if (exp != null) retVal= exp.IRme();
 		if (retVal !=null)
 		{
-			System.out.printf("REtval type %s %s\n", retVal.getType(), myType);
 
 			if (retVal.isaddr){
 				TEMP val = TEMP_FACTORY.getInstance().getFreshTEMP();

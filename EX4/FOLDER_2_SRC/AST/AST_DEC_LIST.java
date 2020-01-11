@@ -83,7 +83,7 @@ public class AST_DEC_LIST extends AST_Node
 		if (tail != null) tail.IRme();
 		if (tail == null)
 		{
-			System.out.println("Done IR'ing!");
+			// System.out.println("Done IR'ing!");
 		}
 		return null;
 	}

@@ -111,7 +111,7 @@ public class AST_STMT_WHILE extends AST_STMT
 		/* [3] cond.IRme(); */
 		/********************/
 		TEMP cond_temp = cond.IRme();
-		System.out.format("While cond %d\n", cond_temp.getSerialNumber());
+		// System.out.format("While cond %d\n", cond_temp.getSerialNumber());
 		/******************************************/
 		/* [4] Jump conditionally to the loop end */
 		/******************************************/

@@ -104,12 +104,12 @@ public class AST_DEC_VAR extends AST_DEC
 		/****************************/
 		/* [1] Check If Type exists */
 		/****************************/
-		System.out.format("DEC_VAR: Looking to find type %s for name %s\n", type, name);
+		// System.out.format("DEC_VAR: Looking to find type %s for name %s\n", type, name);
 		t = SYMBOL_TABLE.getInstance().find(type);
 		if (t == null)
 		{
 			// if type is class we check if there was a previous TYPE_CLASS_VAR_DEC
-			System.out.format(">> ERROR [%d] non existing type %s\n",this.lineNumber,type);
+			// System.out.format(">> ERROR [%d] non existing type %s\n",this.lineNumber,type);
 			throw new AST_EXCEPTION(typeLineNumber);
 		}
 
@@ -143,11 +143,11 @@ public class AST_DEC_VAR extends AST_DEC
 		//SYMBOL_TABLE.getInstance().current_function != null;
 		this.isGlobal = !isInClass && !isInFunc;//!SYMBOL_TABLE.getInstance().isInFunc(name);//!SYMBOL_TABLE.getInstance().isInFunc(name);
 		this.myType = t;
-		System.out.format("######### isGlobal = %s, isInClass = %s, isInFunc = %s \n", this.isGlobal, isInClass, isInFunc);
+		// System.out.format("######### isGlobal = %s, isInClass = %s, isInFunc = %s \n", this.isGlobal, isInClass, isInFunc);
 		if (!isGlobal && !isInClass)
     {
         varIndex = LocalVarCounter.getInstance().declareLocal(name, myType);
-        System.out.format("Declaring for var %s f type %s and got index %d\n", name, myType, varIndex);
+        // System.out.format("Declaring for var %s f type %s and got index %d\n", name, myType, varIndex);
     }
 
 

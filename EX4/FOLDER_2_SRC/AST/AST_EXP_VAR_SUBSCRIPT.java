@@ -143,7 +143,7 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 
 		TEMP elementAddress = TEMP_FACTORY.getInstance().getFreshTEMP();
 		elementAddress.setType(arrayType);
-		System.out.format("Getting subscript %s, %s, %s\n", elementAddress.getSerialNumber(), arr.getSerialNumber(), arr.getType());
+		// System.out.format("Getting subscript %s, %s, %s\n", elementAddress.getSerialNumber(), arr.getSerialNumber(), arr.getType());
 		//Todo: check boundaries
 		IR.getInstance().Add_IRcommand(new IRcommand_Get_Element_Temp(elementAddress, arr, arrayType, newOffset));
 

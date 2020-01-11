@@ -118,7 +118,7 @@ public class AST_STMT_IF extends AST_STMT
 		/********************/
 
 		TEMP cond_temp = cond.IRme();
-		System.out.format("IR'ed cond, %b, %d\n", cond_temp == null, cond_temp.getSerialNumber());
+		// System.out.format("IR'ed cond, %b, %d\n", cond_temp == null, cond_temp.getSerialNumber());
 		/************************************/
 		/* [4] Jump conditionally to if end */
 		/************************************/
