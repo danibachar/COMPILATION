@@ -293,7 +293,7 @@ public class LLVM
 	public void store_paramter(String var_name,TYPE type, int index)
 	{
 		String typeString = typeToString(type);
-		System.out.format("storing param  store %s %%%d, %s* %%%s, align %d\n",typeString,index, typeString, var_name, typeToAlignment(typeString));
+		// System.out.format("storing param  store %s %%%d, %s* %%%s, align %d\n",typeString,index, typeString, var_name, typeToAlignment(typeString));
 
 		fileWriter.format("  store %s %%%d, %s* %%%s, align %d\n",typeString,index, typeString, var_name, typeToAlignment(typeString));
 	}
@@ -682,7 +682,7 @@ public class LLVM
 		for(String str : strings)
 		{
 			String stringName = str.replace(' ', '.');
-			System.out.format("@STR.%s = constant [%d x i8] c\"%s\\00\", align 1\n", stringName, str.length() + 1, str);
+			// System.out.format("@STR.%s = constant [%d x i8] c\"%s\\00\", align 1\n", stringName, str.length() + 1, str);
 			fileWriter.format("@STR.%s = constant [%d x i8] c\"%s\\00\", align 1\n", stringName, str.length() + 1, str);
 		}
 	}

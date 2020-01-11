@@ -128,7 +128,7 @@ public class TYPE_CLASS extends TYPE
 
 	public boolean equals(Object otherType)
 	{
-		System.out.format("Comparing classes! (%s)\n", name);
+		// System.out.format("Comparing classes! (%s)\n", name);
 		if (otherType instanceof TYPE_NIL)
 		{
 			return true;

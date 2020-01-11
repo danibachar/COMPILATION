@@ -161,7 +161,7 @@ public class AST_DEC_VAR extends AST_DEC
 		// if (initialValue == null) System.out.format("IRme - VAR-DEC(%s):%s                , Scope=%d\n",name,type,myScope);
 		if (isGlobal || !isInClass)
 		{
-			System.out.format("@@@@@@@@ isGlobal || !isInClass = %s\n", name);
+			// System.out.format("@@@@@@@@ isGlobal || !isInClass = %s\n", name);
       TEMP src = null;
       if (initialValue != null && !isGlobal) {
           src = initialValue.IRme();
@@ -170,7 +170,7 @@ public class AST_DEC_VAR extends AST_DEC
               TEMP expTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
               expTemp.setType(src.getType());
               expTemp.checkInit = src.checkInit;
-							System.out.format("@@@@@@@@ IRcommand_Load_Temp = %s\n", name);
+							// System.out.format("@@@@@@@@ IRcommand_Load_Temp = %s\n", name);
               IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(expTemp, src));
               src = expTemp;
           }
@@ -178,21 +178,21 @@ public class AST_DEC_VAR extends AST_DEC
 
       if (isGlobal)
       {
-					System.out.format("@@@@@@@@ isGlobal = %s\n", name);
-          System.out.format("IRing global var %s\n", name);
+					// System.out.format("@@@@@@@@ isGlobal = %s\n", name);
+          // System.out.format("IRing global var %s\n", name);
           IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Global(name, myType));
           if (initialValue != null)
           {
               LLVM.addGlobal(name, initialValue);
           }
       } else if (!isInClass){
-					System.out.format("@@@@@@@@ !isGlobal && !isInClass = %s\n", name);
+					// System.out.format("@@@@@@@@ !isGlobal && !isInClass = %s\n", name);
           if (src != null) {
-	          System.out.format("Stroring local var %s %d with TEMP_%d\n", name, varIndex, src.getSerialNumber());
+	          // System.out.format("Stroring local var %s %d with TEMP_%d\n", name, varIndex, src.getSerialNumber());
 	          if (src.getType() instanceof TYPE_NIL) {
 								TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
 								pointerTemp.setType(src.getType());
-								System.out.format("Creating pointer  null Temp of index %d and type %s\n", pointerTemp.getSerialNumber(),pointerTemp.getType());
+								// System.out.format("Creating pointer  null Temp of index %d and type %s\n", pointerTemp.getSerialNumber(),pointerTemp.getType());
 								IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_local(pointerTemp,varIndex,myType));
 								IR.getInstance().
 									Add_IRcommand(new IRcommand_Store_Temp(pointerTemp,src));

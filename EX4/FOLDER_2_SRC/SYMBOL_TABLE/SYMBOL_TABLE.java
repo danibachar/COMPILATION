@@ -216,7 +216,7 @@ public class SYMBOL_TABLE
 		SYMBOL_TABLE_ENTRY e = this.top;
 		SYMBOL_TABLE_ENTRY entry = findEntry(name);
 		if(entry == null){
-			System.out.format("Couldnt find name %s\n", name);
+			// System.out.format("Couldnt find name %s\n", name);
 			// System.out.format("1 RET SYMBOL_TABLE - isInFunc - false\n");
 			return false;
 		}

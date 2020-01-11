@@ -21,10 +21,10 @@ public class TYPE_CLASS_VAR_DEC extends TYPE
 		this.t = t;
 		this.name = name;
 		if (name == null) {
-			System.out.format("TYPE_CLASS_VAR_DEC INIT without name - %s \n",name);
+			// System.out.format("TYPE_CLASS_VAR_DEC INIT without name - %s \n",name);
 		}
 		if (t == null) {
-			System.out.format("TYPE_CLASS_VAR_DEC INIT without type - %s \n",t);
+			// System.out.format("TYPE_CLASS_VAR_DEC INIT without type - %s \n",t);
 		}
 	}
 }
