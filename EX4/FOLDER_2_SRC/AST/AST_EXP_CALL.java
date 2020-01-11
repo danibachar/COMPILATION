@@ -367,7 +367,7 @@ public class AST_EXP_CALL extends AST_EXP
 				TEMP newtemp = TEMP_FACTORY.getInstance().getFreshTEMP();
 				newtemp.setType(types.head);
 				newtemp.checkInit = temps.head.checkInit;
-				System.out.format("Loading in call func %s\n", newtemp.getSerialNumber());
+				System.out.format("Loading in call func %s %b\n", newtemp.getSerialNumber(), types.head == temps.head.getType());
 				IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(newtemp, temps.head));
 				temps.head = newtemp;
 			}

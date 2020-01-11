@@ -1,0 +1,7 @@
+string s1 := "Having";
+
+
+void main()
+{
+	PrintString(s1);
+}

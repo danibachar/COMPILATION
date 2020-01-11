@@ -10,6 +10,10 @@ package IR;
 /*******************/
 /* PROJECT IMPORTS */
 /*******************/
+import TEMP.*;
+import TYPES.*;
+import LLVM.*;
+import MIPS.*;
 
 public class IR
 {
@@ -45,10 +49,11 @@ public class IR
 	/*******************/
 	public void LLVM_bitcode_me()
 	{
+		LLVM.getInstance().defineStrings();
 		if (head != null) head.LLVM_bitcode_me();
 		if (tail != null) tail.LLVM_bitcode_me();
 	}
-	
+
 	/***************/
 	/* MIPS me !!! */
 	/***************/

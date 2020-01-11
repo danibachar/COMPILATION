@@ -115,6 +115,7 @@ public class AST_EXP_NEW extends AST_EXP
 		TEMP newObj = TEMP_FACTORY.getInstance().getFreshTEMP();
 
 		//array
+		String name = this.type;
 		if (exp != null)
 		{
 			System.out.format("Creating array %s\n", name);

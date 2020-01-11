@@ -677,11 +677,12 @@ public class LLVM
 		offset);
 	}
 
-	private void defineStrings()
+	public void defineStrings()
 	{
 		for(String str : strings)
 		{
 			String stringName = str.replace(' ', '.');
+			System.out.format("@STR.%s = constant [%d x i8] c\"%s\\00\", align 1\n", stringName, str.length() + 1, str);
 			fileWriter.format("@STR.%s = constant [%d x i8] c\"%s\\00\", align 1\n", stringName, str.length() + 1, str);
 		}
 	}
@@ -794,7 +795,7 @@ public class LLVM
 			instance.fileWriter.format("@STR.ACCESS.VIOLATION = constant [17 x i8] c\"Access Violation\00\", align 1\n\n");
 			instance.fileWriter.format("@STR.INVALID.POINTER = constant [28 x i8] c\"Invalid Pointer Dereference\00\", align 1\n\n");
 			instance.fileWriter.format("@STR.DIVISION.BY.ZERO = constant [17 x i8] c\"Division By Zero\00\", align 1\n\n");
-			instance.defineStrings();
+			// instance.defineStrings();
 
 			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
 			instance.fileWriter.format(";                              ;\n");
