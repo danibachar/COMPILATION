@@ -35,26 +35,31 @@ public class LLVM
 	/***********************/
 	public PrintWriter fileWriter;
 
+	public static HashSet<String> strings = new HashSet<String>();
+	public static HashMap<String, AST_EXP> _globals = new HashMap<>();
+	public static ArrayList<Pair<String, AST_EXP>> globals = new ArrayList<Pair<String, AST_EXP>>();
+
 	/***********************/
 	/* The file writer ... */
 	/***********************/
 	public void finalizeFile()
 	{
-		//fileWriter.format("  ret i32 0\n");
-		//fileWriter.format("}\n");
 		fileWriter.close();
 	}
-	public void print_int(TEMP t)
+
+	public void zext(TEMP dst, TEMP src)
 	{
-		int idx=t.getSerialNumber();
-		fileWriter.format("  call void @PrintInt(i32 %%Temp_%d)\n",idx);
+		int idxdst=dst.getSerialNumber();
+		int idxsrc=src.getSerialNumber();
+		fileWriter.format("  %%Temp_%d = zext i1 %%Temp_%d to i32\n", idxdst, idxsrc);
 	}
 
 	public void call_func(TEMP dst, String name, TYPE returnType, TEMP_LIST args, TYPE_LIST types)
 	{
 
-		fileWriter.format(  "%%Temp_%d =call %s @%s(",dst.getSerialNumber(), typeToString(returnType), name);
+		fileWriter.format("%%Temp_%d =call %s @%s(",dst.getSerialNumber(), typeToString(returnType), name);
 		while(types!= null){
+			System.out.format("calling maybe void? function name=(%s), retType=(%s), argtype=(%s)",name,returnType,typeToString(args.head.type));
 			fileWriter.format("%s %%Temp_%d ",typeToString(args.head.type), args.head.getSerialNumber());
 			types = types.tail;
 			args = args.tail;
@@ -69,6 +74,7 @@ public class LLVM
 
 		fileWriter.format("  call %s @%s(",typeToString(returnType), name);
 		while(types!= null){
+			System.out.format("calling void function name=(%s), retType=(%s), argtype=(%s)",name,returnType,typeToString(args.head.type));
 			fileWriter.format("%s %%Temp_%d ",typeToString(args.head.type), args.head.getSerialNumber());
 			types = types.tail;
 			args = args.tail;
@@ -92,7 +98,7 @@ public class LLVM
 
 	}
 
-	public void define_func_end()
+	public void end_func()
 	{
 		fileWriter.format("}\n");
 	}
@@ -156,10 +162,7 @@ public class LLVM
 		 typeToString(dst.getType()));
 
 	}
-	public void zext(TEMP dst, TEMP src)
-	{
-		fileWriter.format("  %%Temp_%d = zext i1 %%Temp_%d to i32\n", dst.getSerialNumber(), src.getSerialNumber());
-	}
+
 	public void bitcast(TEMP dst, TEMP src)
 	{
 		fileWriter.format("  %%Temp_%d = bitcast %s* %%Temp_%d to %s\n",
@@ -653,7 +656,6 @@ public class LLVM
 		{
 			typeString = "i8";
 		}
-		fileWriter.format(";getlement temp temp int;\n");
 		fileWriter.format("  %%Temp_%d = getelementptr inbounds %s, %s* %%Temp_%d, i32 %d\n",
 		dst.getSerialNumber(),
 		typeString,
@@ -678,7 +680,7 @@ public class LLVM
 		offset.getSerialNumber());
 	}
 
-	public void get_member(TEMP dst, TYPE type, int offset)
+	public void get_data_member_by_ptr(TEMP dst, TYPE type, int offset)
 	{
 		fileWriter.format("  %%Temp_%d = getelementptr inbounds i8, i8* %%0, i32 %d\n",
 		dst.getSerialNumber(),
@@ -734,10 +736,6 @@ public class LLVM
 	/**************************************/
 	private static LLVM instance = null;
 	private static String filename = "";
-
-	private static HashSet<String> strings = new HashSet<String>();
-	public static HashMap<String, AST_EXP> _globals = new HashMap<>();
-	public static ArrayList<Pair<String, AST_EXP>> globals = new ArrayList<Pair<String, AST_EXP>>();
 
 	/*****************************/
 	/* PREVENT INSTANTIATION ... */

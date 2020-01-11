@@ -15,13 +15,13 @@ import TYPES.*;
 import LLVM.*;
 import MIPS.*;
 
-public class IRcommand_Define_Func_end extends IRcommand
+public class IRcommandEndFuncDef extends IRcommand
 {
 	String funcName;
 	TYPE returnType;
 	TYPE_LIST args;
-	
-	public IRcommand_Define_Func_end(String funcName,TYPE returnType, TYPE_LIST args)
+
+	public IRcommandEndFuncDef(String funcName,TYPE returnType, TYPE_LIST args)
 	{
 		this.funcName      = funcName;
 		this.returnType = returnType;
@@ -33,9 +33,9 @@ public class IRcommand_Define_Func_end extends IRcommand
 	/*******************/
 	public void LLVM_bitcode_me()
 	{
-		LLVM.getInstance().define_func_end();
+		LLVM.getInstance().end_func();
 	}
-	
+
 	/***************/
 	/* MIPS me !!! */
 	/***************/

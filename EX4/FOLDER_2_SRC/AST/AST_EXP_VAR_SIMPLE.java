@@ -59,7 +59,6 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 		myType = SYMBOL_TABLE.getInstance().findField(name, false);
 		if (myType == null)
 		{
-			// System.out.format("Variable named %s does not exist\n", name);
 			throw new AST_EXCEPTION(this.lineNumber);
 		}
 		typeClass = SYMBOL_TABLE.getInstance().current_class;
@@ -67,11 +66,10 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 		if (es != null) {
 			isInFunc = es.scope_number > 0;
 		} else {
-
+			// TODO handling this case??/
 		}
 
 		varIndex = LocalVarCounter.getInstance().getIndex(name, myType);
-		// System.out.format("Looked for car %s with result %s %s\n", name, varIndex, myType);
 		return myType;
 	}
 
@@ -79,7 +77,6 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 	{
 		TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
 		t.setType(myType);
-		// System.out.format("@@@ IRme var simple isInFunc? = %s\n", isInFunc);
 		if (isInFunc)  {
 			t.isaddr = false;
 			if (varIndex == -1) {
@@ -91,11 +88,10 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 			}
 		}
 		else if (typeClass!=null && (typeClass.queryDataMembersReqursivly(name) != null)){
-			// System.out.format("Looking for %s\n", name);
 			int varIndex = typeClass.queryDataMembersReqursivly(name).index;
 			t.setType(typeClass);
 			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Get_Member(t, TYPE_INT.getInstance(), varIndex));
+				.Add_IRcommand(new IRcommandGetDataMemberByPTR(t, TYPE_INT.getInstance(), varIndex));
 			TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
 			pointerTemp.setType(myType);
 			pointerTemp.isaddr = t.isaddr;

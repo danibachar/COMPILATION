@@ -3,9 +3,41 @@ string_access_violation: .asciiz "Access Violation"
 string_illegal_div_by_0: .asciiz "Illegal Division By Zero"
 string_invalid_ptr_dref: .asciiz "Invalid Pointer Dereference"
 .data
-	global_f: .word 721
+	global_4: .word 721
 .data
-	global_f: .word 721
-	li Temp_1,0
+	global_6: .word 721
+.data
+	global_2: .word 721
+.data
+	global_0: .word 721
+.data
+	global_3: .word 721
+.data
+	global_1: .word 721
+.data
+	global_5: .word 721
+	li Temp_1,3
+	li Temp_3,8
+	mul Temp_4,Temp_2,Temp_3
+	li Temp_8,3
+	li Temp_10,8
+	mul Temp_11,Temp_9,Temp_10
+	li Temp_15,3
+	li Temp_17,8
+	mul Temp_18,Temp_16,Temp_17
+	li Temp_22,3
+	li Temp_24,8
+	mul Temp_25,Temp_23,Temp_24
+	li Temp_29,0
+	li Temp_34,1
+	li Temp_39,2
+	li Temp_44,0
+	li Temp_48,0
+	li Temp_51,3
+	li Temp_53,0
+	li Temp_57,0
+	li Temp_62,1
+	li Temp_66,2
+	add Temp_70,Temp_71,Temp_72
 	li $v0,10
 	syscall

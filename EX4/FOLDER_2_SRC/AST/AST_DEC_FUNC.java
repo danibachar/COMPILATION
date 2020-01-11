@@ -223,7 +223,7 @@ public class AST_DEC_FUNC extends AST_DEC
 		}
 		IR.getInstance().Add_IRcommand(new IRcommand_Return(null));
 		IR.getInstance().
-			Add_IRcommand(new IRcommand_Define_Func_end("init_globals", TYPE_VOID.getInstance(), null));
+			Add_IRcommand(new IRcommandEndFuncDef("init_globals", TYPE_VOID.getInstance(), null));
 	}
 
 	public TEMP IRme() throws Exception
@@ -309,7 +309,7 @@ public class AST_DEC_FUNC extends AST_DEC
 		}
 
 		IR.getInstance().
-			Add_IRcommand(new IRcommand_Define_Func_end(fullName, this.returnValType, fullArgs));
+			Add_IRcommand(new IRcommandEndFuncDef(fullName, this.returnValType, fullArgs));
 		return null;
 	}
 

@@ -15,13 +15,13 @@ import TEMP.*;
 import LLVM.*;
 import MIPS.*;
 
-public class IRcommand_Get_Member extends IRcommand
+public class IRcommandGetDataMemberByPTR extends IRcommand
 {
 	public TEMP dst;
 	public TYPE type;
 	public int offset;
-	
-	public IRcommand_Get_Member(TEMP dst, TYPE type, int offset)
+
+	public IRcommandGetDataMemberByPTR(TEMP dst, TYPE type, int offset)
 	{
 		this.dst = dst;
 		this.type = type;
@@ -33,7 +33,7 @@ public class IRcommand_Get_Member extends IRcommand
 	/*******************/
 	public void LLVM_bitcode_me()
 	{
-		LLVM.getInstance().get_member(dst,type, offset);
+		LLVM.getInstance().get_data_member_by_ptr(dst,type, offset);
 	}
 
 	/***************/
