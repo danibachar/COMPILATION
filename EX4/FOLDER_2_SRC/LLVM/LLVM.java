@@ -7,8 +7,12 @@ package LLVM;
 /* GENERAL IMPORTS */
 /*******************/
 import java.io.*;
-import java.util.HashSet;
+import java.util.*;
+import javafx.util.Pair;
+import java.util.Iterator;
+import java.util.Hashtable;
 import java.util.HashMap;
+import java.util.Set;
 import java.io.PrintWriter;
 
 
@@ -337,10 +341,15 @@ public class LLVM
 	}
 
 	static int a=0;
-	public void check_null_deref(TEMP var)
+	public void check_null_deref(TEMP var, boolean shouldReverse)
 	{
 		fileWriter.format("%%Temp_null_%d = bitcast %s %%Temp_%d to i32*\n",a,typeToString(var.getType()) ,var.getSerialNumber());
 		fileWriter.format("%%equal_null_%d = icmp eq i32* %%Temp_null_%d, null\n",a, a);
+		// if (shouldReverse) {
+		// 	fileWriter.format("br i1 %%equal_null_%d, label %%continue_%d, label %%null_deref_%d\n",a, a, a);
+		// } else {
+		//  fileWriter.format("br i1 %%equal_null_%d, label %%null_deref_%d, label %%continue_%d\n",a, a, a);
+		// }
 		fileWriter.format("br i1 %%equal_null_%d, label %%null_deref_%d, label %%continue_%d\n",a, a, a);
 
 		fileWriter.format("null_deref_%d:\n",a);
@@ -728,7 +737,8 @@ public class LLVM
 	private static String filename = "";
 
 	private static HashSet<String> strings = new HashSet<String>();
-	public static HashMap<String, AST_EXP> globals = new HashMap<>();
+	public static HashMap<String, AST_EXP> _globals = new HashMap<>();
+	public static ArrayList<Pair<String, AST_EXP>> globals = new ArrayList<Pair<String, AST_EXP>>();
 
 	/*****************************/
 	/* PREVENT INSTANTIATION ... */
@@ -742,7 +752,11 @@ public class LLVM
 
 	public static void addGlobal(String name, AST_EXP exp)
 	{
-		globals.put(name, exp);
+		if (_globals.get(name) != null) {
+			return;
+		}
+		Pair<String, AST_EXP> p = new Pair(name, exp);
+		globals.add(p);
 	}
 
 	public static void setFileName(String fileName)

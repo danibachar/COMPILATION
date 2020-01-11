@@ -122,7 +122,7 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 			IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(obj1, obj));
 			obj = obj1;
 		}
-		IR.getInstance().Add_IRcommand(new IRcommand_Check_Null(obj));
+		IR.getInstance().Add_IRcommand(new IRcommand_Check_Null(obj, true));
 
 		TYPE_CLASS_VAR_DEC varDec = semantedClass.queryDataMembersReqursivly(fieldName);
 		int varIndex = varDec.index;

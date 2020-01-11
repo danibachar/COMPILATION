@@ -292,7 +292,7 @@ public class AST_EXP_CALL extends AST_EXP
 			IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(arr1, varTemp));
 			varTemp = arr1;
 		}
-		IR.getInstance().Add_IRcommand(new IRcommand_Check_Null(varTemp));
+		IR.getInstance().Add_IRcommand(new IRcommand_Check_Null(varTemp, true));
 		// System.out.format("IRing method call with var %d\n", varTemp.getSerialNumber());
 		TEMP_LIST t = new TEMP_LIST(varTemp, null);
 		// AST_EXP_LIST params = args;

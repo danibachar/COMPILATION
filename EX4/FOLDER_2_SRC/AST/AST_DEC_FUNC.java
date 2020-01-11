@@ -9,7 +9,7 @@ import AST_EXCEPTION.*;
 import LocalVarCounter.*;
 
 import LLVM.*;
-import java.util.ArrayList;
+import java.util.*;
 import javafx.util.Pair;
 import java.util.Iterator;
 import java.util.Hashtable;
@@ -207,7 +207,7 @@ public class AST_DEC_FUNC extends AST_DEC
 	{
 		IR.getInstance().
 			Add_IRcommand(new IRcommand_Define_Func("init_globals", TYPE_VOID.getInstance(), null));
-		for (HashMap.Entry<String, AST_EXP> entry : LLVM.globals.entrySet()) {
+		for (Pair<String, AST_EXP> entry : LLVM.globals) {
 			String key = entry.getKey();
 			AST_EXP value = entry.getValue();
 			TEMP tmp = value.IRme();
@@ -303,7 +303,7 @@ public class AST_DEC_FUNC extends AST_DEC
 
 		if (!foundRet) {
 			if (TYPE_VOID.getInstance() != returnValType) {
-				IR.getInstance().Add_IRcommand(new IRcommand_Call_Func_Void("ExecutionFalls", TYPE_VOID.getInstance(), null,null));
+				// IR.getInstance().Add_IRcommand(new IRcommand_Call_Func_Void("ExecutionFalls", TYPE_VOID.getInstance(), null,null));
 				IR.getInstance().Add_IRcommand(new IRcommand_DummyReturn(returnValType));
 			} else {
 				IR.getInstance().Add_IRcommand(new IRcommand_Return(null));
