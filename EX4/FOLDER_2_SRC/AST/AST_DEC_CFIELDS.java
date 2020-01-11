@@ -78,8 +78,7 @@ public class AST_DEC_CFIELDS extends AST_DEC
 
 	public TEMP IRme() throws Exception
 	{
-
-		System.out.format("IRme - AST_DEC_CFIELDS\n");
+		// System.out.format("IRme - AST_DEC_CFIELDS\n");
 		return null;
 	}
 

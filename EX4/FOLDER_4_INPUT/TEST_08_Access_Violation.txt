@@ -41,7 +41,7 @@ void main()
 	moish.grades[COMPILATION] := 99;
 
 	University TAU := new Student[37];
-	
+
 	TAU[3] := moish;
 	TAU[3].lastYearSalaries[TAU[3].grades[COMPILATION]] := 999;
 }
