@@ -3,17 +3,146 @@ string_access_violation: .asciiz "Access Violation"
 string_illegal_div_by_0: .asciiz "Illegal Division By Zero"
 string_invalid_ptr_dref: .asciiz "Invalid Pointer Dereference"
 .data
-	global_i: .word 721
+	global_l1: .word 721
 .data
-	global_size: .word 721
+	global_l2: .word 721
 .data
 	global_0: .word 721
 .data
-	global_size: .word 721
+	global_l1: .word 721
+.data
+	global_l2: .word 721
+	j Label_0_if.cond
+Label_0_if.cond:
+	beq Temp_3,Temp_2,Label_16_AssignOne
+	bne Temp_3,Temp_2,Label_17_AssignZero
+Label_16_AssignOne:
+	li Temp_0,1
+	j Label_15_end
+Label_17_AssignZero:
 	li Temp_0,0
-	li Temp_1,0
-	add Temp_2,Temp_3,Temp_4
-	li Temp_6,10
-	li Temp_7,1
+	j Label_15_end
+Label_15_end:
+	beq Temp_4,$zero,Label_2_if.exit
+	j Label_2_if.exit
+Label_2_if.exit:
+	j Label_3_if.cond
+Label_3_if.cond:
+	beq Temp_9,Temp_8,Label_19_AssignOne
+	bne Temp_9,Temp_8,Label_20_AssignZero
+Label_19_AssignOne:
+	li Temp_6,1
+	j Label_18_end
+Label_20_AssignZero:
+	li Temp_6,0
+	j Label_18_end
+Label_18_end:
+	beq Temp_10,$zero,Label_5_if.exit
+	j Label_5_if.exit
+Label_5_if.exit:
+	j Label_6_if.cond
+Label_6_if.cond:
+	li Temp_14,12
+	li Temp_18,12
+	blt Temp_22,Temp_21,Label_22_AssignOne
+	bge Temp_22,Temp_21,Label_23_AssignZero
+Label_22_AssignOne:
+	li Temp_12,1
+	j Label_21_end
+Label_23_AssignZero:
+	li Temp_12,0
+	j Label_21_end
+Label_21_end:
+	beq Temp_23,$zero,Label_8_if.exit
+	li Temp_26,0
+	li Temp_30,0
+	j Label_8_if.exit
+Label_8_if.exit:
+	j Label_9_if.cond
+Label_9_if.cond:
+	li Temp_39,12
+	li Temp_43,12
+	blt Temp_47,Temp_46,Label_25_AssignOne
+	bge Temp_47,Temp_46,Label_26_AssignZero
+Label_25_AssignOne:
+	li Temp_37,1
+	j Label_24_end
+Label_26_AssignZero:
+	li Temp_37,0
+	j Label_24_end
+Label_24_end:
+	beq Temp_48,$zero,Label_11_if.exit
+	li Temp_51,0
+	li Temp_56,0
+	j Label_11_if.exit
+Label_11_if.exit:
+.data
+	global_3: .word 721
+.data
+	global_4: .word 721
+.data
+	global_2: .word 721
+.data
+	global_1: .word 721
+.data
+	global_0: .word 721
+.data
+	global_8: .word 721
+.data
+	global_7: .word 721
+.data
+	global_6: .word 721
+.data
+	global_5: .word 721
+	li Temp_63,20
+	li Temp_66,20
+	li Temp_69,20
+	li Temp_72,20
+	li Temp_75,20
+	li Temp_78,20
+	li Temp_81,20
+	li Temp_84,20
+	li Temp_87,12
+	li Temp_90,34
+	li Temp_92,12
+	li Temp_95,70
+	li Temp_97,12
+	li Temp_100,92
+	li Temp_102,12
+	li Temp_105,96
+	li Temp_107,12
+	li Temp_110,12
+	li Temp_112,12
+	li Temp_115,50
+	li Temp_117,12
+	li Temp_120,97
+	li Temp_122,12
+	li Temp_125,99
+	li Temp_127,0
+	li Temp_132,0
+	li Temp_137,0
+	li Temp_142,0
+	li Temp_148,0
+	li Temp_153,0
+	li Temp_158,0
+	li Temp_163,0
+	j Label_14_while.cond
+Label_14_while.cond:
+	li Temp_172,1
+	beq Temp_176,Temp_175,Label_28_AssignOne
+	bne Temp_176,Temp_175,Label_29_AssignZero
+Label_28_AssignOne:
+	li Temp_173,1
+	j Label_27_end
+Label_29_AssignZero:
+	li Temp_173,0
+	j Label_27_end
+Label_27_end:
+	add Temp_171,Temp_172,Temp_177
+	beq Temp_178,$zero,Label_12_while.end
+	li Temp_180,12
+	li Temp_185,0
+	j Label_14_while.cond
+Label_12_while.end:
 	li $v0,10
 	syscall

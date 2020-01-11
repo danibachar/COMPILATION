@@ -164,7 +164,9 @@ public class AST_DEC_CLASS extends AST_DEC
 				System.out.format(">> ERROR [%d] Class %s Extends %s has data_member that is initialized with no constant value %s \n",this.lineNumber,name, parent,v.initialValue);
 				throw new AST_EXCEPTION(v.initialValueLineNumber);
 			}
-			TYPE_CLASS_VAR_DEC fd = new TYPE_CLASS_VAR_DEC(v.SemantMe(),v.name);
+			TYPE vt = v.SemantMe();
+
+			TYPE_CLASS_VAR_DEC fd = new TYPE_CLASS_VAR_DEC(vt,v.name);
 			fd.exp = v.initialValue;
 			t.data_members = new TYPE_CLASS_VAR_DEC_LIST(fd ,t.data_members);
 			// Validating data memebers shadowing
@@ -232,6 +234,7 @@ public class AST_DEC_CLASS extends AST_DEC
 		/************************************************/
 		/* [4] Enter the Class Type to the Symbol Table */
 		/************************************************/
+		// t.updateDataMembersCount();
 		SYMBOL_TABLE.getInstance().enter(name,t);
 		myType = t;
 

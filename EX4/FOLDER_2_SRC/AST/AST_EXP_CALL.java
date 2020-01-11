@@ -26,7 +26,7 @@ public class AST_EXP_CALL extends AST_EXP
 	public AST_EXP_LIST params;
 	public AST_EXP_VAR var;
 
-
+	public boolean shouldReveseParams;
 	public TYPE_CLASS classType;
 	public TYPE returnType;
 	private ArrayList<TYPE> sent_input_params = new ArrayList<TYPE>();
@@ -126,6 +126,7 @@ public class AST_EXP_CALL extends AST_EXP
 				if (params != null)
 				{
 					// We should have params to check
+					this.shouldReveseParams = false;
 					if (paramsTypes == null || !areParamsValid(funcDec.params, paramsTypes,false))
 					{
 						System.out.format(">> ERROR [%d] params mismatch for class(%s) function call -  %s\n",this.lineNumber, varClass.name, funcName);
@@ -181,6 +182,7 @@ public class AST_EXP_CALL extends AST_EXP
 					throw new AST_EXCEPTION(this.lineNumber);
 				}
 				// We should have params to check
+				this.shouldReveseParams = true;
 				if (paramsTypes == null || !areParamsValid(funcTypeValidated.params, paramsTypes,true)) {
 					System.out.format(">> ERROR [%d] params mismatch for global function call - %s 123\n",this.lineNumber,funcName);
 					throw new AST_EXCEPTION(this.lineNumber);

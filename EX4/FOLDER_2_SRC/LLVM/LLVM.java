@@ -51,7 +51,7 @@ public class LLVM
 
 		fileWriter.format(  "%%Temp_%d =call %s @%s(",dst.getSerialNumber(), typeToString(returnType), name);
 		while(types!= null){
-			fileWriter.format("%s %%Temp_%d ",typeToString(types.head), args.head.getSerialNumber());
+			fileWriter.format("%s %%Temp_%d ",typeToString(args.head.type), args.head.getSerialNumber());
 			types = types.tail;
 			args = args.tail;
 			if (types != null) fileWriter.format(",");
@@ -65,7 +65,7 @@ public class LLVM
 
 		fileWriter.format("  call %s @%s(",typeToString(returnType), name);
 		while(types!= null){
-			fileWriter.format("%s %%Temp_%d ",typeToString(types.head), args.head.getSerialNumber());
+			fileWriter.format("%s %%Temp_%d ",typeToString(args.head.type), args.head.getSerialNumber());
 			types = types.tail;
 			args = args.tail;
 			if (types != null) fileWriter.format(",");
@@ -301,7 +301,7 @@ public class LLVM
 	public void li(TEMP t,int value)
 	{
 		int idx=t.getSerialNumber();
-
+		System.out.format("li value,  %%Temp_%d = %d\n",idx,value);
 		fileWriter.format("  %%zero_%d = load i32, i32* @my_zero, align 4\n",x);
 		fileWriter.format("  %%Temp_%d = add nsw i32 %%zero_%d, %d\n",idx,x++,value);
 	}

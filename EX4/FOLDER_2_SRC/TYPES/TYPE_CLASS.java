@@ -34,11 +34,29 @@ public class TYPE_CLASS extends TYPE
 		this.father = father;
 		this.data_members = data_members;
 		this.methods = methods;
-		this.membersCount = 0;
-		for (TYPE_CLASS_VAR_DEC_LIST it=this.data_members;it != null;it=it.tail) {
-			this.membersCount+=1;
+		// Applying member count
+	}
+
+	public void updateDataMembersCount() {
+		if (father !=  null) {
+			this.membersCount = father.membersCount;
+		} else {
+				this.membersCount = 0;
 		}
 
+		for (TYPE_CLASS_VAR_DEC_LIST it=this.data_members;it != null;it=it.tail) {
+			it.head.index = this.membersCount;
+			if (it.head.t instanceof TYPE_ARRAY ||
+					it.head.t instanceof TYPE_CLASS ||
+					it.head.t instanceof TYPE_STRING)
+			{
+				this.membersCount += 12;
+			}
+			else {
+				this.membersCount += 8;
+			}
+			// this.membersCount+=1;
+		}
 	}
 
 	/*************/

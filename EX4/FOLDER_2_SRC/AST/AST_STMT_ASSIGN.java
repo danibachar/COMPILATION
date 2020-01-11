@@ -71,14 +71,14 @@ public class AST_STMT_ASSIGN extends AST_STMT
 
 	public TYPE SemantMe() throws Exception
 	{
-		exp.name = var.name;
+		// exp.name = var.name;
 
 		TYPE t1 = null;
 		TYPE t2 = null;
 
 		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		if (var != null) {
-			// System.out.format("SEMANTME - AST_STMT_ASSIGN before var\nlinenumber = %d\n", this.lineNumber);
+			// System.out.format("SEMANTME - AST_STMT_ASSIGN exp.name = %s\n", exp.name);
 			t1 = var.SemantMe();
 			AST_HELPERS.isValidTypeAssignableFromExpression(t1, exp);
 			return null;

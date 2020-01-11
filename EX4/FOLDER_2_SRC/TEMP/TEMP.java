@@ -15,7 +15,7 @@ import TYPES.*;
 public class TEMP
 {
 	private int serial=0;
-	private TYPE type;
+	public TYPE type;
 	public boolean isaddr;
 	public boolean checkInit=false;
 
@@ -26,7 +26,7 @@ public class TEMP
 		this.serial = serial;
 		this.type = null;
 	}
-	
+
 	public int getSerialNumber()
 	{
 		return serial;
