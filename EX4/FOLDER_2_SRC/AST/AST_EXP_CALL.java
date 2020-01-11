@@ -332,15 +332,13 @@ public class AST_EXP_CALL extends AST_EXP
 
 	public TEMP IRmeScopeOrGlobalFunc() throws Exception {
 		TYPE_FUNCTION definedType = (TYPE_FUNCTION)SYMBOL_TABLE.getInstance().find(funcName);
-		// TODO: simply call the function by name (what about name-colision?)
+
 		String name = this.funcName;
 		if (definedType.origClass != null)
 		{
 			name = definedType.origClass.name+"_" +  this.funcName;
 		}
-		// System.out.format("IRing function call %s\n", name);
 		TEMP_LIST t=null;
-		// AST_EXP_LIST params = params;
 		if (params != null) { t = (TEMP_LIST)params.IRme(); }
 		if (params != null)
 		{
@@ -351,17 +349,6 @@ public class AST_EXP_CALL extends AST_EXP
 			{
 
 			if (temps.head.isaddr){
-				// String llvmType1 = LLVM.getInstance().typeToString(temps.head.getType());
-				// String llvmType2 = LLVM.getInstance().typeToString(types.head);
-				// if (llvmType1.endsWith("*") && llvmType1.equals(llvmType2))
-				// {
-				// 	TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
-				// 	pointerTemp.setType(temps.head.getType());
-				// 	System.out.format("Creating pointerTemp of index %d %s\n", pointerTemp.getSerialNumber(), pointerTemp.getType());
-				// 	IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_Pointer(pointerTemp, temps.head));
-				// 	temps.head = pointerTemp;
-				// }
-				//ir return address and not value
 				TEMP newtemp = TEMP_FACTORY.getInstance().getFreshTEMP();
 				newtemp.setType(types.head);
 				newtemp.checkInit = temps.head.checkInit;
@@ -376,7 +363,7 @@ public class AST_EXP_CALL extends AST_EXP
 		}
 
 		if (returnType == TYPE_VOID.getInstance()){
-			// System.out.format("###### Calling method with named %s\n", funcName);
+
 			IR.getInstance()
 				.Add_IRcommand(new IRcommand_Call_Func_Void(funcName, returnType, t, definedType.params));
 			return null;

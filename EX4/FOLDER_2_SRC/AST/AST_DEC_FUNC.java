@@ -230,7 +230,6 @@ public class AST_DEC_FUNC extends AST_DEC
 	{
 		// System.out.format("IRme - AST_DEC_FUNC(%s):%s, Scope=%d\n",name, returnTypeName, myScope);
 
-
 		if (name.equals("main"))
 		{
 			initGlobals();
@@ -249,8 +248,6 @@ public class AST_DEC_FUNC extends AST_DEC
 
 		if (typeFunction.origClass != null){
 			fullArgs = new TYPE_LIST(typeFunction.origClass, semantedArgs);
-			// fullArgs.head = typeFunction.origClass;
-			// fullArgs.tail = semantedArgs;
 		}
 		else {
 			fullArgs = semantedArgs;
