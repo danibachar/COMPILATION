@@ -59,7 +59,7 @@ public class SYMBOL_TABLE_ENTRY
 		this.next = next;
 		this.prevtop = prevtop;
 		this.prevtop_index = prevtop_index;
-		this.scope_number = scope_number;
+		this.scope_number = 0;
 
 		if(prevtop != null) this.scope_number = prevtop.scope_number;
 

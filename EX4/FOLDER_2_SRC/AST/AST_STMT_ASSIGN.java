@@ -154,12 +154,12 @@ public class AST_STMT_ASSIGN extends AST_STMT
 
 	public TEMP IRme()  throws Exception
 	{
-
-		if (exp instanceof AST_EXP_NEW) {
-			return IRmeClassOrArray();
-		} else {
-			return IRmePrimitive();
-		}
+		return IRmePrimitive();
+		// if (exp instanceof AST_EXP_NEW) {
+		// 	return IRmeClassOrArray();
+		// } else {
+		// 	return IRmePrimitive();
+		// }
 	}
 
 	public TEMP IRmeClassOrArray()  throws Exception {
@@ -199,8 +199,6 @@ public class AST_STMT_ASSIGN extends AST_STMT
 						IR.getInstance().
 							Add_IRcommand(new IRcommand_Store_Local(((AST_EXP_VAR_SIMPLE) var).varIndex,src));
 					}
-
-
 				}
 				else
 				{

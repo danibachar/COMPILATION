@@ -55,10 +55,18 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 	public TYPE SemantMe() throws Exception
 	{
 		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
-		// System.out.format("SEMANTME - AST_EXP_VAR_SIMPLE( %s )\n",name);
-		myType = SYMBOL_TABLE.getInstance().findField(name,false);
+		// System.out.format("SEMANTME - AST_EXP_VAR_SIMPLE( %s ), line = %d\n",name, this.lineNumber);
+		myType = SYMBOL_TABLE.getInstance().findField(name, false);
+		if (myType == null)
+		{
+			System.out.format("Variable named %s does not exist\n", name);
+			throw new AST_EXCEPTION(this.lineNumber);
+		}
 		typeClass = SYMBOL_TABLE.getInstance().current_class;
-		isInFunc = SYMBOL_TABLE.getInstance().isInFunc(name);
+
+		isInFunc = SYMBOL_TABLE.getInstance().findEntry(name).scope_number > 0;
+		//SYMBOL_TABLE.getInstance().findInCurrentScope(name) != null;
+		//SYMBOL_TABLE.getInstance().isInFunc(name);
 		//SYMBOL_TABLE.getInstance().findInCurrentScope(name) != null;
 		//SYMBOL_TABLE.getInstance().current_function != null;
 		varIndex = LocalVarCounter.getInstance().getIndex(name, myType);
@@ -70,7 +78,7 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 	{
 		TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
 		t.setType(myType);
-
+		System.out.format("@@@ IRme var simple isInFunc? = %s\n", isInFunc);
 		if (isInFunc)  {
 			t.isaddr = false;
 			if (varIndex == -1) {

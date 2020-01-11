@@ -102,7 +102,7 @@ public class AST_DEC_FUNC extends AST_DEC
 		TYPE returnType = null;
 		TYPE_LIST type_list = null;
 		// System.out.format("SEMANTME - AST_DEC_FUNC(%s):%s\n",name,returnTypeName);
-		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
+
 		/*******************/
 		/* [0] return type */
 		/*******************/
@@ -126,7 +126,7 @@ public class AST_DEC_FUNC extends AST_DEC
 		/* [1] Begin Function Scope */
 		/****************************/
 		SYMBOL_TABLE.getInstance().beginScope();
-
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// For IRme
 		LocalVarCounter.getInstance().initiateCount();
 		/***************************/

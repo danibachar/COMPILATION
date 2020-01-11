@@ -122,19 +122,10 @@ public class AST_DEC_VAR extends AST_DEC
 			System.out.format(">> ERROR [%d] variable `%s` already exists in scope, found `%s`\n",this.lineNumber,name, temp.name);
 			throw new AST_EXCEPTION(nameLineNumber);
 		}
-		boolean isInFunc = SYMBOL_TABLE.getInstance().isInFunc(name);
-		//myScope > 0 && !isInClass;
-		this.isGlobal = !isInClass && !isInFunc;//!SYMBOL_TABLE.getInstance().isInFunc(name);
 
 		// validate that the initialValue is the same type as the var type, and that it exists!
 		if (initialValue != null) {
 			AST_HELPERS.isValidTypeAssignableFromExpression(t, initialValue);
-			// Hack for replacing names
-			// initialValue.name = name;
-			// if (!isInClass && !isInFunc) {
-			// 	initialValue.name = name;
-			// }
-
 		}
 		/***************************************************/
 		/* [3] Enter the Function Type to the Symbol Table */
@@ -146,9 +137,13 @@ public class AST_DEC_VAR extends AST_DEC
 		/*********************************************************/
 		// this.isInClass = SYMBOL_TABLE.getInstance().current_class != null;
 
-
+		//myScope > 0 && !isInClass;
+		boolean isInFunc =  myScope > 0 && !isInClass;
+		//SYMBOL_TABLE.getInstance().findInCurrentScope(name) != null;
+		//SYMBOL_TABLE.getInstance().current_function != null;
+		this.isGlobal = !isInClass && !isInFunc;//!SYMBOL_TABLE.getInstance().isInFunc(name);//!SYMBOL_TABLE.getInstance().isInFunc(name);
 		this.myType = t;
-		System.out.format("######### isGlobal = %s, isInClass = %s, isInFunc = %s \n", isGlobal, isInClass, isInFunc);
+		System.out.format("######### isGlobal = %s, isInClass = %s, isInFunc = %s \n", this.isGlobal, isInClass, isInFunc);
 		if (!isGlobal && !isInClass)
     {
         varIndex = LocalVarCounter.getInstance().declareLocal(name, myType);
