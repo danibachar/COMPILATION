@@ -129,7 +129,7 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 
 		TEMP newOffset = TEMP_FACTORY.getInstance().getFreshTEMP();
 		newOffset.setType(TYPE_INT.getInstance());
-		System.out.format("IRcommandConstInt (AST_EXP_VAR_FIELD) %%Temp_%d = %d\n",newOffset.getSerialNumber(),varIndex);
+		// System.out.format("IRcommandConstInt (AST_EXP_VAR_FIELD) %%Temp_%d = %d\n",newOffset.getSerialNumber(),varIndex);
 		IR.getInstance().Add_IRcommand(new IRcommandConstInt(newOffset,varIndex));
 
 		TEMP elementAddress = TEMP_FACTORY.getInstance().getFreshTEMP();

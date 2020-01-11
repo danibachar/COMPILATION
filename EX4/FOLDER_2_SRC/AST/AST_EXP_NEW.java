@@ -128,7 +128,7 @@ public class AST_EXP_NEW extends AST_EXP
 			// }
 			TEMP four = TEMP_FACTORY.getInstance().getFreshTEMP();
 			four.setType(TYPE_INT.getInstance());
-			System.out.format("IRcommandConstInt (AST_EXP_NEW - array) %%Temp_%d = %d\n",four.getSerialNumber(),8);
+			// System.out.format("IRcommandConstInt (AST_EXP_NEW - array) %%Temp_%d = %d\n",four.getSerialNumber(),8);
 			IR.getInstance().Add_IRcommand(new IRcommandConstInt(four, 8));
 			TEMP sizeInBytes = TEMP_FACTORY.getInstance().getFreshTEMP();
 			sizeInBytes.setType(TYPE_INT.getInstance());
@@ -158,7 +158,7 @@ public class AST_EXP_NEW extends AST_EXP
 
 			TEMP sizeInBytes = TEMP_FACTORY.getInstance().getFreshTEMP();
 			sizeInBytes.setType(TYPE_INT.getInstance());
-			System.out.format("IRcommandConstInt (AST_EXP_NEW - class 1) %%Temp_%d = %d\n",sizeInBytes.getSerialNumber(),numberofMembers);
+			// System.out.format("IRcommandConstInt (AST_EXP_NEW - class 1) %%Temp_%d = %d\n",sizeInBytes.getSerialNumber(),numberofMembers);
 			IR.getInstance().Add_IRcommand(new IRcommandConstInt(sizeInBytes, numberofMembers));
 
 			TEMP allocated = TEMP_FACTORY.getInstance().getFreshTEMP();
@@ -189,7 +189,7 @@ public class AST_EXP_NEW extends AST_EXP
 
 					TEMP newOffset = TEMP_FACTORY.getInstance().getFreshTEMP();
 					newOffset.setType(TYPE_INT.getInstance());
-					System.out.format("IRcommandConstInt (AST_EXP_NEW - class 2) %%Temp_%d = %d\n",newOffset.getSerialNumber(),varIndex);
+					// System.out.format("IRcommandConstInt (AST_EXP_NEW - class 2) %%Temp_%d = %d\n",newOffset.getSerialNumber(),varIndex);
 					IR.getInstance().Add_IRcommand(new IRcommandConstInt(newOffset,varIndex));
 
 					TEMP elementAddress = TEMP_FACTORY.getInstance().getFreshTEMP();

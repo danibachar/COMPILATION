@@ -3,146 +3,182 @@ string_access_violation: .asciiz "Access Violation"
 string_illegal_div_by_0: .asciiz "Illegal Division By Zero"
 string_invalid_ptr_dref: .asciiz "Invalid Pointer Dereference"
 .data
-	global_l1: .word 721
-.data
-	global_l2: .word 721
-.data
 	global_0: .word 721
+	li Temp_0,7
 .data
-	global_l1: .word 721
+	global_p: .word 721
 .data
-	global_l2: .word 721
-	j Label_0_if.cond
-Label_0_if.cond:
-	beq Temp_3,Temp_2,Label_16_AssignOne
-	bne Temp_3,Temp_2,Label_17_AssignZero
-Label_16_AssignOne:
-	li Temp_0,1
-	j Label_15_end
-Label_17_AssignZero:
-	li Temp_0,0
-	j Label_15_end
-Label_15_end:
-	beq Temp_4,$zero,Label_2_if.exit
-	j Label_2_if.exit
-Label_2_if.exit:
-	j Label_3_if.cond
-Label_3_if.cond:
-	beq Temp_9,Temp_8,Label_19_AssignOne
-	bne Temp_9,Temp_8,Label_20_AssignZero
-Label_19_AssignOne:
-	li Temp_6,1
-	j Label_18_end
-Label_20_AssignZero:
-	li Temp_6,0
-	j Label_18_end
-Label_18_end:
-	beq Temp_10,$zero,Label_5_if.exit
-	j Label_5_if.exit
-Label_5_if.exit:
-	j Label_6_if.cond
-Label_6_if.cond:
-	li Temp_14,12
-	li Temp_18,12
-	blt Temp_22,Temp_21,Label_22_AssignOne
-	bge Temp_22,Temp_21,Label_23_AssignZero
-Label_22_AssignOne:
-	li Temp_12,1
-	j Label_21_end
-Label_23_AssignZero:
-	li Temp_12,0
-	j Label_21_end
-Label_21_end:
-	beq Temp_23,$zero,Label_8_if.exit
-	li Temp_26,0
-	li Temp_30,0
-	j Label_8_if.exit
-Label_8_if.exit:
-	j Label_9_if.cond
-Label_9_if.cond:
-	li Temp_39,12
-	li Temp_43,12
-	blt Temp_47,Temp_46,Label_25_AssignOne
-	bge Temp_47,Temp_46,Label_26_AssignZero
-Label_25_AssignOne:
-	li Temp_37,1
-	j Label_24_end
-Label_26_AssignZero:
-	li Temp_37,0
-	j Label_24_end
-Label_24_end:
-	beq Temp_48,$zero,Label_11_if.exit
-	li Temp_51,0
-	li Temp_56,0
-	j Label_11_if.exit
-Label_11_if.exit:
+	global_p: .word 721
+	li Temp_3,12
 .data
-	global_3: .word 721
+	global_p: .word 721
 .data
-	global_4: .word 721
+	global_p: .word 721
+	li Temp_8,12
+	li Temp_13,12
+	li Temp_16,1
+	add Temp_11,Temp_17,Temp_16
+	li Temp_20,12
 .data
-	global_2: .word 721
+	global_s: .word 721
 .data
 	global_1: .word 721
 .data
 	global_0: .word 721
 .data
-	global_8: .word 721
-.data
-	global_7: .word 721
+	global_s: .word 721
+	li Temp_24,0
+	li Temp_25,0
+	j Label_2_while.cond
+Label_2_while.cond:
+	li Temp_28,10
+	blt Temp_27,Temp_28,Label_7_AssignOne
+	bge Temp_27,Temp_28,Label_8_AssignZero
+Label_7_AssignOne:
+	li Temp_26,1
+	j Label_6_end
+Label_8_AssignZero:
+	li Temp_26,0
+	j Label_6_end
+Label_6_end:
+	beq Temp_29,$zero,Label_0_while.end
+	li Temp_33,28
+	add Temp_30,Temp_31,Temp_40
+	li Temp_44,1
+	add Temp_42,Temp_43,Temp_44
+	j Label_2_while.cond
+Label_0_while.end:
+	li Temp_48,10
 .data
 	global_6: .word 721
 .data
+	global_8: .word 721
+.data
+	global_0: .word 721
+.data
 	global_5: .word 721
-	li Temp_63,20
-	li Temp_66,20
-	li Temp_69,20
-	li Temp_72,20
-	li Temp_75,20
-	li Temp_78,20
-	li Temp_81,20
-	li Temp_84,20
-	li Temp_87,12
-	li Temp_90,34
-	li Temp_92,12
-	li Temp_95,70
-	li Temp_97,12
-	li Temp_100,92
-	li Temp_102,12
-	li Temp_105,96
-	li Temp_107,12
-	li Temp_110,12
-	li Temp_112,12
-	li Temp_115,50
-	li Temp_117,12
-	li Temp_120,97
-	li Temp_122,12
-	li Temp_125,99
-	li Temp_127,0
-	li Temp_132,0
-	li Temp_137,0
-	li Temp_142,0
-	li Temp_148,0
-	li Temp_153,0
-	li Temp_158,0
-	li Temp_163,0
-	j Label_14_while.cond
-Label_14_while.cond:
-	li Temp_172,1
-	beq Temp_176,Temp_175,Label_28_AssignOne
-	bne Temp_176,Temp_175,Label_29_AssignZero
-Label_28_AssignOne:
-	li Temp_173,1
-	j Label_27_end
-Label_29_AssignZero:
-	li Temp_173,0
-	j Label_27_end
-Label_27_end:
-	add Temp_171,Temp_172,Temp_177
-	beq Temp_178,$zero,Label_12_while.end
-	li Temp_180,12
-	li Temp_185,0
-	j Label_14_while.cond
-Label_12_while.end:
+.data
+	global_2: .word 721
+.data
+	global_4: .word 721
+.data
+	global_9: .word 721
+.data
+	global_1: .word 721
+.data
+	global_7: .word 721
+.data
+	global_3: .word 721
+.data
+	global_10: .word 721
+	li Temp_51,40
+	li Temp_53,12
+	li Temp_56,10
+	li Temp_58,28
+	li Temp_62,10
+	li Temp_64,8
+	mul Temp_65,Temp_63,Temp_64
+	li Temp_69,0
+	li Temp_73,13
+	li Temp_75,8
+	mul Temp_76,Temp_74,Temp_75
+	li Temp_80,0
+	li Temp_84,0
+	li Temp_87,7400
+	li Temp_89,0
+	li Temp_93,1
+	li Temp_96,7400
+	li Temp_98,0
+	li Temp_102,2
+	li Temp_105,7400
+	li Temp_107,0
+	li Temp_111,3
+	li Temp_114,7400
+	li Temp_116,0
+	li Temp_120,4
+	li Temp_123,7400
+	li Temp_125,0
+	li Temp_129,5
+	li Temp_132,7400
+	li Temp_134,0
+	li Temp_138,6
+	li Temp_141,7400
+	li Temp_143,0
+	li Temp_147,7
+	li Temp_150,7400
+	li Temp_152,0
+	li Temp_156,8
+	li Temp_159,7400
+	li Temp_161,0
+	li Temp_165,9
+	li Temp_168,7400
+	li Temp_170,0
+	li Temp_174,10
+	li Temp_177,7400
+	li Temp_179,0
+	li Temp_183,11
+	li Temp_186,7400
+	li Temp_188,0
+	li Temp_192,12
+	li Temp_195,7400
+	li Temp_196,0
+	li Temp_197,1
+	li Temp_198,2
+	li Temp_199,3
+	li Temp_200,4
+	li Temp_201,5
+	li Temp_202,6
+	li Temp_203,7
+	li Temp_204,8
+	li Temp_205,9
+	li Temp_207,28
+	li Temp_214,96
+	li Temp_216,28
+	li Temp_223,100
+	li Temp_225,28
+	li Temp_232,95
+	li Temp_234,28
+	li Temp_241,81
+	li Temp_243,28
+	li Temp_250,95
+	li Temp_252,28
+	li Temp_259,95
+	li Temp_261,28
+	li Temp_268,100
+	li Temp_270,28
+	li Temp_277,100
+	li Temp_279,28
+	li Temp_286,74
+	li Temp_288,28
+	li Temp_295,99
+	j Label_3_if.cond
+Label_3_if.cond:
+	li Temp_299,60
+	blt Temp_299,Temp_298,Label_10_AssignOne
+	bge Temp_299,Temp_298,Label_11_AssignZero
+Label_10_AssignOne:
+	li Temp_296,1
+	j Label_9_end
+Label_11_AssignZero:
+	li Temp_296,0
+	j Label_9_end
+Label_9_end:
+	beq Temp_300,$zero,Label_5_if.exit
+	li Temp_302,0
+	li Temp_307,12
+	li Temp_315,0
+	li Temp_323,1000
+	add Temp_313,Temp_324,Temp_323
+	li Temp_327,0
+	li Temp_332,12
+	li Temp_340,0
+	li Temp_348,1000
+	add Temp_338,Temp_349,Temp_348
+	li Temp_352,0
+	li Temp_356,10
+	li Temp_361,0
+	li Temp_365,11
+	j Label_5_if.exit
+Label_5_if.exit:
 	li $v0,10
 	syscall

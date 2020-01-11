@@ -301,7 +301,7 @@ public class LLVM
 	public void li(TEMP t,int value)
 	{
 		int idx=t.getSerialNumber();
-		System.out.format("li value,  %%Temp_%d = %d\n",idx,value);
+		// System.out.format("li value,  %%Temp_%d = %d\n",idx,value);
 		fileWriter.format("  %%zero_%d = load i32, i32* @my_zero, align 4\n",x);
 		fileWriter.format("  %%Temp_%d = add nsw i32 %%zero_%d, %d\n",idx,x++,value);
 	}

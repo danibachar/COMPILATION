@@ -234,7 +234,7 @@ public class AST_DEC_CLASS extends AST_DEC
 		/************************************************/
 		/* [4] Enter the Class Type to the Symbol Table */
 		/************************************************/
-		// t.updateDataMembersCount();
+		t.updateDataMembersAndFunctionsCount();
 		SYMBOL_TABLE.getInstance().enter(name,t);
 		myType = t;
 

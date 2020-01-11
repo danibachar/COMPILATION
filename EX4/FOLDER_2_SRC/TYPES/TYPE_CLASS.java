@@ -37,7 +37,7 @@ public class TYPE_CLASS extends TYPE
 		// Applying member count
 	}
 
-	public void updateDataMembersCount() {
+	public void updateDataMembersAndFunctionsCount() {
 		if (father !=  null) {
 			this.membersCount = father.membersCount;
 		} else {
@@ -46,6 +46,7 @@ public class TYPE_CLASS extends TYPE
 
 		for (TYPE_CLASS_VAR_DEC_LIST it=this.data_members;it != null;it=it.tail) {
 			it.head.index = this.membersCount;
+			it.head.typeClass = this;
 			if (it.head.t instanceof TYPE_ARRAY ||
 					it.head.t instanceof TYPE_CLASS ||
 					it.head.t instanceof TYPE_STRING)

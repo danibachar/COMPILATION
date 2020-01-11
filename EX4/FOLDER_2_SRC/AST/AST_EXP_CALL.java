@@ -314,8 +314,11 @@ public class AST_EXP_CALL extends AST_EXP
 			temps = temps.tail;
 			params = params.tail;
 		}
-		System.out.format("Calling method with class %s and class %s\n", classType.name, ((TYPE_CLASS)varTemp.getType()).name);
-		String fullName = classType.queryDataMembersReqursivly(name).typeClass.name + "_" + name;
+		System.out.format("2 #### Calling method with class %s and class %s\n", classType.name, ((TYPE_CLASS)varTemp.getType()).name);
+		System.out.format("Searching data member - %s in line number = %d\n", var.name, this.lineNumber);
+		TYPE_CLASS_VAR_DEC tc = classType.queryDataMembersReqursivly(var.name);
+		System.out.format("tc = %s\n", tc);
+		String fullName = classType.queryDataMembersReqursivly(var.name).typeClass.name + "_" + var.name;
 		TYPE_LIST newParams = new TYPE_LIST(classType, functionType.params);
 		if (functionType.returnType == TYPE_VOID.getInstance()){
 			IR.getInstance()
