@@ -122,27 +122,25 @@ public class AST_EXP_VAR_FIELD extends AST_EXP_VAR
 			IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(obj1, obj));
 			obj = obj1;
 		}
-		IR.getInstance().Add_IRcommand(new IRcommand_Check_Null(obj, true));
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Check_Null(obj, true));
 
 		TYPE_CLASS_VAR_DEC varDec = semantedClass.queryDataMembersReqursivly(fieldName);
 		int varIndex = varDec.index;
 
 		TEMP newOffset = TEMP_FACTORY.getInstance().getFreshTEMP();
 		newOffset.setType(TYPE_INT.getInstance());
-		// System.out.format("IRcommandConstInt (AST_EXP_VAR_FIELD) %%Temp_%d = %d\n",newOffset.getSerialNumber(),varIndex);
 		IR.getInstance().Add_IRcommand(new IRcommandConstInt(newOffset,varIndex));
 
 		TEMP elementAddress = TEMP_FACTORY.getInstance().getFreshTEMP();
 		elementAddress.setType(semantedClass);
-		//Todo: check boundaries
-	//	TEMP elementInt = TEMP_FACTORY.getInstance().getFreshTEMP();
-		//elementInt.setType(TYPE_INT.getInstance());
-
-		IR.getInstance().Add_IRcommand(new IRcommand_Get_Element_Temp(elementAddress, obj, TYPE_INT.getInstance(), newOffset));
-			TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
-			pointerTemp.setType(varDec.t);
-			IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_Pointer(pointerTemp, elementAddress));
-			elementAddress = pointerTemp;
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Get_Element_Temp(elementAddress, obj, TYPE_INT.getInstance(), newOffset));
+		TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
+		pointerTemp.setType(varDec.t);
+		IR.getInstance()
+				.Add_IRcommand(new IRcommand_Bitcast_Pointer(pointerTemp, elementAddress));
+		elementAddress = pointerTemp;
 		elementAddress.isaddr = true;
 		elementAddress.checkInit = true;
 

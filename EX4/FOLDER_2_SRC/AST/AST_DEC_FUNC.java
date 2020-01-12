@@ -170,11 +170,11 @@ public class AST_DEC_FUNC extends AST_DEC
 				}
 				else if (it.head instanceof AST_STMT_IF)
 				{
-					((AST_STMT_IF)it.head).propegateRetVal(this.returnValType);
+					((AST_STMT_IF)it.head).update_return(this.returnValType);
 				}
 				else if (it.head instanceof AST_STMT_WHILE)
 				{
-					((AST_STMT_WHILE)it.head).propegateRetVal(this.returnValType);
+					((AST_STMT_WHILE)it.head).update_return(this.returnValType);
 				}
 			}
 
@@ -265,12 +265,10 @@ public class AST_DEC_FUNC extends AST_DEC
 
 		TYPE_LIST semantedArgsIter = fullArgs;
 		while(argList != null && argList.head != null){
-			// System.out.format("Allocating param %s %s \n",argList.head.name,  semantedArgsIter.head );
 			IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Param(argList.head.name, semantedArgsIter.head));
 			argList = argList.tail;
 			semantedArgsIter = semantedArgsIter.tail;
 		}
-		// System.out.format("Iring function %s with %d locals\n", name, localVarInfo.size());
 		for (int i=0;i<localVarInfo.size();i++) {
 			Pair<TYPE, Integer> info = localVarInfo.get(i);
 			IR.getInstance()
@@ -300,7 +298,6 @@ public class AST_DEC_FUNC extends AST_DEC
 
 		if (!foundRet) {
 			if (TYPE_VOID.getInstance() != returnValType) {
-				// IR.getInstance().Add_IRcommand(new IRcommand_Call_Func_Void("ExecutionFalls", TYPE_VOID.getInstance(), null,null));
 				IR.getInstance().Add_IRcommand(new IRcommand_DummyReturn(returnValType));
 			} else {
 				IR.getInstance().Add_IRcommand(new IRcommand_Return(null));

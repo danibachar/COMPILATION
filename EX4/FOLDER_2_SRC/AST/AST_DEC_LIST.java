@@ -81,10 +81,6 @@ public class AST_DEC_LIST extends AST_Node
 		// System.out.format("IRme - DEC_LIST, Scope=%d\n", myScope);
 		if (head != null) head.IRme();
 		if (tail != null) tail.IRme();
-		if (tail == null)
-		{
-			// System.out.println("Done IR'ing!");
-		}
 		return null;
 	}
 

@@ -293,9 +293,7 @@ public class AST_EXP_CALL extends AST_EXP
 			varTemp = arr1;
 		}
 		IR.getInstance().Add_IRcommand(new IRcommand_Check_Null(varTemp, true));
-		// System.out.format("IRing method call with var %d\n", varTemp.getSerialNumber());
 		TEMP_LIST t = new TEMP_LIST(varTemp, null);
-		// AST_EXP_LIST params = args;
 		if (params != null) {
 			 t.tail = (TEMP_LIST)params.IRme();
 		}
@@ -304,7 +302,6 @@ public class AST_EXP_CALL extends AST_EXP
 		while (temps != null && params != null)
 		{
 			if (temps.head.isaddr){
-				//ir return address and not value
 				TEMP newtemp = TEMP_FACTORY.getInstance().getFreshTEMP();
 				newtemp.setType(temps.head.getType());
 				newtemp.checkInit = temps.head.checkInit;
@@ -314,8 +311,6 @@ public class AST_EXP_CALL extends AST_EXP
 			temps = temps.tail;
 			params = params.tail;
 		}
-		// System.out.format("2 #### Calling method with class %s and class %s\n", classType.name, ((TYPE_CLASS)varTemp.getType()).name);
-		// System.out.format("Searching data member - %s in line number = %d\n", var.name, this.lineNumber);
 		String fullName = classType.queryDataMembersReqursivly(var.name).typeClass.name + "_" + var.name;
 		TYPE_LIST newParams = new TYPE_LIST(classType, functionType.params);
 		if (functionType.returnType == TYPE_VOID.getInstance()){
@@ -326,7 +321,8 @@ public class AST_EXP_CALL extends AST_EXP
 
 		TEMP dst = TEMP_FACTORY.getInstance().getFreshTEMP();
 		dst.setType(functionType.returnType);
-		IR.getInstance().Add_IRcommand(new IRcommand_Call_Func(dst, fullName, functionType.returnType, t, newParams));
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Call_Func(dst, fullName, functionType.returnType, t, newParams));
 		return dst;
 	}
 
@@ -352,7 +348,6 @@ public class AST_EXP_CALL extends AST_EXP
 				TEMP newtemp = TEMP_FACTORY.getInstance().getFreshTEMP();
 				newtemp.setType(types.head);
 				newtemp.checkInit = temps.head.checkInit;
-				// System.out.format("Loading in call func %s %b\n", newtemp.getSerialNumber(), types.head == temps.head.getType());
 				IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(newtemp, temps.head));
 				temps.head = newtemp;
 			}
@@ -372,7 +367,8 @@ public class AST_EXP_CALL extends AST_EXP
 		TEMP dst = TEMP_FACTORY.getInstance().getFreshTEMP();
 		dst.setType(returnType);
 		dst.isaddr = false;
-		IR.getInstance().Add_IRcommand(new IRcommand_Call_Func(dst, name, returnType, t,definedType.params));
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Call_Func(dst, name, returnType, t,definedType.params));
 		return dst;
 	}
 

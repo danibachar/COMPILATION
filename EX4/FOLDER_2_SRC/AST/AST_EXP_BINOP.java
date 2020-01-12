@@ -207,12 +207,9 @@ public class AST_EXP_BINOP extends AST_EXP
 
 		// Plus Operation Testing
 		if (OP == 3) {
-			// Allow concatenation of strings
 			if ((t1 == TYPE_STRING.getInstance()) && (t2 == TYPE_STRING.getInstance())) {
 				return TYPE_STRING.getInstance();
 			}
-
-			// Allow
 		}
 
 
@@ -222,7 +219,6 @@ public class AST_EXP_BINOP extends AST_EXP
 
 	public TEMP IRme() throws Exception
 	{
-		// TODO: add support for operations 1, 5, 6 (need to create matching IRCommands)
 		TEMP t1 = null;
 		TEMP t2 = null;
 		TEMP dst = TEMP_FACTORY.getInstance().getFreshTEMP();
@@ -231,10 +227,8 @@ public class AST_EXP_BINOP extends AST_EXP
 
 		boolean shouldCastToInt = false;
 		boolean shouldCheckOverflow = false;
-		// WE need integers
 			if (rightTemp!=null && rightTemp.isaddr)
 			{
-				//ir return address and not value
 				t2 = TEMP_FACTORY.getInstance().getFreshTEMP();
 
 				t2.setType(rightTemp.getType());
@@ -242,7 +236,6 @@ public class AST_EXP_BINOP extends AST_EXP
 				IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(t2, rightTemp));
 			}
 			if (leftTemp != null && leftTemp.isaddr){
-				//ir return address and not value
 				t1 = TEMP_FACTORY.getInstance().getFreshTEMP();
 				;
 				t1.setType(leftTemp.getType());
@@ -261,7 +254,6 @@ public class AST_EXP_BINOP extends AST_EXP
 
 		if (OP == 3)
 		{
-			// System.out.format("Adding %s %s\n", t1.getType(), t2.getType());
 			if (t1.getType() instanceof TYPE_STRING)
 			{
 				dst.setType(TYPE_STRING.getInstance());
@@ -312,7 +304,6 @@ public class AST_EXP_BINOP extends AST_EXP
 				TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
 			pointerTemp.setType(t2.getType());
 			pointerTemp.checkInit = t2.checkInit;
-			// System.out.format("Creating pointer null Temp of index %d and type %s\n", pointerTemp.getSerialNumber(),pointerTemp.getType());
 			IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_To_Null(pointerTemp, t2));
 			t2 = pointerTemp;
 			oneIsNull = true;
@@ -322,7 +313,6 @@ public class AST_EXP_BINOP extends AST_EXP
 				TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
 			pointerTemp.setType(t1.getType());
 			pointerTemp.checkInit = t1.checkInit;
-			// System.out.format("Creating pointer  null Temp of index %d and type %s\n", pointerTemp.getSerialNumber(),pointerTemp.getType());
 			IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_To_Null(pointerTemp, t1));
 			t1 = pointerTemp;
 			oneIsNull = true;

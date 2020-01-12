@@ -90,10 +90,6 @@ public class AST_EXP_LIST extends AST_Node
 	}
 	public TEMP IRme() throws Exception
 	{
-		// We are handling this outside of this node!
-		// The onle other node that is actually using this AST is AST_EXP_CALL
-		// Which needs to hold the list of params
-		// System.out.format("IRme - AST_EXP_LIST\nnScope=%d\n",myScope);
 		TEMP_LIST result = new TEMP_LIST();
 
 		if (head != null) {

@@ -70,7 +70,6 @@ public class AST_EXP_INT extends AST_EXP
 		// System.out.format("IRme - AST_EXP_INT( %d ), Scope=%d\n",value,myScope);
 		TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
 		t.setType(TYPE_INT.getInstance());
-		// System.out.format("IRcommandConstInt (AST_EXP_INT) %%Temp_%d = %d\n",t.getSerialNumber(),value);
 		IR.getInstance().Add_IRcommand(new IRcommandConstInt(t,value));
 		return t;
 	}
