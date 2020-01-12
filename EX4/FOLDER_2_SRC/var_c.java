@@ -1,4 +1,4 @@
-package LocalVarCounter;
+package var_c;
 
 import AST.*;
 import LLVM.*;
@@ -11,9 +11,22 @@ import TYPES.TYPE;
 
 
 
-public class LocalVarCounter
+public class var_c
 {
 
+
+		private static var_c instance = null;
+		protected var_c() {}
+
+		public static var_c getInstance()
+		{
+			if (instance == null)
+			{
+				instance = new var_c();
+
+			}
+			return instance;
+		}
 	private int localCount=0;
 	public Hashtable<String, Pair<TYPE,Integer>> localIndexes = new Hashtable<String, Pair<TYPE,Integer>>();
 
@@ -33,7 +46,7 @@ public class LocalVarCounter
 
 	public int declareLocal(String varName, TYPE type)
 	{
-		String key = varName + "_" + LLVM.getInstance().typeToString(type);
+		String key = varName + "_" + AST_HELPERS.type_to_str(type);
 		if (localIndexes.containsKey(key)){
 			return localIndexes.get(key).getValue();
 		}
@@ -44,13 +57,10 @@ public class LocalVarCounter
 
 	public int getIndex(String varName, TYPE type)
 	{
-		String key = varName + "_" + LLVM.getInstance().typeToString(type);;
-		// System.out.format("key = %s\n", key);
+		String key = varName + "_" + AST_HELPERS.type_to_str(type);;
 		if (localIndexes.containsKey(key)){
-			// System.out.format("key = %s, found = %s\n", key, localIndexes.get(key).getValue());
 			return localIndexes.get(key).getValue();
 		}
-		// System.out.format("key = %s, NOT found \n", key);
 		return -1;
 	}
 
@@ -62,34 +72,6 @@ public class LocalVarCounter
 			localMap.add(localIndexes.get(key));
 		}
 		return localMap;
-	}
-
-
-
-		/**************************************/
-	/* USUAL SINGLETON IMPLEMENTATION ... */
-	/**************************************/
-	private static LocalVarCounter instance = null;
-
-	/*****************************/
-	/* PREVENT INSTANTIATION ... */
-	/*****************************/
-	protected LocalVarCounter() {}
-
-	/******************************/
-	/* GET SINGLETON INSTANCE ... */
-	/******************************/
-	public static LocalVarCounter getInstance()
-	{
-		if (instance == null)
-		{
-			/*******************************/
-			/* [0] The instance itself ... */
-			/*******************************/
-			instance = new LocalVarCounter();
-
-		}
-		return instance;
 	}
 
 }

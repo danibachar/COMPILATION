@@ -98,8 +98,11 @@ public class LLVM
 
 	}
 
-	public void end_func()
+	public void end_func(String funcName,TYPE returnType, TYPE_LIST args)
 	{
+		if (funcName.equals("main")) {
+			fileWriter.format("call void @exit(i32 0)\n");
+		}
 		fileWriter.format("}\n");
 	}
 

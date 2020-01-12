@@ -33,7 +33,7 @@ public class IRcommandEndFuncDef extends IRcommand
 	/*******************/
 	public void LLVM_bitcode_me()
 	{
-		LLVM.getInstance().end_func();
+		LLVM.getInstance().end_func(funcName, returnType, args);
 	}
 
 	/***************/

@@ -6,7 +6,7 @@ import IR.*;
 import MIPS.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
-import LocalVarCounter.*;
+import var_c.*;
 import LLVM.*;
 import java.util.ArrayList;
 import javafx.util.Pair;

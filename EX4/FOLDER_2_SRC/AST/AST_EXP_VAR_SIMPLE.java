@@ -7,7 +7,7 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
-import LocalVarCounter.*;
+import var_c.*;
 import LLVM.*;
 import javafx.util.Pair;
 import java.util.*;
@@ -69,7 +69,7 @@ public class AST_EXP_VAR_SIMPLE extends AST_EXP_VAR
 			// TODO handling this case??/
 		}
 
-		varIndex = LocalVarCounter.getInstance().getIndex(name, myType);
+		varIndex = var_c.getInstance().getIndex(name, myType);
 		return myType;
 	}
 

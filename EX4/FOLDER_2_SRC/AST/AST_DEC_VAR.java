@@ -6,7 +6,7 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
-import LocalVarCounter.*;
+import var_c.*;
 import LLVM.*;
 import java.util.ArrayList;
 import javafx.util.Pair;
@@ -146,7 +146,7 @@ public class AST_DEC_VAR extends AST_DEC
 		// System.out.format("######### isGlobal = %s, isInClass = %s, isInFunc = %s \n", this.isGlobal, isInClass, isInFunc);
 		if (!isGlobal && !isInClass)
     {
-        varIndex = LocalVarCounter.getInstance().declareLocal(name, myType);
+        varIndex = var_c.getInstance().declareLocal(name, myType);
     }
 
 

@@ -201,34 +201,29 @@ public class AST_HELPERS
     }
     return def_ret_val;
   }
-  static public String type_to_string(TYPE t) {
-    if (t == null) {
-      return "i1";
-    }
-
-    if (t.isClassVar()) {
-      TYPE_CLASS_VAR_DEC tc = (TYPE_CLASS_VAR_DEC)t;
-      t = tc.t;
-    }
-
-    if (t == null) {
-      return "i1";
-    }
-    if (t == TYPE_VOID.getInstance()) {
-      return "void";
-    }
-    if (t == TYPE_NIL.getInstance()) {
-      return "i32*";
-    }
-    if (t == TYPE_INT.getInstance()) {
-      return "i32";
-    }
-    if (t.isArray()) {
-
-      String typeString = AST_HELPERS.type_to_string(((TYPE_ARRAY)t).type) + "*";
+  static public String type_to_str(TYPE type){
+		if (type == null){
+			return "i1";
+		}
+		if (type instanceof TYPE_NIL){
+			return "i32*";
+		}
+		if (type.isClass())
+		{
+			return "i8*";
+		}
+		if(type.isArray()){
+			String typeString = type_to_str(((TYPE_ARRAY)type).type) + "*";
 			return typeString;
-    }
-
-    return "i8*";
-  }
+		}
+		if(type.isInt())
+		{
+			return "i32";
+		}
+		if (type.isVoid())
+		{
+			return "void";
+		}
+		return "i8*";
+	}
 }

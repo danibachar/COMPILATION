@@ -6,7 +6,7 @@ import TEMP.*;
 import IR.*;
 import MIPS.*;
 import AST_EXCEPTION.*;
-import LocalVarCounter.*;
+import var_c.*;
 
 import LLVM.*;
 import java.util.*;
@@ -128,7 +128,7 @@ public class AST_DEC_FUNC extends AST_DEC
 		SYMBOL_TABLE.getInstance().beginScope();
 		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// For IRme
-		LocalVarCounter.getInstance().initiateCount();
+		var_c.getInstance().initiateCount();
 		/***************************/
 		/* [2] Semant Input Params */
 		/***************************/
@@ -187,7 +187,7 @@ public class AST_DEC_FUNC extends AST_DEC
 
 		// For IRme
 		localVarInfo = new ArrayList<>();
-		localVarInfo = LocalVarCounter.getInstance().getLocalMap();
+		localVarInfo = var_c.getInstance().getLocalMap();
 		/***************************************************/
 		/* [5] Enter the Function Type to the Symbol Table */
 		/***************************************************/
