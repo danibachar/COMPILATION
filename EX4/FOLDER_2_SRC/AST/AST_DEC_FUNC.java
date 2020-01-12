@@ -236,30 +236,33 @@ public class AST_DEC_FUNC extends AST_DEC
 		}
 
 		TYPE_LIST semantedArgs = null;
-		String fullName = null;
-		if (typeFunction.origClass != null){
-			fullName = typeFunction.origClass.name + "_" + this.name;
-		} else {
-			fullName = name;
-		}
+		String fullName = name;
+		// todo - handke class fun name
+		// if (typeFunction.origClass != null){
+		// 	fullName = typeFunction.origClass.name + "_" + this.name;
+		// } else {
+		// 	fullName = name;
+		// }
 
 		TYPE_LIST fullArgs = null;
-		if (params != null) semantedArgs = params.GetTypes();
+		if (params != null) fullArgs = params.GetTypes();
 
-		if (typeFunction.origClass != null){
-			fullArgs = new TYPE_LIST(typeFunction.origClass, semantedArgs);
-		}
-		else {
-			fullArgs = semantedArgs;
-		}
+		//add class to args
+		// if (typeFunction.origClass != null){
+		// 	fullArgs = new TYPE_LIST(typeFunction.origClass, semantedArgs);
+		// }
+		// else {
+		// 	fullArgs = semantedArgs;
+		// }
 		IR.getInstance().
 			Add_IRcommand(new IRcommand_Define_Func(fullName, this.returnValType, fullArgs));
 
 		AST_TYPE_NAME_LIST argList = null;
-		if (typeFunction.origClass != null){
-			AST_TYPE_NAME thisType = new AST_TYPE_NAME(typeFunction.origClass.name, "this",this.lineNumber);
-			this.params = new AST_TYPE_NAME_LIST(thisType, this.params, this.lineNumber);
-		}
+		// add the type of the class
+		// if (typeFunction.origClass != null){
+		// 	AST_TYPE_NAME thisType = new AST_TYPE_NAME(typeFunction.origClass.name, "this",this.lineNumber);
+		// 	this.params = new AST_TYPE_NAME_LIST(thisType, this.params, this.lineNumber);
+		// }
 
 		argList = this.params;
 

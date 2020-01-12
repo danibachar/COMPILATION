@@ -276,9 +276,14 @@ public class AST_EXP_CALL extends AST_EXP
 		// System.out.format("IRme - Scope=%d\n",myScope);
 		if (this.var == null) { // global or global in scope
 			return IRmeScopeOrGlobalFunc();
-		} else { // funciton call on field/class
-			return IRmeVar();
 		}
+		return null;
+		// return IRmeScopeOrGlobalFunc();
+		// else {
+			// todo funciton call on field/class
+			// return IRmeVar();
+		// }
+
 	}
 
 	public TEMP IRmeVar() throws Exception {
@@ -311,8 +316,13 @@ public class AST_EXP_CALL extends AST_EXP
 			temps = temps.tail;
 			params = params.tail;
 		}
-		String fullName = classType.queryDataMembersReqursivly(var.name).typeClass.name + "_" + var.name;
-		TYPE_LIST newParams = new TYPE_LIST(classType, functionType.params);
+		// add class name to fullname
+		//classType.queryDataMembersReqursivly(var.name).typeClass.name + "_" +
+		String fullName = var.name;
+		// todo - add classtayp
+		//new TYPE_LIST(classType, functionType.params);
+		TYPE_LIST newParams = functionType.params;
+
 		if (functionType.returnType == TYPE_VOID.getInstance()){
 			IR.getInstance()
 				.Add_IRcommand(new IRcommand_Call_Func_Void(fullName, functionType.returnType, t, newParams));
@@ -330,10 +340,11 @@ public class AST_EXP_CALL extends AST_EXP
 		TYPE_FUNCTION definedType = (TYPE_FUNCTION)SYMBOL_TABLE.getInstance().find(funcName);
 
 		String name = this.funcName;
-		if (definedType.origClass != null)
-		{
-			name = definedType.origClass.name+"_" +  this.funcName;
-		}
+		//todo class func name
+		// if (definedType.origClass != null)
+		// {
+		// 	name = definedType.origClass.name+"_" +  this.funcName;
+		// }
 		TEMP_LIST t=null;
 		if (params != null) { t = (TEMP_LIST)params.IRme(); }
 		if (params != null)
@@ -351,10 +362,10 @@ public class AST_EXP_CALL extends AST_EXP
 				IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(newtemp, temps.head));
 				temps.head = newtemp;
 			}
-			temps = temps.tail;
-			params = params.tail;
-			types = types.tail;
-		}
+				temps = temps.tail;
+				params = params.tail;
+				types = types.tail;
+			}
 		}
 
 		if (returnType == TYPE_VOID.getInstance()){
