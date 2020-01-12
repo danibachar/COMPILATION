@@ -277,63 +277,9 @@ public class AST_EXP_CALL extends AST_EXP
 		if (this.var == null) { // global or global in scope
 			return IRmeScopeOrGlobalFunc();
 		}
+		// todo funciton call on field/class
 		return null;
-		// return IRmeScopeOrGlobalFunc();
-		// else {
-			// todo funciton call on field/class
-			// return IRmeVar();
-		// }
 
-	}
-
-	public TEMP IRmeVar() throws Exception {
-		TYPE_FUNCTION functionType = (TYPE_FUNCTION)SYMBOL_TABLE.getInstance().find(funcName);
-		TEMP varTemp = this.var.IRme();
-		if (varTemp.isaddr)
-		{
-			TEMP arr1 = TEMP_FACTORY.getInstance().getFreshTEMP();
-			arr1.setType(varTemp.getType());
-			arr1.checkInit = varTemp.checkInit;
-			IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(arr1, varTemp));
-			varTemp = arr1;
-		}
-		IR.getInstance().Add_IRcommand(new IRcommand_Check_Null(varTemp, true));
-		TEMP_LIST t = new TEMP_LIST(varTemp, null);
-		if (params != null) {
-			 t.tail = (TEMP_LIST)params.IRme();
-		}
-
-		TEMP_LIST temps=t;
-		while (temps != null && params != null)
-		{
-			if (temps.head.isaddr){
-				TEMP newtemp = TEMP_FACTORY.getInstance().getFreshTEMP();
-				newtemp.setType(temps.head.getType());
-				newtemp.checkInit = temps.head.checkInit;
-				IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(newtemp, temps.head));
-				temps.head = newtemp;
-			}
-			temps = temps.tail;
-			params = params.tail;
-		}
-		// add class name to fullname
-		//classType.queryDataMembersReqursivly(var.name).typeClass.name + "_" +
-		String fullName = var.name;
-		// todo - add classtayp
-		//new TYPE_LIST(classType, functionType.params);
-		TYPE_LIST newParams = functionType.params;
-
-		if (functionType.returnType == TYPE_VOID.getInstance()){
-			IR.getInstance()
-				.Add_IRcommand(new IRcommand_Call_Func_Void(fullName, functionType.returnType, t, newParams));
-			return null;
-		}
-
-		TEMP dst = TEMP_FACTORY.getInstance().getFreshTEMP();
-		dst.setType(functionType.returnType);
-		IR.getInstance()
-			.Add_IRcommand(new IRcommand_Call_Func(dst, fullName, functionType.returnType, t, newParams));
-		return dst;
 	}
 
 	public TEMP IRmeScopeOrGlobalFunc() throws Exception {
@@ -341,10 +287,6 @@ public class AST_EXP_CALL extends AST_EXP
 
 		String name = this.funcName;
 		//todo class func name
-		// if (definedType.origClass != null)
-		// {
-		// 	name = definedType.origClass.name+"_" +  this.funcName;
-		// }
 		TEMP_LIST t=null;
 		if (params != null) { t = (TEMP_LIST)params.IRme(); }
 		if (params != null)
