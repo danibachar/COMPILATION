@@ -291,6 +291,11 @@ public class AST_DEC_FUNC extends AST_DEC
 			}
 
 		}
+		if (name.equals("main"))
+		{
+			IR.getInstance().
+				Add_IRcommand(new IRcommand_Exit_Zero());
+		}
 
 		IR.getInstance().
 			Add_IRcommand(new IRcommandEndFuncDef(fullName, this.returnValType, fullArgs));

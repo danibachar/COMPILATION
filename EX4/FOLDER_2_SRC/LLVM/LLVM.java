@@ -100,11 +100,16 @@ public class LLVM
 
 	public void end_func(String funcName,TYPE returnType, TYPE_LIST args)
 	{
-		if (funcName.equals("main")) {
-			fileWriter.format("call void @exit(i32 0)\n");
-		}
+		// if (funcName.equals("main")) {
+		// 	fileWriter.format("call void @exit(i32 0)\n");
+		// }
 		fileWriter.format("}\n");
 	}
+	public void exit_with_number(int num)
+	{
+		fileWriter.format("call void @exit(i32 0)\n");
+	}
+
 
 	public void returnFunc(TEMP retVal)
 	{
