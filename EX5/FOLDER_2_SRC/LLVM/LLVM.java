@@ -8,7 +8,7 @@ package LLVM;
 /*******************/
 import java.io.*;
 import java.util.*;
-import javafx.util.Pair;
+import Pair.*;
 import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.HashMap;
@@ -822,6 +822,7 @@ public class LLVM
 			instance.fileWriter.format("  ret void\n");
 			instance.fileWriter.format("}\n");
 			instance.fileWriter.format("\n");
+
 			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
 			instance.fileWriter.format(";                            ;\n");
 			instance.fileWriter.format("; STDANDRD LIBRARY :: printf ;\n");
@@ -830,12 +831,21 @@ public class LLVM
 			//instance.fileWriter.format("@.str = private unnamed_addr constant [4 x i8] c\"%d \00\", align 1\n");
 			instance.fileWriter.format("@.str = private unnamed_addr constant [4 x i8] c\"%%d \\00\", align 1\n");
 			instance.fileWriter.format("declare dso_local i32 @printf(i8*, ...)\n\n");
+			instance.fileWriter.format("\n");
+
+			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
+			instance.fileWriter.format(";                              ;\n");
+			instance.fileWriter.format("; LIBRARY FUNCTION :: PrintInt ;\n");
+			instance.fileWriter.format("; LIBRARY FUNCTION :: PrintPtr ;\n");
+			instance.fileWriter.format(";                              ;\n");
+			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
 			instance.fileWriter.format("define void @PrintPtr(i32* %%p)\n");
 			instance.fileWriter.format("{\n");
 			instance.fileWriter.format("  %%Temp1_66  = ptrtoint i32* %%p to i32\n");
 			instance.fileWriter.format("  call void @PrintInt(i32 %%Temp1_66 )\n");
 			instance.fileWriter.format("  ret void\n}\n\n");
 			instance.fileWriter.format("@.str1 = private unnamed_addr constant [4 x i8] c\"%%s\\0A\\00\", align 1\n");
+			instance.fileWriter.format("\n");
 
 			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;n");
 			instance.fileWriter.format(";                                 ;\n");

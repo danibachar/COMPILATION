@@ -5,7 +5,7 @@ package MIPS;
 
 import java.io.*;
 import java.util.*;
-import javafx.util.Pair;
+import Pair.*;
 import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.HashMap;

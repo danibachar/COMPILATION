@@ -6,11 +6,11 @@ import TEMP.*;
 import IR.*;
 import MIPS.*;
 import AST_EXCEPTION.*;
-import LocalVarCounter.*;
+import var_c.*;
 
 import LLVM.*;
 import java.util.*;
-import javafx.util.Pair;
+import Pair.*;
 import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.HashMap;
@@ -128,7 +128,7 @@ public class AST_DEC_FUNC extends AST_DEC
 		SYMBOL_TABLE.getInstance().beginScope();
 		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// For IRme
-		LocalVarCounter.getInstance().initiateCount();
+		var_c.getInstance().initiateCount();
 		/***************************/
 		/* [2] Semant Input Params */
 		/***************************/
@@ -187,7 +187,7 @@ public class AST_DEC_FUNC extends AST_DEC
 
 		// For IRme
 		localVarInfo = new ArrayList<>();
-		localVarInfo = LocalVarCounter.getInstance().getLocalMap();
+		localVarInfo = var_c.getInstance().getLocalMap();
 		/***************************************************/
 		/* [5] Enter the Function Type to the Symbol Table */
 		/***************************************************/
@@ -299,6 +299,10 @@ public class AST_DEC_FUNC extends AST_DEC
 		if (body != null) body.IRme();
 
 		if (!foundRet) {
+			if (name.equals("main")) {
+				IR.getInstance().Add_IRcommand(new IRcommand_Exit_Zero());
+			}
+			
 			if (TYPE_VOID.getInstance() != returnValType) {
 				// IR.getInstance().Add_IRcommand(new IRcommand_Call_Func_Void("ExecutionFalls", TYPE_VOID.getInstance(), null,null));
 				IR.getInstance().Add_IRcommand(new IRcommand_DummyReturn(returnValType));

@@ -9,7 +9,7 @@ import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
 
 import java.util.*;
-import javafx.util.Pair;
+import Pair.*;
 
 public class AST_HELPERS
 {

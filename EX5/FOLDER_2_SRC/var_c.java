@@ -1,17 +1,15 @@
-package LocalVarCounter;
+package var_c;
 
 import AST.*;
 import LLVM.*;
 import java.util.Hashtable;
 import java.util.ArrayList;
 import java.util.Set;
-import javafx.util.Pair;
+import Pair.*;
 
 import TYPES.TYPE;
 
-
-
-public class LocalVarCounter
+public class var_c
 {
 
 	private int localCount=0;
@@ -69,24 +67,24 @@ public class LocalVarCounter
 		/**************************************/
 	/* USUAL SINGLETON IMPLEMENTATION ... */
 	/**************************************/
-	private static LocalVarCounter instance = null;
+	private static var_c instance = null;
 
 	/*****************************/
 	/* PREVENT INSTANTIATION ... */
 	/*****************************/
-	protected LocalVarCounter() {}
+	protected var_c() {}
 
 	/******************************/
 	/* GET SINGLETON INSTANCE ... */
 	/******************************/
-	public static LocalVarCounter getInstance()
+	public static var_c getInstance()
 	{
 		if (instance == null)
 		{
 			/*******************************/
 			/* [0] The instance itself ... */
 			/*******************************/
-			instance = new LocalVarCounter();
+			instance = new var_c();
 
 		}
 		return instance;
