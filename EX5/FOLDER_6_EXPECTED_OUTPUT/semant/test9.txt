@@ -1,0 +1,8 @@
+class Father
+{
+    int foo;
+}
+class Son extends Father
+{
+    string foo;
+}

@@ -1,0 +1,8 @@
+
+void main()
+{
+  int i1 := 5;
+  int i2 := 10;
+
+  PrintInt(i1 - i2);
+}

@@ -1,0 +1,4 @@
+int Check(string s)
+{
+    return s = "LosPollosHermanos";
+}

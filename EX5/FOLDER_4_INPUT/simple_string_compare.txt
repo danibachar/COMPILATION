@@ -1,0 +1,11 @@
+string glob := "daniel1";
+
+int comp(string cmp)
+{
+    string g := "daniel1";
+    return g = cmp;
+}
+
+void main() {
+  PrintInt(comp(glob));
+}

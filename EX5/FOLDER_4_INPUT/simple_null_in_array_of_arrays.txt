@@ -1,0 +1,10 @@
+array IntArray = int[]
+array Mat      = IntArray[]
+
+void main()
+{
+	IntArray row0 := new int[3];
+	Mat A := new IntArray[3];
+  A[0] := row0;
+  PrintInt(A[0][0]);
+}

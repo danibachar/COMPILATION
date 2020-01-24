@@ -1,0 +1,19 @@
+class Song
+{
+	string title;
+	string artist;
+	string album;
+}
+
+void main()
+{
+
+	PrintInt(1);
+	Song mySong;
+
+	PrintInt(2);
+	mySong.title := "Womanizer";
+
+	// This line shouldnt be executed
+	PrintInt(3);
+}

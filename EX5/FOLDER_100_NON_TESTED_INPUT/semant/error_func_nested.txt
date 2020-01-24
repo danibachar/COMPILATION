@@ -1,0 +1,16 @@
+class Vertex
+{
+  int weight;
+}
+
+
+
+class Edges
+{
+  Vertex v1;
+  Vertex v2;
+  void get()  {
+    void grrr() { int i; }
+    return;
+  }
+}

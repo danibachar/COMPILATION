@@ -1,0 +1,4 @@
+void main()
+{
+	PrintInt(77);
+}

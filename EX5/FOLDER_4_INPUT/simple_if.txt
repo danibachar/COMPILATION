@@ -1,0 +1,12 @@
+int i := 10;
+
+void BubbleSort(int size)
+{
+    i := 0;
+    int j := 0;
+    PrintInt(i+j);
+}
+
+void main() {
+  BubbleSort(1);
+}

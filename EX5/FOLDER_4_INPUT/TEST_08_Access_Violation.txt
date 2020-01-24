@@ -1,0 +1,47 @@
+array IntArray = int[]
+
+class Person
+{
+	int ID;
+	int age := 18;
+
+	IntArray lastYearSalaries;
+}
+
+int getAge(Person p)  { return p.age;                   }
+int birthday(Person p){ p.age := p.age+1; return p.age; }
+
+
+class Student extends Person
+{
+	IntArray grades;
+}
+
+int getAverage(Student s)
+{
+	int i := 0;
+	int sum := 0;
+	while (i<10)
+	{
+		sum := sum+s.grades[i];
+		i := i+1;
+	}
+	return sum/10;
+}
+
+array University = Student[]
+
+void main()
+{
+	Student moish := new Student;
+	moish.grades := new int[10];
+	moish.lastYearSalaries := new int[12];
+	int COMPILATION := 6;
+
+	moish.grades[COMPILATION] := 99;
+
+	University TAU := new Student[37];
+
+	TAU[3] := moish;
+	TAU[3].lastYearSalaries[TAU[3].grades[COMPILATION]] := 999;
+}

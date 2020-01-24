@@ -1,0 +1,11 @@
+.data
+string_access_violation: .asciiz "Access Violation"
+string_illegal_div_by_0: .asciiz "Illegal Division By Zero"
+string_invalid_ptr_dref: .asciiz "Invalid Pointer Dereference"
+.text
+main:
+	li $v0,1 # service 1 is print int
+	li $a0, 25 # load imediate value
+	syscall
+	li $v0, 10 # service 10 is exit syscall
+	syscall
