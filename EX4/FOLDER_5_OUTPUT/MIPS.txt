@@ -4,6 +4,6 @@ string_illegal_div_by_0: .asciiz "Illegal Division By Zero"
 string_invalid_ptr_dref: .asciiz "Invalid Pointer Dereference"
 .data
 	global_0: .word 721
-	li Temp_1,0
+	li Temp_0,10
 	li $v0,10
 	syscall

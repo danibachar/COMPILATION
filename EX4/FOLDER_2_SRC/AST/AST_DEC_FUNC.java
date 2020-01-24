@@ -7,10 +7,9 @@ import IR.*;
 import MIPS.*;
 import AST_EXCEPTION.*;
 import var_c.*;
-
+import Pair.*;
 import LLVM.*;
 import java.util.*;
-import javafx.util.Pair;
 import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.HashMap;
@@ -284,17 +283,16 @@ public class AST_DEC_FUNC extends AST_DEC
 		if (body != null) body.IRme();
 
 		if (!foundRet) {
+			if (name.equals("main")) {
+				IR.getInstance().Add_IRcommand(new IRcommand_Exit_Zero());
+			}
+
 			if (TYPE_VOID.getInstance() != returnValType) {
 				IR.getInstance().Add_IRcommand(new IRcommand_DummyReturn(returnValType));
 			} else {
 				IR.getInstance().Add_IRcommand(new IRcommand_Return(null));
 			}
 
-		}
-		if (name.equals("main"))
-		{
-			IR.getInstance().
-				Add_IRcommand(new IRcommand_Exit_Zero());
 		}
 
 		IR.getInstance().

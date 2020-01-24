@@ -9,7 +9,6 @@ import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
 import var_c.*;
 import LLVM.*;
-import javafx.util.Pair;
 import java.util.*;
 
 public class AST_STMT_RETURN extends AST_STMT

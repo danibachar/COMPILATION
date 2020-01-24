@@ -7,9 +7,8 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
-
+import var_c.*;
 import java.util.*;
-import javafx.util.Pair;
 
 public class AST_HELPERS
 {

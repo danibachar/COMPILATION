@@ -1,15 +1,13 @@
 package var_c;
 
 import AST.*;
+import Pair.*;
 import LLVM.*;
 import java.util.Hashtable;
 import java.util.ArrayList;
 import java.util.Set;
-import javafx.util.Pair;
 
 import TYPES.TYPE;
-
-
 
 public class var_c
 {

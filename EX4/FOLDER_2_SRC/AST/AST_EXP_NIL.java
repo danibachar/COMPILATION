@@ -10,7 +10,6 @@ import AST_EXCEPTION.*;
 import var_c.*;
 import LLVM.*;
 import java.util.ArrayList;
-import javafx.util.Pair;
 import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.HashMap;
