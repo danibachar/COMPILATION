@@ -86,7 +86,6 @@ public class LLVM
 
 	public void define_func(String name, TYPE returnType, TYPE_LIST args)
 	{
-
 		fileWriter.format("define %s @%s(",typeToString(returnType), name);
 		while(args!= null){
 			fileWriter.format("%s",typeToString(args.head));

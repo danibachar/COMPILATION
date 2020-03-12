@@ -20,6 +20,10 @@ import TEMP.*;
 import AST.*;
 import TYPES.*;
 
+/* Some notes
+	Got help from - https://courses.cs.washington.edu/courses/cse378/09wi/lectures/lec05.pdf
+*/
+
 public class sir_MIPS_a_lot
 {
 	private int WORD_SIZE=4;
@@ -34,11 +38,12 @@ public class sir_MIPS_a_lot
 
 	private static final String INDENTATION = "\t";
 	private static final String NEWLINE = "\n";
-	// private static final int SIZE = IRContext.PRIMITIVE_DATA_SIZE;
+	private static final int SIZE = 4;
 	private static final int REGISTERS_COUNT = 8;
 	private static final int COLORING_OFFSET = 8;
-	// private static final int REGISTERS_BACKUP_SIZE = REGISTERS_COUNT * SIZE;
-	// private static final int SKIP_SIZE = 2 * SIZE;
+	private static final int REGISTERS_BACKUP_SIZE = REGISTERS_COUNT * SIZE;
+	private static final int SKIP_SIZE = 2 * SIZE;
+
 	// registers
 	private static final int $0 = 0;
 	private static final int $v0 = 2;
@@ -65,8 +70,6 @@ public class sir_MIPS_a_lot
 	private static final String FUNCTION_NAME_PREFIX = "FUNCTION_NAME_";
 	private static final String MAIN_LABEL = "main";
 
-	private StringBuilder dataSection = new StringBuilder();
-	private StringBuilder codeSection = new StringBuilder();
 	// private Map<Register, IRLabel> globals = new HashMap<>();
 	private Map<String, Integer> functionIds = new HashMap<>();
 	private int functionIdCounter = 0;
@@ -126,6 +129,54 @@ public class sir_MIPS_a_lot
 		fileWriter.print("\tsyscall\n");
 		fileWriter.close();
 	}
+
+	// private void generateFunctionHeader(IRLabel label, int parameters, int locals, int functionId)
+	public void define_func(String name, TYPE returnType, TYPE_LIST args)
+	{
+
+		// Temp hack to compile first simple example
+		int locals = 1;
+		int parameters = 0;
+		int functionId = 100;
+
+		label(name);
+		comment("[START] define_func");
+		/* Backup registers
+			callee-saved registers - $s0-$s7 $ra
+			caller-saved registers - $t0-$t9 $a0-$a3 $v0-$v
+			— $ra is tricky; it is saved by a callee who is also a caller.
+		*/
+    for (int i = 0; i < REGISTERS_COUNT; i++) {
+        push(COLORING_OFFSET + i);
+    }
+    push($fp);
+    push($ra);
+
+		// update FP
+		move($fp, $sp);
+
+		// set default value to all locals on stack and return value
+		if (locals - localsAsReal.size() > 0) {
+				comment("Allocating " + (locals - localsAsReal.size()) + " slots for local variables that could not be stored as registers");
+				for (int i = 0; i < locals - localsAsReal.size(); i++) {
+						pushConst(0);
+				}
+		}
+
+		comment("Allocating a slot for return value");
+    pushConst(0);
+
+		// set default value for all locals on real registers
+    comment("Setting initial value to local variables stored as registers");
+    comment(localsAsReal.entrySet().stream().map(e -> e.getKey() + " => " + name(e.getValue())).collect(Collectors.joining(", ")));
+    localsAsReal.forEach((local, realReg) -> constant(realReg, 0));
+
+    // push function id and header size
+    comment("Saving function id and header size");
+    pushConst(functionId);
+    pushConst((parameters + 2 + locals + 3 - localsAsReal.size()) * SIZE + REGISTERS_BACKUP_SIZE);
+    comment("[END] define_func");
+	}
 	public void print_int(TEMP t)
 	{
 		int idx=t.getSerialNumber();
@@ -135,17 +186,127 @@ public class sir_MIPS_a_lot
 		fileWriter.format("\tsyscall\n");
 		fileWriter.format("\tli $a0,32\n");
 		fileWriter.format("\tli $v0,11\n");
+		syscall();
+	}
+
+	// Grrrrr
+
+	private void push(int register) {
+			selfAddConst($sp, -SIZE);
+			storeToMemory($sp, register);
+	}
+
+	private void pushConst(int constant) {
+			selfAddConst($sp, -SIZE);
+			constant($t8, constant);
+			storeToMemory($sp, $t8);
+	}
+
+	private void pop(int register) {
+			loadFromMemory(register, $sp);
+			selfAddConst($sp, SIZE);
+	}
+
+	private void syscall() {
 		fileWriter.format("\tsyscall\n");
 	}
-	//public TEMP addressLocalVar(int serialLocalVarNum)
-	//{
-	//	TEMP t  = TEMP_FACTORY.getInstance().getFreshTEMP();
-	//	int idx = t.getSerialNumber();
-	//
-	//	fileWriter.format("\taddi Temp_%d,$fp,%d\n",idx,-serialLocalVarNum*WORD_SIZE);
-	//
-	//	return t;
-	//}
+
+	private void syscallPrintString(String label) {
+			loadAddress($a0, label);
+			constant($v0, SYSCALL_PRINT_STRING);
+			syscall();
+	}
+
+	private void syscallExit() {
+			constant($v0, SYSCALL_EXIT);
+			syscall();
+	}
+
+	private void syscallPrintChar(char c) {
+			constant($a0, (int) c);
+			constant($v0, SYSCALL_PRINT_CHAR);
+			syscall();
+	}
+
+	private void move(int to, int from) {
+		fileWriter.format("\tmove %s, %s\n",name(to), name(from));
+	}
+
+	public void jump(String inlabel) {
+		fileWriter.format("\tj %s\n",inlabel);
+	}
+
+	public void jumpRegister(int reg) {
+		fileWriter.format("\tjr %s\n", name(reg));
+	}
+
+	public void jumpRegisterAndLink(int reg) {
+		fileWriter.format("\tjalr %s\n", name(reg));
+	}
+
+	public void jumpAndLink(String label) {
+		fileWriter.format("\tjal %s\n", label);
+	}
+
+	public void branchNotEqual(int reg1, int reg2, String label) {
+		fileWriter.format("\tbne %s, %s, %s\n", name(reg1), name(reg2), label);
+	}
+
+	public void branchEqual(int reg1, int reg2, String label) {
+		fileWriter.format("\tbeq %s, %s, %s\n", name(reg1), name(reg2), label);
+	}
+
+	private void selfAddConst(int reg, int constant) {
+			addConst(reg, reg, constant);
+	}
+
+	private void addConst(int dest, int reg, int constant) {
+			if (constant != 0) {
+					fileWriter.format("\taddi %s, %s, %d\n", name(dest), name(reg), constant);
+			} else if (dest != reg) {
+					move(dest, reg);
+			}
+
+	}
+
+	private void loadAddress(int dest, String label) {
+		fileWriter.format("\tla %s, %s\n", name(dest), label);
+	}
+
+	private void loadByteFromMemory(int dest, int memRegister) {
+		fileWriter.format("\tlb %s,(%s)\n", name(dest), name(memRegister));
+	}
+
+	private void storeByteToMemory(int memoryDest, int reg) {
+		fileWriter.format("\tsb %s,(%s)\n", name(reg), name(memoryDest));
+	}
+
+	private void loadFromMemory(int dest, int memRegister) {
+		fileWriter.format("\tlw %s,(%s)\n", name(dest), name(memRegister));
+	}
+
+	private void loadFromMemory(int dest, String label) {
+		fileWriter.format("\tlw %s, %s\n", name(dest), label);
+	}
+
+	private void storeToMemory(int memoryDest, int reg) {
+		fileWriter.format("\tsw %s,(%s)\n", name(reg), name(memoryDest));
+	}
+
+	private void storeToMemory(int memoryDest, String label) {
+		fileWriter.format("\tlw %s, %s\n", name(memoryDest), label);
+	}
+
+	private void constant(int reg, int constant) {
+		if (constant == 0) {
+				move(reg, $0);
+		} else {
+			fileWriter.format("\taddi %s, %s, %d\n", name(reg), name($0), constant);
+		}
+}
+
+	// Grrrrr
+
 	public void allocate(String var_name)
 	{
 		fileWriter.format(".data\n");
@@ -194,10 +355,22 @@ public class sir_MIPS_a_lot
 			fileWriter.format("%s:\n",inlabel);
 		}
 	}
-	public void jump(String inlabel)
-	{
-		fileWriter.format("\tj %s\n",inlabel);
+
+	private void comment(String s) {
+		// Comment Prefix
+		for (int i=0; i<s.length(); i++) {
+			fileWriter.format("#");
+		}
+		fileWriter.format("\n");
+		// Actual Comment
+		fileWriter.format("# %s\n",s);
+		// Comment Suffix
+		for (int i=0; i<s.length(); i++) {
+			fileWriter.format("#");
+		}
+		fileWriter.format("\n");
 	}
+
 	public void blt(TEMP oprnd1,TEMP oprnd2,String label)
 	{
 		int i1 =oprnd1.getSerialNumber();

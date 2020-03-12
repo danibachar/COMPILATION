@@ -250,7 +250,7 @@ run-old:
 	clang -Wno-override-module ${OUTPUT_DIR}/$(OUTPUT_FILE).bc -o ${BASEDIR}/program
 	${BASEDIR}/program > ${OUTPUT_DIR}/$(OUTPUT_FILE).txt
 run:
-	java -jar COMPILER $(INPUT_FILE) $(OUTPUT_FILE).ll
-	llvm-as $(OUTPUT_FILE).ll
+	java -jar COMPILER ${INPUT_DIR}/$(INPUT_FILE).txt ${OUTPUT_DIR}/$(OUTPUT_FILE).ir
+	spim -f ${OUTPUT_DIR}/$(OUTPUT_FILE).ir
 	clang -Wno-override-module $(OUTPUT_FILE).bc -o $(OUTPUT_FILE).prog
 	$(OUTPUT_FILE).prog > $(OUTPUT_FILE)

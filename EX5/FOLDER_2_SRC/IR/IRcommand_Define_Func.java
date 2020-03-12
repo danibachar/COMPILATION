@@ -42,6 +42,6 @@ public class IRcommand_Define_Func extends IRcommand
 	public void MIPSme()
 	{
 		System.out.format("IRcommand_Define_Func - MIPS\n");
-		//sir_MIPS_a_lot.getInstance().store(var_name,src);
+		sir_MIPS_a_lot.getInstance().define_func(funcName, returnType, args);
 	}
 }
