@@ -116,30 +116,24 @@ public class sir_MIPS_a_lot
 	public void define_func(String name, TYPE returnType, TYPE_LIST args)
 	{
 
-		// Temp hack to compile first simple example
+
 		int locals = 1;
 		int parameters = 0;
 		int functionId = 100;
 
 		label(name);
-		comment("[START] define_func");
-		/* Backup registers
-			callee-saved registers - $s0-$s7 $ra
-			caller-saved registers - $t0-$t9 $a0-$a3 $v0-$v
-			— $ra is tricky; it is saved by a callee who is also a caller.
-		*/
+
+
     for (int i = 0; i < REGISTERS_COUNT; i++) {
         push(COLORING_OFFSET + i);
     }
     push($fp);
     push($ra);
 
-		// update FP
+		// FP
 		move($fp, $sp);
 
-		// set default value to all locals on stack and return value
 		if (locals - localsAsReal.size() > 0) {
-				comment("Allocating " + (locals - localsAsReal.size()) + " slots for local variables that could not be stored as registers");
 				for (int i = 0; i < locals - localsAsReal.size(); i++) {
 						pushConst(0);
 				}
@@ -329,21 +323,6 @@ public class sir_MIPS_a_lot
 		{
 			fileWriter.format("%s:\n",inlabel);
 		}
-	}
-
-	private void comment(String s) {
-		// Comment Prefix
-		for (int i=0; i<s.length(); i++) {
-			fileWriter.format("#");
-		}
-		fileWriter.format("\n");
-		// Actual Comment
-		fileWriter.format("# %s\n",s);
-		// Comment Suffix
-		for (int i=0; i<s.length(); i++) {
-			fileWriter.format("#");
-		}
-		fileWriter.format("\n");
 	}
 
 	public void blt(TEMP oprnd1,TEMP oprnd2,String label)
