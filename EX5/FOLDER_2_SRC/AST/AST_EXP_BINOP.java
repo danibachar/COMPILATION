@@ -287,21 +287,7 @@ public class AST_EXP_BINOP extends AST_EXP
 				Add_IRcommand(new IRcommand_Binop_Dec_Integers(dst,t1,t2));
 			shouldCheckOverflow = true;
 		}
-		if (OP == 1)
-		{
-			shouldCastToInt = true;
-			IR.
-			getInstance().
-			Add_IRcommand(new IRcommand_Binop_LT_Integers(dst,t1,t2));
-		}
 
-		if (OP == 2)
-		{
-			shouldCastToInt = true;
-			IR.
-			getInstance().
-			Add_IRcommand(new IRcommand_Binop_LT_Integers(dst,t2,t1));
-		}
 
 		if (OP == 0)
 		{
@@ -356,6 +342,21 @@ public class AST_EXP_BINOP extends AST_EXP
 			Add_IRcommand(new IRcommand_Binop_Mul_Integers(dst,t1,t2));
 			shouldCheckOverflow = true;
 		}
+		if (OP == 1)
+		{
+			shouldCastToInt = true;
+			IR.
+			getInstance().
+			Add_IRcommand(new IRcommand_Binop_LT_Integers(dst,t1,t2));
+		}
+
+		if (OP == 2)
+		{
+			shouldCastToInt = true;
+			IR.
+			getInstance().
+			Add_IRcommand(new IRcommand_Binop_LT_Integers(dst,t2,t1));
+		}
 		if (OP == 6)
 		{
 			dst.setType(TYPE_INT.getInstance());
@@ -375,15 +376,6 @@ public class AST_EXP_BINOP extends AST_EXP
 			dst = t2;
 		}
 
-		if (shouldCheckOverflow)
-		{
-			TEMP newDst = TEMP_FACTORY.getInstance().getFreshTEMP();
-			newDst.setType(dst.getType());
-			IR.
-			getInstance().
-			Add_IRcommand(new IRcommand_Binop_Overflow(newDst,dst));
-			dst = newDst;
-		}
 		return dst;
 	}
 

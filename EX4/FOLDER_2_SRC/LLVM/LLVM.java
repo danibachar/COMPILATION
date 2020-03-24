@@ -69,39 +69,6 @@ public class LLVM
 		fileWriter.format(")\n");
 	}
 
-	public void call_func_void(String name, TYPE returnType, TEMP_LIST args, TYPE_LIST types)
-	{
-
-		fileWriter.format("  call %s @%s(",typeToString(returnType), name);
-		while(types!= null){
-			System.out.format("calling void function name=(%s), retType=(%s), argtype=(%s)",name,returnType,typeToString(args.head.type));
-			fileWriter.format("%s %%Temp_%d ",typeToString(args.head.type), args.head.getSerialNumber());
-			types = types.tail;
-			args = args.tail;
-			if (types != null) fileWriter.format(",");
-		}
-
-		fileWriter.format(")\n");
-	}
-
-	public void define_func(String name, TYPE returnType, TYPE_LIST args)
-	{
-
-		fileWriter.format("define %s @%s(",typeToString(returnType), name);
-		while(args!= null){
-			fileWriter.format("%s",typeToString(args.head));
-			args = args.tail;
-			if (args != null) fileWriter.format(",");
-		}
-
-		fileWriter.format(")\n { \n");
-
-	}
-
-	public void end_func()
-	{
-		fileWriter.format("}\n");
-	}
 
 	public void returnFunc(TEMP retVal)
 	{
@@ -216,79 +183,38 @@ public class LLVM
 		varName,
 		typeToAlignment(typeString));
 	}
-	public void load_local(TEMP dst,int varIndex)
+	public void call_func_void(String name, TYPE returnType, TEMP_LIST args, TYPE_LIST types)
 	{
-		int idxdst=dst.getSerialNumber();
-		String typeString = typeToString(dst.getType());
 
-		fileWriter.format("  %%Temp_%d = load %s, %s* %%local_%s, align %d\n",
-		idxdst,
-		typeString,
-		typeString,
-		varIndex,
-		typeToAlignment(typeString));
-	}
-	public void load_global(TEMP dst,String name)
-	{
-		int idxdst=dst.getSerialNumber();
-		String typeString = typeToString(dst.getType());
-
-		fileWriter.format("  %%Temp_%d = load %s, %s* @%s, align %d\n",
-		idxdst,
-		typeString,
-		typeString,
-		name,
-		typeToAlignment(typeString));
-	}
-	public void load(TEMP dst,TEMP src)
-	{
-		fileWriter.format(";load temp temp;\n");
-		if (src.checkInit)
-		{
-			check_init_load(dst, src);
-			return;
+		fileWriter.format("  call %s @%s(",typeToString(returnType), name);
+		while(types!= null){
+			System.out.format("calling void function name=(%s), retType=(%s), argtype=(%s)",name,returnType,typeToString(args.head.type));
+			fileWriter.format("%s %%Temp_%d ",typeToString(args.head.type), args.head.getSerialNumber());
+			types = types.tail;
+			args = args.tail;
+			if (types != null) fileWriter.format(",");
 		}
 
-		int idxdst=dst.getSerialNumber();
-		String typeString = typeToString(dst.getType());
-
-		fileWriter.format("  %%Temp_%d = load %s, %s* %%Temp_%d, align %d\n",
-		idxdst,
-		typeString,
-		typeString,
-		src.getSerialNumber(),
-		typeToAlignment(typeString));
+		fileWriter.format(")\n");
 	}
-	public void store_global(String var_name,TEMP src)
-	{
-		int idxsrc=src.getSerialNumber();
-		String typeString = typeToString(src.getType());
-		fileWriter.format("  store %s %%Temp_%d, %s* @%s, align %d\n",typeString, idxsrc, typeString,var_name, typeToAlignment(typeString));
-	}
-	public void store(TEMP dst,TEMP src)
-	{
-		fileWriter.format(";store %s dst src;\n", dst.getType());
 
-		if (dst.checkInit)
-		{
-			check_init_store(dst, src);
-			return;
+	public void define_func(String name, TYPE returnType, TYPE_LIST args)
+	{
+
+		fileWriter.format("define %s @%s(",typeToString(returnType), name);
+		while(args!= null){
+			fileWriter.format("%s",typeToString(args.head));
+			args = args.tail;
+			if (args != null) fileWriter.format(",");
 		}
-		int idxsrc=src.getSerialNumber();
-		String typeString = typeToString(dst.getType());
-		fileWriter.format("  store %s %%Temp_%d, %s* %%Temp_%d, align %d\n",
-		typeToString(src.getType()),
-		idxsrc,
-		typeToString(dst.getType()),
-		dst.getSerialNumber(),
-		typeToAlignment(typeString));
+
+		fileWriter.format(")\n { \n");
+
 	}
-	public void store_local(int varIndex,TEMP src)
+
+	public void end_func()
 	{
-		if (src == null) { return;}
-		String typeString = typeToString(src.getType());
-		int idxsrc=src.getSerialNumber();
-		fileWriter.format("  store %s %%Temp_%d, %s* %%local_%s, align %d\n",typeString, idxsrc,typeString, varIndex,typeToAlignment(typeString));
+		fileWriter.format("}\n");
 	}
 	public void store_param(String paramName,TEMP src)
 	{
@@ -325,6 +251,57 @@ public class LLVM
 
 
 	}
+	public void load_local(TEMP dst,int varIndex)
+	{
+		int idxdst=dst.getSerialNumber();
+		String typeString = typeToString(dst.getType());
+
+		fileWriter.format("  %%Temp_%d = load %s, %s* %%local_%s, align %d\n",
+		idxdst,
+		typeString,
+		typeString,
+		varIndex,
+		typeToAlignment(typeString));
+	}
+	public void load_global(TEMP dst,String name)
+	{
+		int idxdst=dst.getSerialNumber();
+		String typeString = typeToString(dst.getType());
+
+		fileWriter.format("  %%Temp_%d = load %s, %s* @%s, align %d\n",
+		idxdst,
+		typeString,
+		typeString,
+		name,
+		typeToAlignment(typeString));
+	}
+
+	public void store(TEMP dst,TEMP src)
+	{
+		fileWriter.format(";store %s dst src;\n", dst.getType());
+
+		if (dst.checkInit)
+		{
+			check_init_store(dst, src);
+			return;
+		}
+		int idxsrc=src.getSerialNumber();
+		String typeString = typeToString(dst.getType());
+		fileWriter.format("  store %s %%Temp_%d, %s* %%Temp_%d, align %d\n",
+		typeToString(src.getType()),
+		idxsrc,
+		typeToString(dst.getType()),
+		dst.getSerialNumber(),
+		typeToAlignment(typeString));
+	}
+	public void store_local(int varIndex,TEMP src)
+	{
+		if (src == null) { return;}
+		String typeString = typeToString(src.getType());
+		int idxsrc=src.getSerialNumber();
+		fileWriter.format("  store %s %%Temp_%d, %s* %%local_%s, align %d\n",typeString, idxsrc,typeString, varIndex,typeToAlignment(typeString));
+	}
+
 
 	static int z=0;
 	public void add_strings(TEMP dst, TEMP oprnd1,TEMP oprnd2)
@@ -389,49 +366,52 @@ public class LLVM
 
 		fileWriter.format("continue_idx_%d:\n",a++);
 	}
+	public void load(TEMP dst,TEMP src)
+	{
+		fileWriter.format(";load temp temp;\n");
+		if (src.checkInit)
+		{
+			check_init_load(dst, src);
+			return;
+		}
 
+		int idxdst=dst.getSerialNumber();
+		String typeString = typeToString(dst.getType());
+
+		fileWriter.format("  %%Temp_%d = load %s, %s* %%Temp_%d, align %d\n",
+		idxdst,
+		typeString,
+		typeString,
+		src.getSerialNumber(),
+		typeToAlignment(typeString));
+	}
+	public void store_global(String var_name,TEMP src)
+	{
+		int idxsrc=src.getSerialNumber();
+		String typeString = typeToString(src.getType());
+		fileWriter.format("  store %s %%Temp_%d, %s* @%s, align %d\n",typeString, idxsrc, typeString,var_name, typeToAlignment(typeString));
+	}
 	public void check_init_load(TEMP dst, TEMP src)
 	{
 		String typeString = typeToString(dst.getType());
-
 		fileWriter.format("%%Temp_init_ptr_%d = bitcast %s* %%Temp_%d to i32*\n",a,typeToString(src.getType()), src.getSerialNumber());
 		fileWriter.format("%%init_state_%d = load i32, i32* %%Temp_init_ptr_%d,align 4\n", a, a);
 		fileWriter.format("%%is_init_%d = icmp eq i32  %%init_state_%d, 0\n",a, a);
 		fileWriter.format("br i1 %%is_init_%d , label %%error_init_%d, label %%good_init_%d\n",a, a, a);
-
 		fileWriter.format("error_init_%d:\n",a);
-
 		fileWriter.format("call void @InvalidPointer()\n");
 		fileWriter.format("br label %%good_init_%d\n",a);
-
 		fileWriter.format("good_init_%d:\n",a);
 		fileWriter.format("%%Temp_actual_ptr_%d = getelementptr inbounds i32, i32* %%Temp_init_ptr_%d, i32 1\n", a, a);
 		fileWriter.format("%%Temp_actual_%d = bitcast i32* %%Temp_actual_ptr_%d to %s*\n",a,a , typeString);
 		fileWriter.format("  %%Temp_%d = load %s, %s* %%Temp_actual_%d , align %d\n",
-		dst.getSerialNumber(),
-		typeString,
+		dst.getSerialNumber(),typeString,
 		typeString,
 		a++,
 		typeToAlignment(typeString));
 	}
 
-	public void check_init_store(TEMP dst, TEMP src)
-	{
-		String typeString = typeToString(dst.getType());
 
-		fileWriter.format("%%Temp_init_ptr_%d = bitcast %s* %%Temp_%d to i32*\n",a,typeString, dst.getSerialNumber());
-		fileWriter.format("store i32 1, i32* %%Temp_init_ptr_%d,align 4\n", a, a);
-		fileWriter.format("%%Temp_actual_ptr_%d = getelementptr inbounds i32, i32* %%Temp_init_ptr_%d, i32 1\n", a, a);
-		fileWriter.format("%%Temp_actual_%d = bitcast i32* %%Temp_actual_ptr_%d to %s*\n",a,a , typeToString(src.getType()));
-
-		int idxsrc=src.getSerialNumber();
-		fileWriter.format("  store %s %%Temp_%d, %s* %%Temp_actual_%d, align %d\n",
-		typeToString(src.getType()),
-		idxsrc,
-		typeToString(src.getType()),
-		a++,
-		typeToAlignment(typeString));
-	}
 
 	public void store_string(TEMP t,String value)
 	{
@@ -481,6 +461,23 @@ public class LLVM
 			i1,
 			i2);
 	}
+	public void check_init_store(TEMP dst, TEMP src)
+	{
+		String typeString = typeToString(dst.getType());
+
+		fileWriter.format("%%Temp_init_ptr_%d = bitcast %s* %%Temp_%d to i32*\n",a,typeString, dst.getSerialNumber());
+		fileWriter.format("store i32 1, i32* %%Temp_init_ptr_%d,align 4\n", a, a);
+		fileWriter.format("%%Temp_actual_ptr_%d = getelementptr inbounds i32, i32* %%Temp_init_ptr_%d, i32 1\n", a, a);
+		fileWriter.format("%%Temp_actual_%d = bitcast i32* %%Temp_actual_ptr_%d to %s*\n",a,a , typeToString(src.getType()));
+
+		int idxsrc=src.getSerialNumber();
+		fileWriter.format("  store %s %%Temp_%d, %s* %%Temp_actual_%d, align %d\n",
+		typeToString(src.getType()),
+		idxsrc,
+		typeToString(src.getType()),
+		a++,
+		typeToAlignment(typeString));
+	}
 	public void add(TEMP dst,TEMP oprnd1,int value)
 	{
 		int i1 =oprnd1.getSerialNumber();
@@ -506,48 +503,6 @@ public class LLVM
 			i2);
 	}
 
-	private static int c=0;
-	public void div(TEMP dst,TEMP oprnd1,TEMP oprnd2)
-	{
-		int i1 =oprnd1.getSerialNumber();
-		int i2 =oprnd2.getSerialNumber();
-		int dstidx=dst.getSerialNumber();
-
-
-		fileWriter.format("%%is_div_zero_%d = icmp eq i32  %%Temp_%d, 0\n",c, i2);
-		fileWriter.format("br i1 %%is_div_zero_%d , label %%div_by_zero_%d, label %%good_div_%d\n",c, c, c);
-
-		fileWriter.format("div_by_zero_%d:\n",c);
-
-		fileWriter.format("call void @DivideByZero()\n");
-		fileWriter.format("br label %%good_div_%d\n",c);
-
-		fileWriter.format("good_div_%d:\n",c++);
-
-		fileWriter.format(
-			"  %%Temp_%d = sdiv i32 %%Temp_%d, %%Temp_%d\n",
-			dstidx,
-			i1,
-			i2);
-	}
-
-	public void handle_overflow(TEMP dst, TEMP val)
-	{
-		fileWriter.format("%%Temp_%d = call i32 @CheckOverflow(i32 %%Temp_%d)\n",dst.getSerialNumber(),val.getSerialNumber());
-
-	}
-	public void icmp_lt(TEMP dst,TEMP oprnd1,TEMP oprnd2)
-	{
-		int i1 =oprnd1.getSerialNumber();
-		int i2 =oprnd2.getSerialNumber();
-		int dstidx=dst.getSerialNumber();
-
-		fileWriter.format(
-			"  %%Temp_%d = icmp slt i32 %%Temp_%d, %%Temp_%d\n",
-			dstidx,
-			i1,
-			i2);
-	}
 	public void icmp_eq(TEMP dst,TEMP oprnd1,TEMP oprnd2)
 	{
 		int i1 =oprnd1.getSerialNumber();
@@ -724,6 +679,49 @@ public class LLVM
 		return "i8*";
 	}
 
+	private static int c=0;
+	public void div(TEMP dst,TEMP oprnd1,TEMP oprnd2)
+	{
+		int i1 =oprnd1.getSerialNumber();
+		int i2 =oprnd2.getSerialNumber();
+		int dstidx=dst.getSerialNumber();
+
+
+		fileWriter.format("%%is_div_zero_%d = icmp eq i32  %%Temp_%d, 0\n",c, i2);
+		fileWriter.format("br i1 %%is_div_zero_%d , label %%div_by_zero_%d, label %%good_div_%d\n",c, c, c);
+
+		fileWriter.format("div_by_zero_%d:\n",c);
+
+		fileWriter.format("call void @DivideByZero()\n");
+		fileWriter.format("br label %%good_div_%d\n",c);
+
+		fileWriter.format("good_div_%d:\n",c++);
+
+		fileWriter.format(
+			"  %%Temp_%d = sdiv i32 %%Temp_%d, %%Temp_%d\n",
+			dstidx,
+			i1,
+			i2);
+	}
+
+	public void handle_overflow(TEMP dst, TEMP val)
+	{
+		fileWriter.format("%%Temp_%d = call i32 @CheckOverflow(i32 %%Temp_%d)\n",dst.getSerialNumber(),val.getSerialNumber());
+
+	}
+	public void icmp_lt(TEMP dst,TEMP oprnd1,TEMP oprnd2)
+	{
+		int i1 =oprnd1.getSerialNumber();
+		int i2 =oprnd2.getSerialNumber();
+		int dstidx=dst.getSerialNumber();
+
+		fileWriter.format(
+			"  %%Temp_%d = icmp slt i32 %%Temp_%d, %%Temp_%d\n",
+			dstidx,
+			i1,
+			i2);
+	}
+
 	private int typeToAlignment(String typeString){
 		if (typeString.endsWith("*"))
 		{
@@ -861,7 +859,18 @@ public class LLVM
 			instance.fileWriter.format("call void @exit(i32 0)\n");
 			instance.fileWriter.format("ret void\n");
 			instance.fileWriter.format("}\n\n");
-
+			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;n");
+			instance.fileWriter.format(";                                 ;\n");
+			instance.fileWriter.format(";  AccessViolation ;\n");
+			instance.fileWriter.format(";                                 ;\n");
+			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
+			instance.fileWriter.format("define void @AccessViolation() {\n");
+			instance.fileWriter.format("%%err_1 = alloca i8*, align 8\n");
+			instance.fileWriter.format("store i8* getelementptr inbounds ([17 x i8], [17 x i8]* @STR.ACCESS.VIOLATION, i32 0, i32 0), i8** %%err_1, align 8\n");
+			instance.fileWriter.format("%%err_Temp_1 = load i8*, i8** %%err_1, align 8\n");
+			instance.fileWriter.format("call void @ExitWithError(i8* %%err_Temp_1)\n");
+			instance.fileWriter.format("ret void\n");
+			instance.fileWriter.format("}\n\n");
 			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;n");
 			instance.fileWriter.format(";                                 ;\n");
 			instance.fileWriter.format(";  ExecutionFalls ;\n");
@@ -875,18 +884,7 @@ public class LLVM
 			instance.fileWriter.format("ret void\n");
 			instance.fileWriter.format("}\n\n");
 
-			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;n");
-			instance.fileWriter.format(";                                 ;\n");
-			instance.fileWriter.format(";  AccessViolation ;\n");
-			instance.fileWriter.format(";                                 ;\n");
-			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n");
-			instance.fileWriter.format("define void @AccessViolation() {\n");
-			instance.fileWriter.format("%%err_1 = alloca i8*, align 8\n");
-			instance.fileWriter.format("store i8* getelementptr inbounds ([17 x i8], [17 x i8]* @STR.ACCESS.VIOLATION, i32 0, i32 0), i8** %%err_1, align 8\n");
-			instance.fileWriter.format("%%err_Temp_1 = load i8*, i8** %%err_1, align 8\n");
-			instance.fileWriter.format("call void @ExitWithError(i8* %%err_Temp_1)\n");
-			instance.fileWriter.format("ret void\n");
-			instance.fileWriter.format("}\n\n");
+
 
 			instance.fileWriter.format(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;n");
 			instance.fileWriter.format(";                                 ;\n");
@@ -923,15 +921,12 @@ public class LLVM
 			instance.fileWriter.format("%%Temp_val = alloca i32\n");
 			instance.fileWriter.format("%%is_overflow = icmp sge i32  %%val, 32767\n");
 			instance.fileWriter.format("br i1 %%is_overflow , label %%label_overflow, label %%label_is_underflow\n");
-
 			instance.fileWriter.format("label_overflow:\n");
 			instance.fileWriter.format("store i32 32767,i32* %%Temp_val\n");
 			instance.fileWriter.format("br label %%label_handeled_overflow\n");
-
 			instance.fileWriter.format("label_is_underflow:\n");
 			instance.fileWriter.format("%%is_underflow = icmp slt i32  %%val, -32767\n");
 			instance.fileWriter.format("br i1 %%is_underflow , label %%label_underflow, label %%label_no_overflow\n");
-
 			instance.fileWriter.format("label_underflow:\n");
 			instance.fileWriter.format("store i32 -32768,i32* %%Temp_val\n");
 			instance.fileWriter.format("br label %%label_handeled_overflow\n");

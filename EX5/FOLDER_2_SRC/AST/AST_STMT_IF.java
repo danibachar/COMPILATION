@@ -148,7 +148,7 @@ public class AST_STMT_IF extends AST_STMT
 		/* [8] return null */
 		/*******************/
 		return null;
-		// return t;
+		
 	}
 
 	public void propegateRetVal(TYPE retType) throws Exception

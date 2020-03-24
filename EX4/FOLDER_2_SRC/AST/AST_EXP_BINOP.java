@@ -244,7 +244,6 @@ public class AST_EXP_BINOP extends AST_EXP
 			if (leftTemp != null && leftTemp.isaddr){
 				//ir return address and not value
 				t1 = TEMP_FACTORY.getInstance().getFreshTEMP();
-				;
 				t1.setType(leftTemp.getType());
 				t1.checkInit = leftTemp.checkInit;
 
@@ -279,14 +278,14 @@ public class AST_EXP_BINOP extends AST_EXP
 			}
 		}
 
-		if (OP == 4)
-		{
-			dst.setType(TYPE_INT.getInstance());
-				IR.
-				getInstance().
-				Add_IRcommand(new IRcommand_Binop_Dec_Integers(dst,t1,t2));
-			shouldCheckOverflow = true;
-		}
+				if (OP == 2)
+				{
+					shouldCastToInt = true;
+					IR.
+					getInstance().
+					Add_IRcommand(new IRcommand_Binop_LT_Integers(dst,t2,t1));
+				}
+
 		if (OP == 1)
 		{
 			shouldCastToInt = true;
@@ -295,13 +294,6 @@ public class AST_EXP_BINOP extends AST_EXP
 			Add_IRcommand(new IRcommand_Binop_LT_Integers(dst,t1,t2));
 		}
 
-		if (OP == 2)
-		{
-			shouldCastToInt = true;
-			IR.
-			getInstance().
-			Add_IRcommand(new IRcommand_Binop_LT_Integers(dst,t2,t1));
-		}
 
 		if (OP == 0)
 		{
@@ -346,7 +338,14 @@ public class AST_EXP_BINOP extends AST_EXP
 			}
 
 		}
-
+		if (OP == 4)
+		{
+			dst.setType(TYPE_INT.getInstance());
+				IR.
+				getInstance().
+				Add_IRcommand(new IRcommand_Binop_Dec_Integers(dst,t1,t2));
+			shouldCheckOverflow = true;
+		}
 		if (OP == 5)
 		{
 			dst.setType(TYPE_INT.getInstance());
@@ -375,15 +374,6 @@ public class AST_EXP_BINOP extends AST_EXP
 			dst = t2;
 		}
 
-		if (shouldCheckOverflow)
-		{
-			TEMP newDst = TEMP_FACTORY.getInstance().getFreshTEMP();
-			newDst.setType(dst.getType());
-			IR.
-			getInstance().
-			Add_IRcommand(new IRcommand_Binop_Overflow(newDst,dst));
-			dst = newDst;
-		}
 		return dst;
 	}
 

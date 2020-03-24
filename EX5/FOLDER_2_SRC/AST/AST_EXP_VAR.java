@@ -28,7 +28,7 @@ public abstract class AST_EXP_VAR extends AST_EXP
 
 	public TEMP IRme() throws Exception
 	{
-		System.out.format("IRme - AST_EXP_VAR - unknown expression, Scope=%d\n",myScope);
+		// System.out.format("IRme - AST_EXP_VAR - unknown expression, Scope=%d\n",myScope);
 		return null;
 	}
 

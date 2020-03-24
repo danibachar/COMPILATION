@@ -40,7 +40,7 @@ public class AST_EXP_STRING extends AST_EXP
 		/*******************************/
 		/* AST NODE TYPE = AST STRING EXP */
 		/*******************************/
-		// System.out.format("AST_EXP_STRING( %s )\n",value);
+		
 		/***************************************/
 		/* PRINT Node to AST GRAPHVIZ DOT file */
 		/***************************************/
