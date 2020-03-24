@@ -133,18 +133,6 @@ public class sir_MIPS_a_lot
 		// FP
 		move($fp, $sp);
 
-		if (locals - localsAsReal.size() > 0) {
-				for (int i = 0; i < locals - localsAsReal.size(); i++) {
-						pushConst(0);
-				}
-		}
-
-    pushConst(0);
-    localsAsReal.forEach((local, realReg) -> constant(realReg, 0));
-
-    // push function id and header size
-    pushConst(functionId);
-    pushConst((parameters + 2 + locals + 3 - localsAsReal.size()) * SIZE + REGISTERS_BACKUP_SIZE);
 	}
 	public void print_int(TEMP t)
 	{

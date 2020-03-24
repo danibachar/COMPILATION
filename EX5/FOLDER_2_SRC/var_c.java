@@ -5,7 +5,7 @@ import LLVM.*;
 import java.util.Hashtable;
 import java.util.ArrayList;
 import java.util.Set;
-import Pair.*;
+import javafx.util.Pair;
 
 import TYPES.TYPE;
 
