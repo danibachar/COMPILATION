@@ -64,17 +64,14 @@ public class sir_MIPS_a_lot
 	private static final int SYSCALL_EXIT = 10;
 	private static final int SYSCALL_PRINT_CHAR = 11;
 	private static final Map<Integer, String> registerNames = new HashMap<>();
-	// private static final IRLabel STRING_EQUALS_LABEL = new IRLabel("__string_equality__");
-	// private static final IRLabel STRING_CONCAT_LABEL = new IRLabel("__string_concat__");
-	// private static final IRLabel FUNCTION_NAMES = new IRLabel("FUNCTION_NAMES");
+
 	private static final String FUNCTION_NAME_PREFIX = "FUNCTION_NAME_";
 	private static final String MAIN_LABEL = "main";
 
-	// private Map<Register, IRLabel> globals = new HashMap<>();
+
 	private Map<String, Integer> functionIds = new HashMap<>();
 	private int functionIdCounter = 0;
-	// private Map<Register, Integer> realRegMapsRegisters;
-	// private Map<LocalRegister, Integer> localsAsReal;
+
 	private int parametersCount;
 	private int localsCount;
 	private int boundedLabelCounter = 0;
@@ -85,21 +82,6 @@ public class sir_MIPS_a_lot
 	}
 
 	public void initRegisters() {
-		registerNames.put($0, "$0");
-		registerNames.put($a0, "$a0");
-		registerNames.put($a3, "$a3");
-		registerNames.put($v0, "$v0");
-		registerNames.put($t0, "$t0");
-		registerNames.put($t1, "$t1");
-		registerNames.put($t2, "$t2");
-		registerNames.put($t8, "$t8");
-		registerNames.put($t9, "$t9");
-		registerNames.put($sp, "$sp");
-		registerNames.put($fp, "$fp");
-		registerNames.put($ra, "$ra");
-		for (int i = 0; i < REGISTERS_COUNT; i++) {
-				registerNames.put(COLORING_OFFSET + i, "$t" + i);
-		}
 	}
 
 	public static void addString(String value)
@@ -163,19 +145,12 @@ public class sir_MIPS_a_lot
 				}
 		}
 
-		comment("Allocating a slot for return value");
     pushConst(0);
-
-		// set default value for all locals on real registers
-    comment("Setting initial value to local variables stored as registers");
-    comment(localsAsReal.entrySet().stream().map(e -> e.getKey() + " => " + name(e.getValue())).collect(Collectors.joining(", ")));
     localsAsReal.forEach((local, realReg) -> constant(realReg, 0));
 
     // push function id and header size
-    comment("Saving function id and header size");
     pushConst(functionId);
     pushConst((parameters + 2 + locals + 3 - localsAsReal.size()) * SIZE + REGISTERS_BACKUP_SIZE);
-    comment("[END] define_func");
 	}
 	public void print_int(TEMP t)
 	{
