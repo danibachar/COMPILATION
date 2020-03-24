@@ -7,9 +7,8 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
-import LocalVarCounter.*;
+import var_c.*;
 import LLVM.*;
-import javafx.util.Pair;
 import java.util.*;
 
 public class AST_STMT_WHILE extends AST_STMT
@@ -145,7 +144,7 @@ public class AST_STMT_WHILE extends AST_STMT
 		return null;
 	}
 
-	public void propegateRetVal(TYPE retType) throws Exception
+	public void update_return(TYPE retType) throws Exception
 	{
 		for (AST_STMT_LIST it = body ; it != null ; it = it.tail)
 		{
@@ -155,11 +154,11 @@ public class AST_STMT_WHILE extends AST_STMT
 			}
 			else if (it.head instanceof AST_STMT_IF)
 			{
-				((AST_STMT_IF)it.head).propegateRetVal(retType);
+				((AST_STMT_IF)it.head).update_return(retType);
 			}
 			else if (it.head instanceof AST_STMT_WHILE)
 			{
-				((AST_STMT_WHILE)it.head).propegateRetVal(retType);
+				((AST_STMT_WHILE)it.head).update_return(retType);
 			}
 		}
 	}

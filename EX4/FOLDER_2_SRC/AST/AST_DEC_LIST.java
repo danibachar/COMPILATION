@@ -6,10 +6,9 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
-import LocalVarCounter.*;
+import var_c.*;
 import LLVM.*;
 import java.util.ArrayList;
-import javafx.util.Pair;
 import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.HashMap;
@@ -81,10 +80,6 @@ public class AST_DEC_LIST extends AST_Node
 		// System.out.format("IRme - DEC_LIST, Scope=%d\n", myScope);
 		if (head != null) head.IRme();
 		if (tail != null) tail.IRme();
-		if (tail == null)
-		{
-			// System.out.println("Done IR'ing!");
-		}
 		return null;
 	}
 

@@ -7,9 +7,8 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
-import LocalVarCounter.*;
+import var_c.*;
 import LLVM.*;
-import javafx.util.Pair;
 import java.util.*;
 
 public class AST_EXP_STRING extends AST_EXP
@@ -50,16 +49,15 @@ public class AST_EXP_STRING extends AST_EXP
 	}
 	public TYPE SemantMe() throws Exception
 	{
-		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// System.out.format("AST_EXP_STRING( %s )\n",value);
+		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		LLVM.addString(value);
 		return TYPE_STRING.getInstance();
 	}
 
 	public TEMP IRme()
 	{
-		// TODO: String is not a fixed-size length (addition of 2 string for example can create any-sized string)
-		// We probably want some variable-length allocation here, maybe allocate on HEAP somehow?
+
 		TEMP t = TEMP_FACTORY.getInstance().getFreshTEMP();
 		t.setType(TYPE_STRING.getInstance());
 		IR.getInstance().Add_IRcommand(new IRcommandConstString(t,value));

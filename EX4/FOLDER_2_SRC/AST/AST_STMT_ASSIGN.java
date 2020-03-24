@@ -7,9 +7,8 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
-import LocalVarCounter.*;
+import var_c.*;
 import LLVM.*;
-import javafx.util.Pair;
 import java.util.*;
 
 public class AST_STMT_ASSIGN extends AST_STMT
@@ -162,7 +161,6 @@ public class AST_STMT_ASSIGN extends AST_STMT
 	}
 
 	public TEMP IRmePrimitive()  throws Exception {
-		// TODO: what aobut naming for inner-scope variables? should they receive the same name too? (probably not)
 		if (var instanceof AST_EXP_VAR_SIMPLE) {
 			TEMP src = exp.IRme();
 
@@ -175,30 +173,24 @@ public class AST_STMT_ASSIGN extends AST_STMT
 				src = expTemp;
 			}
 			AST_EXP_VAR_SIMPLE simpleVar = (AST_EXP_VAR_SIMPLE)var;
-			// System.out.format("@@@ simpleVar.isInFunc ? %s\n", simpleVar.isInFunc);
 			if (simpleVar.isInFunc){
-				// System.out.format("Storing into local %s\n", simpleVar.name);
 				if (((AST_EXP_VAR_SIMPLE) var).varIndex > -1)
 				{
 					if (src.getType() instanceof TYPE_NIL)
 					{
 						TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
 						pointerTemp.setType(src.getType());
-						// System.out.format("Creating pointer  null Temp of index %d and type %s\n", pointerTemp.getSerialNumber(),pointerTemp.getType());
-						IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_local(pointerTemp,((AST_EXP_VAR_SIMPLE) var).varIndex,((AST_EXP_VAR_SIMPLE) var).myType));
-						IR.getInstance().
-							Add_IRcommand(new IRcommand_Store_Temp(pointerTemp,src));
+						IR.getInstance()
+							.Add_IRcommand(new IRcommand_Bitcast_local(pointerTemp,((AST_EXP_VAR_SIMPLE) var).varIndex,((AST_EXP_VAR_SIMPLE) var).myType));
+						IR.getInstance()
+							.Add_IRcommand(new IRcommand_Store_Temp(pointerTemp,src));
+					} else {
+						IR.getInstance()
+							.Add_IRcommand(new IRcommand_Store_Local(((AST_EXP_VAR_SIMPLE) var).varIndex,src));
 					}
-					else
-					{
-						IR.getInstance().
-							Add_IRcommand(new IRcommand_Store_Local(((AST_EXP_VAR_SIMPLE) var).varIndex,src));
-					}
-				}
-				else
-				{
-					IR.getInstance().
-						Add_IRcommand(new IRcommand_Store_Param(((AST_EXP_VAR_SIMPLE) var).name,src));
+				} else {
+					IR.getInstance()
+						.Add_IRcommand(new IRcommand_Store_Param(((AST_EXP_VAR_SIMPLE) var).name,src));
 				}
 
 				return null;
@@ -217,12 +209,10 @@ public class AST_STMT_ASSIGN extends AST_STMT
 			TEMP pointerTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
 			pointerTemp.setType(src.getType());
 			pointerTemp.checkInit = dst.checkInit;
-			// System.out.format("Creating pointer  null Temp of index %d and type %s\n", pointerTemp.getSerialNumber(),pointerTemp.getType());
 			IR.getInstance().Add_IRcommand(new IRcommand_Bitcast_Pointer(pointerTemp, dst));
 			dst = pointerTemp;
 		}
 		else if (src.isaddr){
-			//ir return address and not value
 			TEMP expTemp = TEMP_FACTORY.getInstance().getFreshTEMP();
 			expTemp.setType(src.getType());
 			expTemp.checkInit = src.checkInit;

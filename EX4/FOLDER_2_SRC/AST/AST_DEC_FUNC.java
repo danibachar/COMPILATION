@@ -6,11 +6,10 @@ import TEMP.*;
 import IR.*;
 import MIPS.*;
 import AST_EXCEPTION.*;
-import LocalVarCounter.*;
-
+import var_c.*;
+import Pair.*;
 import LLVM.*;
 import java.util.*;
-import javafx.util.Pair;
 import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.HashMap;
@@ -128,7 +127,7 @@ public class AST_DEC_FUNC extends AST_DEC
 		SYMBOL_TABLE.getInstance().beginScope();
 		this.myScope = SYMBOL_TABLE.getInstance().scopeCount;
 		// For IRme
-		LocalVarCounter.getInstance().initiateCount();
+		var_c.getInstance().initiateCount();
 		/***************************/
 		/* [2] Semant Input Params */
 		/***************************/
@@ -170,11 +169,11 @@ public class AST_DEC_FUNC extends AST_DEC
 				}
 				else if (it.head instanceof AST_STMT_IF)
 				{
-					((AST_STMT_IF)it.head).propegateRetVal(this.returnValType);
+					((AST_STMT_IF)it.head).update_return(this.returnValType);
 				}
 				else if (it.head instanceof AST_STMT_WHILE)
 				{
-					((AST_STMT_WHILE)it.head).propegateRetVal(this.returnValType);
+					((AST_STMT_WHILE)it.head).update_return(this.returnValType);
 				}
 			}
 
@@ -187,7 +186,7 @@ public class AST_DEC_FUNC extends AST_DEC
 
 		// For IRme
 		localVarInfo = new ArrayList<>();
-		localVarInfo = LocalVarCounter.getInstance().getLocalMap();
+		localVarInfo = var_c.getInstance().getLocalMap();
 		/***************************************************/
 		/* [5] Enter the Function Type to the Symbol Table */
 		/***************************************************/
@@ -236,41 +235,26 @@ public class AST_DEC_FUNC extends AST_DEC
 		}
 
 		TYPE_LIST semantedArgs = null;
-		String fullName = null;
-		if (typeFunction.origClass != null){
-			fullName = typeFunction.origClass.name + "_" + this.name;
-		} else {
-			fullName = name;
-		}
+		String fullName = name;
+		// todo - handke class fun name
 
 		TYPE_LIST fullArgs = null;
-		if (params != null) semantedArgs = params.GetTypes();
+		if (params != null) fullArgs = params.GetTypes();
 
-		if (typeFunction.origClass != null){
-			fullArgs = new TYPE_LIST(typeFunction.origClass, semantedArgs);
-		}
-		else {
-			fullArgs = semantedArgs;
-		}
 		IR.getInstance().
 			Add_IRcommand(new IRcommand_Define_Func(fullName, this.returnValType, fullArgs));
 
 		AST_TYPE_NAME_LIST argList = null;
-		if (typeFunction.origClass != null){
-			AST_TYPE_NAME thisType = new AST_TYPE_NAME(typeFunction.origClass.name, "this",this.lineNumber);
-			this.params = new AST_TYPE_NAME_LIST(thisType, this.params, this.lineNumber);
-		}
+		// add the type of the class
 
 		argList = this.params;
 
 		TYPE_LIST semantedArgsIter = fullArgs;
 		while(argList != null && argList.head != null){
-			// System.out.format("Allocating param %s %s \n",argList.head.name,  semantedArgsIter.head );
 			IR.getInstance().Add_IRcommand(new IRcommand_Allocate_Param(argList.head.name, semantedArgsIter.head));
 			argList = argList.tail;
 			semantedArgsIter = semantedArgsIter.tail;
 		}
-		// System.out.format("Iring function %s with %d locals\n", name, localVarInfo.size());
 		for (int i=0;i<localVarInfo.size();i++) {
 			Pair<TYPE, Integer> info = localVarInfo.get(i);
 			IR.getInstance()
@@ -299,8 +283,11 @@ public class AST_DEC_FUNC extends AST_DEC
 		if (body != null) body.IRme();
 
 		if (!foundRet) {
+			if (name.equals("main")) {
+				IR.getInstance().Add_IRcommand(new IRcommand_Exit_Zero());
+			}
+
 			if (TYPE_VOID.getInstance() != returnValType) {
-				// IR.getInstance().Add_IRcommand(new IRcommand_Call_Func_Void("ExecutionFalls", TYPE_VOID.getInstance(), null,null));
 				IR.getInstance().Add_IRcommand(new IRcommand_DummyReturn(returnValType));
 			} else {
 				IR.getInstance().Add_IRcommand(new IRcommand_Return(null));

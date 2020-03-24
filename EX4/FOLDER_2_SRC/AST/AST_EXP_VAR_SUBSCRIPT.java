@@ -7,9 +7,8 @@ import MIPS.*;
 import TYPES.*;
 import SYMBOL_TABLE.*;
 import AST_EXCEPTION.*;
-import LocalVarCounter.*;
+import var_c.*;
 import LLVM.*;
-import javafx.util.Pair;
 import java.util.*;
 
 public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
@@ -116,13 +115,14 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 			TEMP arr1 = TEMP_FACTORY.getInstance().getFreshTEMP();
 			arr1.setType(arr.getType());
 			arr1.checkInit = arr.checkInit;
-			IR.getInstance().Add_IRcommand(new IRcommand_Load_Temp(arr1, arr));
+			IR.getInstance()
+				.Add_IRcommand(new IRcommand_Load_Temp(arr1, arr));
 			arr = arr1;
 		}
-		IR.getInstance().Add_IRcommand(new IRcommand_Check_Null(arr));
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Check_Null(arr));
 
-		//	TEMP size = TEMP_FACTORY.getInstance().getFreshTEMP();
-		//	size.setType(TYPE_INT.getInstance());
+
 		TEMP subscript = this.subscript.IRme();
 		if (subscript.isaddr)
 		{
@@ -133,19 +133,18 @@ public class AST_EXP_VAR_SUBSCRIPT extends AST_EXP_VAR
 			subscript = subscript1;
 		}
 
-		IR.getInstance().Add_IRcommand(new IRcommand_Check_Subscript(arr, subscript));
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Check_Subscript(arr, subscript));
 
-		// Now size is the actual size of the array
-		//IR.getInstance().Add_IRcommand(new IRcommand_Get_Element_Int(size, arr, TYPE_INT.getInstance(), 0));
 		TEMP newOffset = TEMP_FACTORY.getInstance().getFreshTEMP();
 		newOffset.setType(TYPE_INT.getInstance());
-		IR.getInstance().Add_IRcommand(new IRcommand_Add_Int(newOffset,subscript,1));
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Add_Int(newOffset,subscript,1));
 
 		TEMP elementAddress = TEMP_FACTORY.getInstance().getFreshTEMP();
 		elementAddress.setType(arrayType);
-		// System.out.format("Getting subscript %s, %s, %s\n", elementAddress.getSerialNumber(), arr.getSerialNumber(), arr.getType());
-		//Todo: check boundaries
-		IR.getInstance().Add_IRcommand(new IRcommand_Get_Element_Temp(elementAddress, arr, arrayType, newOffset));
+		IR.getInstance()
+			.Add_IRcommand(new IRcommand_Get_Element_Temp(elementAddress, arr, arrayType, newOffset));
 
 		elementAddress.setType(arrayType);
 		elementAddress.isaddr = true;
