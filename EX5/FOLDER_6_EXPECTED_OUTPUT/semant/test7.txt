@@ -1,0 +1,8 @@
+class Father
+{
+	int foo(int i) { return 8; }
+}
+class Son extends Father
+{
+	int foo(int j) { return j; }
+}

@@ -1,0 +1,15 @@
+int i1 := 101 + 2 * 3;
+int i2 := 15;
+int i3 := 17;
+int i4 := 62 + 2;
+
+void main()
+{
+  int i1 := 3;
+  PrintInt(i1);
+  PrintInt(i2);
+  PrintInt(i2+i1);
+  PrintInt(i2+i3);
+  PrintInt(i2+i3*i4);
+  PrintInt((i2+i3)*i4);
+}

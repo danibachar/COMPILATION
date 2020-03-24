@@ -1,0 +1,14 @@
+
+void foo1(int i1, int i2) {
+  if (i1+i2 < 50) {
+    PrintInt(50);
+    return;
+  }
+  PrintInt(40);
+  return;
+}
+
+void main()
+{
+  foo1(15,15);
+}

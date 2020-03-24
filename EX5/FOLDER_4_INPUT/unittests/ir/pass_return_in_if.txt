@@ -1,0 +1,13 @@
+
+int foo1(int i1, int i2) {
+  if (i1+i2 < 50) {
+    return i1-i2;
+  }
+  return i1+i2;
+}
+
+void main()
+{
+  int i := foo1(15,15);
+  PrintInt(i);
+}

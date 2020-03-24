@@ -1,5 +1,0 @@
-digraph "CFG for 'PrintInt' function" {
-	label="CFG for 'PrintInt' function";
-
-	Node0x7ffdab506700 [shape=record,label="{entry:\l  %i.addr = alloca i32, align 4\l  store i32 %i, i32* %i.addr, align 4\l  %0 = load i32, i32* %i.addr, align 4\l  %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4\l... x i8]* @.str, i32 0, i32 0), i32 %0)\l  ret void\l}"];
-}

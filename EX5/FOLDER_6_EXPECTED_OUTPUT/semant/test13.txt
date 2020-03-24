@@ -1,0 +1,9 @@
+array gradesArray = int[]
+array IDsArray = int[]
+void F(IDsArray ids){ PrintInt(ids[6]); }
+void main()
+{
+    IDsArray ids := new int[8];
+    gradesArray grades := new int[8];
+    F(grades);
+}
